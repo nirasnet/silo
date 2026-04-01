@@ -21,22 +21,22 @@ def _now_th() -> datetime:
 
 @router.get("/overview")
 async def dashboard_overview(request: Request, auth: dict = Depends(require_auth)):
-    """Organization overview: messages today, active groups, digest count, usage."""
+    """Organization overview using production date period."""
     db = _get_db(request)
     org_id = auth["org_id"]
     now = _now_th()
-    today = now.strftime("%Y-%m-%d")
-    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
-    today_end = now.isoformat()
 
-    # Get stats
-    messages_today = db.messages_count(org_id, date_from=today_start, date_to=today_end)
+    # Use production period instead of calendar date
+    period = db.get_production_period(org_id)
+    start_iso = datetime.fromtimestamp(period["start_ts"], TH_TZ).isoformat()
+    end_iso = datetime.fromtimestamp(period["end_ts"], TH_TZ).isoformat()
+
+    messages_today = db.messages_count(org_id, date_from=start_iso, date_to=end_iso)
     groups = db.org_get_groups(org_id)
     active_groups = len([g for g in groups if g.get("status", "active") == "active"])
-    digests_today = db.digest_count(org_id, date=today)
+    digests_today = db.digest_count(org_id, date=period["production_date"])
     usage = db.usage_get_summary(org_id, month=now.strftime("%Y-%m"))
 
-    # Org info
     org = db.org_get(org_id)
     org_name = org["name"] if org else ""
     plan = org.get("plan", "free") if org else "free"
@@ -50,25 +50,28 @@ async def dashboard_overview(request: Request, auth: dict = Depends(require_auth
         "total_groups": len(groups),
         "digests_today": digests_today,
         "usage": usage,
-        "date": today,
+        "production_date": period["production_date"],
+        "production_period": f"{period['start_str']} — {period['end_str']}",
+        "production_start_time": period["production_start_time"],
     }
 
 
 @router.get("/groups")
 async def dashboard_groups(request: Request, auth: dict = Depends(require_auth)):
-    """All groups with stats: message count, last message, digest status."""
+    """All groups with stats using production date period."""
     db = _get_db(request)
     org_id = auth["org_id"]
-    now = _now_th()
-    today = now.strftime("%Y-%m-%d")
-    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
-    today_end = now.isoformat()
+
+    period = db.get_production_period(org_id)
+    start_iso = datetime.fromtimestamp(period["start_ts"], TH_TZ).isoformat()
+    end_iso = datetime.fromtimestamp(period["end_ts"], TH_TZ).isoformat()
+    today = period["production_date"]
 
     groups = db.org_get_groups(org_id)
     result = []
     for g in groups:
         chat_id = g["group_mid"]
-        msg_count = db.messages_count(org_id, chat_id=chat_id, date_from=today_start, date_to=today_end)
+        msg_count = db.messages_count(org_id, chat_id=chat_id, date_from=start_iso, date_to=end_iso)
         last_msg = db.messages_get_recent(org_id, chat_id, limit=1)
         last_digest = db.digest_list(org_id, chat_id=chat_id, limit=1)
 
