@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silo — Dashboard</title>
+<style>
+:root {
+  --bg: #0a0a0f;
+  --bg-card: #0f0f1a;
+  --bg-surface: #13132a;
+  --bg-hover: #1a1a35;
+  --border: rgba(59,130,246,0.1);
+  --border-active: rgba(59,130,246,0.3);
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --text-muted: #64748b;
+  --text-faint: #475569;
+  --blue: #3b82f6;
+  --purple: #8b5cf6;
+  --cyan: #06b6d4;
+  --green: #10b981;
+  --amber: #f59e0b;
+  --red: #ef4444;
+  --pink: #ec4899;
+  --gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  --sidebar-w: 260px;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Thai', sans-serif;
+  background: var(--bg); color: var(--text);
+  display: flex; min-height: 100vh; overflow-x: hidden;
+}
+
+/* ── Sidebar ── */
+.sidebar {
+  width: var(--sidebar-w); min-height: 100vh;
+  background: rgba(10,10,18,0.95);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: fixed; left: 0; top: 0; bottom: 0;
+  z-index: 100;
+  transition: transform .3s;
+}
+.sidebar-header {
+  padding: 28px 24px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar-logo { font-size: 28px; font-weight: 800; letter-spacing: -1px; }
+.sidebar-logo .s { color: var(--blue); }
+.sidebar-logo .dot { color: var(--purple); }
+.sidebar-org {
+  font-size: 12px; color: var(--text-muted); margin-top: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.sidebar-nav { flex: 1; padding: 16px 12px; }
+.nav-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-radius: var(--radius-sm);
+  color: var(--text-dim); font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: all .2s; margin-bottom: 4px;
+  text-decoration: none;
+}
+.nav-item:hover { background: var(--bg-hover); color: var(--text); }
+.nav-item.active {
+  background: rgba(59,130,246,0.1); color: var(--blue);
+  font-weight: 600;
+}
+.nav-item svg { width: 20px; height: 20px; flex-shrink: 0; }
+.nav-divider { height: 1px; background: var(--border); margin: 12px 16px; }
+.sidebar-footer {
+  padding: 16px 20px; border-top: 1px solid var(--border);
+  font-size: 12px; color: var(--text-faint);
+}
+.sidebar-footer a { color: var(--text-muted); text-decoration: none; }
+.sidebar-footer a:hover { color: var(--text); }
+
+/* ── Main ── */
+.main {
+  flex: 1; margin-left: var(--sidebar-w);
+  padding: 32px 36px;
+  min-height: 100vh;
+}
+.page-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 28px;
+}
+.page-title { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
+.page-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+.header-actions { display: flex; gap: 10px; align-items: center; }
+
+/* ── Cards ── */
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+.stat-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 22px 24px;
+  transition: border-color .2s, transform .15s;
+}
+.stat-card:hover { border-color: var(--border-active); transform: translateY(-1px); }
+.stat-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; font-weight: 600; }
+.stat-value {
+  font-size: 32px; font-weight: 800; margin: 8px 0 4px;
+  background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.stat-sub { font-size: 12px; color: var(--text-faint); }
+.stat-icon {
+  width: 40px; height: 40px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 12px; font-size: 18px;
+}
+.stat-icon.blue { background: rgba(59,130,246,0.1); color: var(--blue); }
+.stat-icon.purple { background: rgba(139,92,246,0.1); color: var(--purple); }
+.stat-icon.cyan { background: rgba(6,182,212,0.1); color: var(--cyan); }
+.stat-icon.green { background: rgba(16,185,129,0.1); color: var(--green); }
+
+/* ── Panels ── */
+.panel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+.panel {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); overflow: hidden;
+}
+.panel-full { grid-column: 1 / -1; }
+.panel-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 22px; border-bottom: 1px solid var(--border);
+}
+.panel-title { font-size: 14px; font-weight: 700; color: var(--text); }
+.panel-body { padding: 16px 22px; }
+.panel-body.no-pad { padding: 0; }
+
+/* ── Table ── */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px;
+  color: var(--text-muted); font-weight: 600;
+  padding: 12px 16px; text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+tbody td {
+  padding: 14px 16px; font-size: 13px; color: var(--text-dim);
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+}
+tbody tr { cursor: pointer; transition: background .15s; }
+tbody tr:hover { background: var(--bg-hover); }
+
+/* ── Activity feed ── */
+.feed-item {
+  display: flex; gap: 14px; padding: 14px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.feed-item:last-child { border-bottom: none; }
+.feed-icon {
+  width: 36px; height: 36px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 14px;
+}
+.feed-icon.digest { background: rgba(139,92,246,0.1); color: var(--purple); }
+.feed-icon.message { background: rgba(59,130,246,0.1); color: var(--blue); }
+.feed-icon.alert { background: rgba(245,158,11,0.1); color: var(--amber); }
+.feed-text { font-size: 13px; color: var(--text-dim); line-height: 1.5; flex: 1; }
+.feed-text strong { color: var(--text); font-weight: 600; }
+.feed-time { font-size: 11px; color: var(--text-faint); margin-top: 2px; }
+
+/* ── Buttons ── */
+.btn {
+  padding: 10px 20px; border: none; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: all .2s; text-decoration: none; display: inline-flex;
+  align-items: center; gap: 6px;
+}
+.btn-primary { background: var(--gradient); color: #fff; }
+.btn-primary:hover { box-shadow: 0 8px 24px rgba(59,130,246,0.25); transform: translateY(-1px); }
+.btn-ghost { background: transparent; color: var(--text-dim); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--bg-hover); color: var(--text); }
+.btn-sm { padding: 7px 14px; font-size: 12px; }
+.btn-danger { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+.btn-danger:hover { background: rgba(239,68,68,0.2); }
+
+/* ── Forms ── */
+.form-group { margin-bottom: 20px; }
+.form-group label {
+  display: block; font-size: 12px; font-weight: 600; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
+}
+.form-input {
+  width: 100%; padding: 12px 16px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text);
+  font-size: 14px; outline: none; transition: border-color .2s;
+}
+.form-input:focus { border-color: var(--blue); }
+.form-input::placeholder { color: var(--text-faint); }
+textarea.form-input { min-height: 100px; resize: vertical; font-family: inherit; }
+select.form-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+}
+
+/* ── Badge ── */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+}
+.badge-green { background: rgba(16,185,129,0.1); color: var(--green); }
+.badge-blue { background: rgba(59,130,246,0.1); color: var(--blue); }
+.badge-amber { background: rgba(245,158,11,0.1); color: var(--amber); }
+.badge-red { background: rgba(239,68,68,0.1); color: var(--red); }
+.badge-purple { background: rgba(139,92,246,0.1); color: var(--purple); }
+
+/* ── Chat ── */
+.chat-container {
+  display: flex; height: calc(100vh - 140px);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  overflow: hidden; background: var(--bg-card);
+}
+.chat-sidebar {
+  width: 280px; border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+}
+.chat-sidebar-header { padding: 16px; border-bottom: 1px solid var(--border); }
+.chat-sidebar-list { flex: 1; overflow-y: auto; }
+.chat-group-item {
+  padding: 14px 16px; cursor: pointer; transition: background .15s;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+}
+.chat-group-item:hover { background: var(--bg-hover); }
+.chat-group-item.active { background: rgba(59,130,246,0.08); border-left: 3px solid var(--blue); }
+.chat-group-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.chat-group-preview { font-size: 12px; color: var(--text-faint); margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.chat-main { flex: 1; display: flex; flex-direction: column; }
+.chat-messages { flex: 1; overflow-y: auto; padding: 20px; }
+.chat-msg { margin-bottom: 16px; max-width: 80%; }
+.chat-msg.user { margin-left: auto; }
+.chat-msg.assistant { margin-right: auto; }
+.chat-msg-bubble {
+  padding: 12px 16px; border-radius: 14px; font-size: 14px; line-height: 1.6;
+}
+.chat-msg.user .chat-msg-bubble { background: var(--blue); color: #fff; border-bottom-right-radius: 4px; }
+.chat-msg.assistant .chat-msg-bubble { background: var(--bg-surface); color: var(--text-dim); border-bottom-left-radius: 4px; }
+.chat-msg-time { font-size: 10px; color: var(--text-faint); margin-top: 4px; }
+.chat-input-area {
+  padding: 16px; border-top: 1px solid var(--border);
+  display: flex; gap: 10px;
+}
+.chat-input {
+  flex: 1; padding: 12px 16px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text);
+  font-size: 14px; outline: none; resize: none;
+}
+.chat-input:focus { border-color: var(--blue); }
+.chat-send {
+  padding: 12px 20px; border: none; border-radius: var(--radius-sm);
+  background: var(--gradient); color: #fff; font-weight: 600;
+  cursor: pointer; transition: transform .15s;
+}
+.chat-send:hover { transform: translateY(-1px); }
+
+/* ── Messages panel ── */
+.msg-item {
+  display: flex; gap: 10px; padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+}
+.msg-avatar {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--bg-surface); display: flex; align-items: center;
+  justify-content: center; font-size: 12px; font-weight: 700;
+  color: var(--text-muted); flex-shrink: 0;
+}
+.msg-content { flex: 1; }
+.msg-sender { font-size: 12px; font-weight: 600; color: var(--text); }
+.msg-text { font-size: 13px; color: var(--text-dim); margin-top: 2px; line-height: 1.4; }
+.msg-time { font-size: 10px; color: var(--text-faint); margin-top: 2px; }
+
+/* ── Settings sections ── */
+.settings-section {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px; margin-bottom: 20px;
+}
+.settings-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+.settings-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.settings-row:last-child { border-bottom: none; }
+.settings-label { font-size: 13px; color: var(--text-dim); }
+.settings-value { font-size: 13px; color: var(--text); font-weight: 600; }
+
+/* ── Digest expand ── */
+.digest-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); margin-bottom: 12px;
+  overflow: hidden; transition: border-color .2s;
+}
+.digest-card:hover { border-color: var(--border-active); }
+.digest-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; cursor: pointer;
+}
+.digest-header-left { display: flex; align-items: center; gap: 12px; }
+.digest-date { font-size: 13px; font-weight: 700; color: var(--text); }
+.digest-chat { font-size: 12px; color: var(--text-muted); }
+.digest-msgs { font-size: 11px; color: var(--text-faint); }
+.digest-body {
+  padding: 0 20px 20px; display: none;
+  font-size: 13px; color: var(--text-dim); line-height: 1.7;
+}
+.digest-body.open { display: block; }
+.digest-topics { margin-top: 12px; }
+.digest-topic {
+  display: inline-block; padding: 4px 10px; margin: 3px 4px 3px 0;
+  background: rgba(139,92,246,0.08); color: var(--purple);
+  border-radius: 6px; font-size: 11px; font-weight: 600;
+}
+
+/* ── Hamburger ── */
+.hamburger {
+  display: none; background: none; border: none; color: var(--text);
+  font-size: 24px; cursor: pointer; padding: 8px;
+}
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 90; }
+
+/* ── View toggle ── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── Loading ── */
+.loading {
+  display: flex; align-items: center; justify-content: center;
+  padding: 40px; color: var(--text-muted);
+}
+.spinner-sm {
+  width: 20px; height: 20px; border: 2px solid var(--border);
+  border-top-color: var(--blue); border-radius: 50%;
+  animation: spin .8s linear infinite; margin-right: 10px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Empty state ── */
+.empty-state {
+  text-align: center; padding: 48px 20px; color: var(--text-muted);
+}
+.empty-state .icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+.empty-state .title { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: var(--text-dim); }
+.empty-state .desc { font-size: 13px; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .panel-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .overlay.open { display: block; }
+  .main { margin-left: 0; padding: 20px 16px; }
+  .hamburger { display: block; }
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+  .chat-sidebar { width: 100%; }
+  .chat-main { display: none; }
+  .chat-container.chat-open .chat-sidebar { display: none; }
+  .chat-container.chat-open .chat-main { display: flex; }
+}
+@media (max-width: 480px) {
+  .stat-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+
+/* ── Tooltip ── */
+.token-reveal {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px; background: var(--bg);
+  padding: 8px 12px; border-radius: 8px;
+  word-break: break-all; margin-top: 8px;
+  border: 1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-logo"><span class="s">S</span>ilo<span class="dot">.</span></div>
+    <div class="sidebar-org" id="orgName">Loading...</div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item active" data-view="dashboard" onclick="switchView('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item" data-view="groups" onclick="switchView('groups')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Groups
+    </a>
+    <a class="nav-item" data-view="digests" onclick="switchView('digests')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Digests
+    </a>
+    <a class="nav-item" data-view="aichat" onclick="switchView('aichat')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      AI Chat
+    </a>
+    <div class="nav-divider"></div>
+    <a class="nav-item" data-view="settings" onclick="switchView('settings')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Settings
+    </a>
+  </nav>
+  <div class="sidebar-footer">
+    <a href="/auth/logout">Logout</a> &middot; Silo v1.0
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- Main content -->
+<div class="main">
+  <div class="page-header">
+    <div>
+      <button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
+      <div class="page-title" id="pageTitle">Dashboard</div>
+      <div class="page-subtitle" id="pageSubtitle">ภาพรวมกิจกรรมวันนี้</div>
+    </div>
+    <div class="header-actions" id="headerActions"></div>
+  </div>
+
+  <!-- Dashboard View -->
+  <div class="view active" id="view-dashboard">
+    <div class="stat-grid" id="statGrid">
+      <div class="stat-card">
+        <div class="stat-icon blue">&#128172;</div>
+        <div class="stat-label">ข้อความวันนี้</div>
+        <div class="stat-value" id="statMessages">--</div>
+        <div class="stat-sub" id="statMessagesSub">loading...</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green">&#128101;</div>
+        <div class="stat-label">กลุ่มที่เชื่อมต่อ</div>
+        <div class="stat-value" id="statGroups">--</div>
+        <div class="stat-sub" id="statGroupsSub">loading...</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon purple">&#128203;</div>
+        <div class="stat-label">Digest สร้างแล้ว</div>
+        <div class="stat-value" id="statDigests">--</div>
+        <div class="stat-sub" id="statDigestsSub">loading...</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon cyan">&#129302;</div>
+        <div class="stat-label">AI Queries</div>
+        <div class="stat-value" id="statAI">--</div>
+        <div class="stat-sub" id="statAISub">loading...</div>
+      </div>
+    </div>
+
+    <div class="panel-grid">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">กิจกรรมล่าสุด</span>
+          <button class="btn btn-ghost btn-sm" onclick="loadActivity()">&#8635; Refresh</button>
+        </div>
+        <div class="panel-body" id="activityFeed">
+          <div class="loading"><div class="spinner-sm"></div> กำลังโหลด...</div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">กลุ่มยอดนิยม</span>
+        </div>
+        <div class="panel-body no-pad">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>กลุ่ม</th><th>ข้อความ</th><th>สถานะ</th></tr></thead>
+              <tbody id="topGroupsBody">
+                <tr><td colspan="3" style="text-align:center;color:var(--text-faint)">loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Groups View -->
+  <div class="view" id="view-groups">
+    <div id="groupsList"></div>
+    <div id="groupDetail" style="display:none"></div>
+  </div>
+
+  <!-- Digests View -->
+  <div class="view" id="view-digests">
+    <div id="digestsList"></div>
+  </div>
+
+  <!-- AI Chat View -->
+  <div class="view" id="view-aichat">
+    <div class="chat-container" id="chatContainer">
+      <div class="chat-sidebar">
+        <div class="chat-sidebar-header">
+          <div style="font-size:14px;font-weight:700;margin-bottom:8px">เลือกกลุ่ม</div>
+          <input class="form-input" placeholder="ค้นหา..." id="chatSearch" oninput="filterChatGroups()" style="padding:10px 14px;font-size:13px">
+        </div>
+        <div class="chat-sidebar-list" id="chatGroupList"></div>
+      </div>
+      <div class="chat-main">
+        <div class="chat-messages" id="chatMessages">
+          <div class="empty-state">
+            <div class="icon">&#129302;</div>
+            <div class="title">เลือกกลุ่มเพื่อเริ่มถาม AI</div>
+            <div class="desc">AI จะวิเคราะห์จาก Digest และข้อความในกลุ่ม</div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <textarea class="chat-input" id="chatInput" rows="1" placeholder="พิมพ์คำถาม..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+          <button class="chat-send" onclick="sendChat()">ส่ง</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings View -->
+  <div class="view" id="view-settings">
+    <div class="settings-section">
+      <div class="settings-title">ข้อมูลองค์กร</div>
+      <div id="settingsOrg">
+        <div class="loading"><div class="spinner-sm"></div> กำลังโหลด...</div>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">LINE Official Account</div>
+      <div id="settingsLine">
+        <div class="form-group">
+          <label>Channel ID</label>
+          <input class="form-input" id="lineChannelId" placeholder="LINE Channel ID">
+        </div>
+        <div class="form-group">
+          <label>Channel Secret</label>
+          <input class="form-input" id="lineChannelSecret" type="password" placeholder="LINE Channel Secret">
+        </div>
+        <div class="form-group">
+          <label>Channel Access Token</label>
+          <input class="form-input" id="lineChannelToken" type="password" placeholder="LINE Channel Access Token">
+        </div>
+        <button class="btn btn-primary" onclick="saveLineConfig()">บันทึก LINE Config</button>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">สมาชิก</div>
+      <div id="settingsMembers">
+        <div class="loading"><div class="spinner-sm"></div> กำลังโหลด...</div>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">API Tokens</div>
+      <div id="settingsTokens">
+        <p style="font-size:13px;color:var(--text-muted)">ใช้ API key สำหรับเชื่อมต่อระบบภายนอก</p>
+        <div style="margin-top:12px">
+          <button class="btn btn-ghost btn-sm" onclick="generateApiToken()">+ สร้าง API Token</button>
+        </div>
+        <div id="tokenList" style="margin-top:12px"></div>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">แผนปัจจุบัน</div>
+      <div id="settingsPlan">
+        <div class="loading"><div class="spinner-sm"></div> กำลังโหลด...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ──
+let currentView = 'dashboard';
+let orgId = '';
+let selectedChatId = '';
+let conversationId = null;
+let groupsData = [];
+let refreshTimer = null;
+
+// ── API helpers ──
+async function api(path, opts = {}) {
+  const resp = await fetch(path, {
+    headers: { 'Content-Type': 'application/json', ...opts.headers },
+    ...opts,
+  });
+  if (resp.status === 403 || resp.status === 401) {
+    window.location.href = '/auth/login';
+    return null;
+  }
+  return resp.json();
+}
+
+// ── Init ──
+async function init() {
+  const me = await api('/auth/me');
+  if (!me) return;
+  orgId = me.org_id;
+  document.getElementById('orgName').textContent = me.org_name || me.org_slug || orgId.slice(0,8);
+  loadDashboard();
+  startAutoRefresh();
+}
+
+function startAutoRefresh() {
+  if (refreshTimer) clearInterval(refreshTimer);
+  refreshTimer = setInterval(() => {
+    if (currentView === 'dashboard') loadDashboard();
+  }, 30000);
+}
+
+// ── Navigation ──
+function switchView(view) {
+  currentView = view;
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  document.querySelector(`[data-view="${view}"]`).classList.add('active');
+
+  const titles = {
+    dashboard: ['Dashboard', 'ภาพรวมกิจกรรมวันนี้'],
+    groups: ['Groups', 'กลุ่ม LINE ที่เชื่อมต่อ'],
+    digests: ['Digests', 'สรุป AI ย้อนหลัง'],
+    aichat: ['AI Chat', 'ถาม AI เกี่ยวกับแชท'],
+    settings: ['Settings', 'ตั้งค่าองค์กรและการเชื่อมต่อ'],
+  };
+  const [t, s] = titles[view] || [view, ''];
+  document.getElementById('pageTitle').textContent = t;
+  document.getElementById('pageSubtitle').textContent = s;
+
+  // Header actions
+  const ha = document.getElementById('headerActions');
+  if (view === 'digests') {
+    ha.innerHTML = '<button class="btn btn-primary btn-sm" onclick="generateAllDigests()">&#9889; Generate All</button>';
+  } else if (view === 'groups') {
+    ha.innerHTML = '<button class="btn btn-primary btn-sm" onclick="showAddGroup()">+ เพิ่มกลุ่ม</button>';
+  } else {
+    ha.innerHTML = '';
+  }
+
+  if (view === 'dashboard') loadDashboard();
+  else if (view === 'groups') loadGroups();
+  else if (view === 'digests') loadDigests();
+  else if (view === 'aichat') loadChatGroups();
+  else if (view === 'settings') loadSettings();
+
+  closeSidebar();
+}
+
+// ── Sidebar mobile ──
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// ── Dashboard ──
+async function loadDashboard() {
+  const data = await api(`/api/v1/dashboard/overview`);
+  if (!data) return;
+
+  document.getElementById('statMessages').textContent = (data.messages_today || 0).toLocaleString();
+  document.getElementById('statMessagesSub').textContent = `${data.date}`;
+  document.getElementById('statGroups').textContent = data.active_groups || 0;
+  document.getElementById('statGroupsSub').textContent = `${data.total_groups || 0} ทั้งหมด`;
+  document.getElementById('statDigests').textContent = data.digests_today || 0;
+  document.getElementById('statDigestsSub').textContent = 'วันนี้';
+  const usage = data.usage || {};
+  document.getElementById('statAI').textContent = (usage.ai_queries || 0).toLocaleString();
+  document.getElementById('statAISub').textContent = `เดือนนี้`;
+
+  loadActivity();
+  loadTopGroups();
+}
+
+async function loadActivity() {
+  const data = await api('/api/v1/dashboard/activity?limit=10');
+  if (!data) return;
+  const el = document.getElementById('activityFeed');
+  if (!data.feed || data.feed.length === 0) {
+    el.innerHTML = '<div class="empty-state"><div class="icon">&#128196;</div><div class="title">ยังไม่มีกิจกรรม</div></div>';
+    return;
+  }
+  el.innerHTML = data.feed.map(f => {
+    const icon = f.type === 'digest' ? 'digest' : 'message';
+    const emoji = f.type === 'digest' ? '&#128203;' : '&#128172;';
+    const text = f.type === 'digest'
+      ? `<strong>${esc(f.chat_name)}</strong> — ${esc(f.summary || 'Digest generated')}`
+      : `<strong>${esc(f.chat_name)}</strong> — ${f.count} ข้อความ`;
+    return `<div class="feed-item">
+      <div class="feed-icon ${icon}">${emoji}</div>
+      <div class="feed-text">${text}<div class="feed-time">${timeAgo(f.timestamp)}</div></div>
+    </div>`;
+  }).join('');
+}
+
+async function loadTopGroups() {
+  const data = await api('/api/v1/dashboard/groups');
+  if (!data) return;
+  const groups = Array.isArray(data) ? data : [];
+  const el = document.getElementById('topGroupsBody');
+  if (groups.length === 0) {
+    el.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-faint)">ยังไม่มีกลุ่ม</td></tr>';
+    return;
+  }
+  el.innerHTML = groups.slice(0, 5).map(g => `
+    <tr onclick="switchView('groups'); showGroupDetail('${esc(g.chat_id)}')">
+      <td><strong>${esc(g.name)}</strong></td>
+      <td>${g.messages_today.toLocaleString()}</td>
+      <td>${g.has_digest_today ? '<span class="badge badge-green">Digest</span>' : '<span class="badge badge-amber">Pending</span>'}</td>
+    </tr>`).join('');
+}
+
+// ── Groups ──
+async function loadGroups() {
+  const data = await api('/api/v1/dashboard/groups');
+  groupsData = Array.isArray(data) ? data : [];
+  const el = document.getElementById('groupsList');
+  document.getElementById('groupDetail').style.display = 'none';
+  if (groupsData.length === 0) {
+    el.innerHTML = '<div class="empty-state"><div class="icon">&#128101;</div><div class="title">ยังไม่มีกลุ่ม</div><div class="desc">เพิ่มกลุ่ม LINE เพื่อเริ่มติดตาม</div></div>';
+    return;
+  }
+  el.innerHTML = '<div class="panel-grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">' +
+    groupsData.map(g => `
+      <div class="panel" style="cursor:pointer" onclick="showGroupDetail('${esc(g.chat_id)}')">
+        <div class="panel-body">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <strong style="font-size:15px">${esc(g.name)}</strong>
+            ${g.status === 'active' ? '<span class="badge badge-green">Active</span>' : '<span class="badge badge-red">Inactive</span>'}
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;color:var(--text-muted)">
+            <div>ข้อความวันนี้: <strong style="color:var(--text)">${g.messages_today}</strong></div>
+            <div>ทั้งหมด: <strong style="color:var(--text)">${(g.total_messages||0).toLocaleString()}</strong></div>
+            <div>Digest ล่าสุด: <strong style="color:var(--text)">${g.last_digest_date || '-'}</strong></div>
+            <div>${g.has_digest_today ? '<span class="badge badge-green badge-sm">Digest OK</span>' : '<span class="badge badge-amber badge-sm">Pending</span>'}</div>
+          </div>
+        </div>
+      </div>`).join('') + '</div>';
+}
+
+async function showGroupDetail(chatId) {
+  document.getElementById('groupsList').style.display = 'none';
+  const det = document.getElementById('groupDetail');
+  det.style.display = 'block';
+  det.innerHTML = '<div class="loading"><div class="spinner-sm"></div> กำลังโหลด...</div>';
+
+  const [msgs, digests] = await Promise.all([
+    api(`/api/v1/dashboard/groups/${chatId}/messages?limit=30`),
+    api(`/api/v1/dashboard/groups/${chatId}/digests?limit=5`),
+  ]);
+
+  const g = groupsData.find(x => x.chat_id === chatId) || {};
+  let html = `
+    <div style="margin-bottom:16px">
+      <button class="btn btn-ghost btn-sm" onclick="loadGroups()">&larr; กลับ</button>
+      <span style="margin-left:12px;font-size:18px;font-weight:700">${esc(g.name || chatId)}</span>
+      <button class="btn btn-primary btn-sm" style="float:right" onclick="generateDigest('${esc(chatId)}')">&#9889; Generate Digest</button>
+    </div>`;
+
+  // Digests
+  html += '<div class="panel" style="margin-bottom:16px"><div class="panel-header"><span class="panel-title">Digests</span></div><div class="panel-body">';
+  if (digests && digests.digests && digests.digests.length > 0) {
+    html += digests.digests.map(d => `
+      <div class="digest-card">
+        <div class="digest-header" onclick="this.nextElementSibling.classList.toggle('open')">
+          <div class="digest-header-left">
+            <span class="badge badge-purple">${esc(d.date || '')}</span>
+            <span class="digest-msgs">${d.message_count || 0} msgs</span>
+          </div>
+          <span style="color:var(--text-faint)">&#9660;</span>
+        </div>
+        <div class="digest-body">
+          <div>${esc(d.summary || '')}</div>
+          ${d.topics && d.topics.length ? '<div class="digest-topics">' + d.topics.map(t => '<span class="digest-topic">' + esc(t) + '</span>').join('') + '</div>' : ''}
+        </div>
+      </div>`).join('');
+  } else {
+    html += '<div style="color:var(--text-faint);font-size:13px">ยังไม่มี Digest</div>';
+  }
+  html += '</div></div>';
+
+  // Messages
+  html += '<div class="panel"><div class="panel-header"><span class="panel-title">ข้อความล่าสุด</span><span class="badge badge-blue">' + ((msgs && msgs.total) || 0) + ' ทั้งหมด</span></div><div class="panel-body">';
+  if (msgs && msgs.messages && msgs.messages.length > 0) {
+    html += msgs.messages.map(m => `
+      <div class="msg-item">
+        <div class="msg-avatar">${(m.sender_name || '?')[0].toUpperCase()}</div>
+        <div class="msg-content">
+          <div class="msg-sender">${esc(m.sender_name || 'Unknown')}</div>
+          <div class="msg-text">${esc(m.text || '')}</div>
+          <div class="msg-time">${timeAgo(m.timestamp || m.created_at)}</div>
+        </div>
+      </div>`).join('');
+  } else {
+    html += '<div style="color:var(--text-faint);font-size:13px">ไม่มีข้อความ</div>';
+  }
+  html += '</div></div>';
+
+  det.innerHTML = html;
+}
+
+async function generateDigest(chatId) {
+  const resp = await api('/api/v1/digest/generate', {
+    method: 'POST',
+    body: JSON.stringify({ chat_id: chatId, last_24h: true }),
+  });
+  if (resp && resp.ok) {
+    alert('Digest สร้างเสร็จแล้ว: ' + (resp.message_count || 0) + ' ข้อความ');
+    showGroupDetail(chatId);
+  } else {
+    alert('Error: ' + (resp ? resp.error || resp.detail || 'Unknown' : 'Network error'));
+  }
+}
+
+async function generateAllDigests() {
+  if (!confirm('สร้าง Digest สำหรับทุกกลุ่ม?')) return;
+  const resp = await api('/api/v1/digest/generate/all', {
+    method: 'POST',
+    body: JSON.stringify({}),
+  });
+  if (resp && resp.ok) {
+    alert(`สำเร็จ ${resp.success}/${resp.total} กลุ่ม`);
+    loadDigests();
+  } else {
+    alert('Error: ' + (resp ? resp.error || resp.detail || 'Unknown' : 'Network error'));
+  }
+}
+
+function showAddGroup() {
+  const mid = prompt('Group MID (LINE group ID):');
+  if (!mid) return;
+  const name = prompt('ชื่อกลุ่ม:') || '';
+  api(`/api/v1/org/${orgId}/groups`, {
+    method: 'POST',
+    body: JSON.stringify({ group_mid: mid, group_name: name }),
+  }).then(r => {
+    if (r && r.ok) { alert('เพิ่มกลุ่มแล้ว'); loadGroups(); }
+    else alert('Error: ' + (r ? r.detail || 'Unknown' : 'Failed'));
+  });
+}
+
+// ── Digests ──
+async function loadDigests() {
+  const data = await api('/api/v1/digest/list?limit=30');
+  const el = document.getElementById('digestsList');
+  const digests = Array.isArray(data) ? data : [];
+  if (digests.length === 0) {
+    el.innerHTML = '<div class="empty-state"><div class="icon">&#128203;</div><div class="title">ยังไม่มี Digest</div><div class="desc">กด Generate เพื่อสร้างสรุป AI</div></div>';
+    return;
+  }
+  el.innerHTML = digests.map(d => `
+    <div class="digest-card">
+      <div class="digest-header" onclick="this.nextElementSibling.classList.toggle('open')">
+        <div class="digest-header-left">
+          <span class="badge badge-purple">${esc(d.date || '')}</span>
+          <span class="digest-chat">${esc(d.chat_name || '')}</span>
+          <span class="digest-msgs">${d.message_count || 0} msgs</span>
+        </div>
+        <span style="color:var(--text-faint)">&#9660;</span>
+      </div>
+      <div class="digest-body">
+        <div style="white-space:pre-wrap">${esc(d.summary || '')}</div>
+        ${d.topics && d.topics.length ? '<div class="digest-topics">' + d.topics.map(t => '<span class="digest-topic">' + esc(t) + '</span>').join('') + '</div>' : ''}
+        ${d.action_items && d.action_items.length ? '<div style="margin-top:12px"><strong style="font-size:12px;color:var(--amber)">Action Items:</strong><ul style="margin-top:4px;padding-left:18px;font-size:12px">' + d.action_items.map(a => '<li>' + esc(a) + '</li>').join('') + '</ul></div>' : ''}
+        ${d.sentiment ? '<div style="margin-top:8px"><span class="badge ' + sentimentBadge(d.sentiment) + '">' + esc(d.sentiment) + '</span></div>' : ''}
+      </div>
+    </div>`).join('');
+}
+
+// ── AI Chat ──
+async function loadChatGroups() {
+  const data = await api('/api/v1/dashboard/groups');
+  const groups = Array.isArray(data) ? data : [];
+  const el = document.getElementById('chatGroupList');
+  el.innerHTML = groups.map(g => `
+    <div class="chat-group-item ${selectedChatId === g.chat_id ? 'active' : ''}" onclick="selectChat('${esc(g.chat_id)}', '${esc(g.name)}')" data-name="${esc(g.name.toLowerCase())}">
+      <div class="chat-group-name">${esc(g.name)}</div>
+      <div class="chat-group-preview">${g.messages_today} ข้อความวันนี้</div>
+    </div>`).join('');
+}
+
+function filterChatGroups() {
+  const q = document.getElementById('chatSearch').value.toLowerCase();
+  document.querySelectorAll('.chat-group-item').forEach(el => {
+    el.style.display = el.dataset.name.includes(q) ? '' : 'none';
+  });
+}
+
+function selectChat(chatId, chatName) {
+  selectedChatId = chatId;
+  conversationId = null;
+  document.querySelectorAll('.chat-group-item').forEach(el => el.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('chatMessages').innerHTML = `
+    <div class="empty-state">
+      <div class="icon">&#129302;</div>
+      <div class="title">${esc(chatName)}</div>
+      <div class="desc">พิมพ์คำถามเกี่ยวกับแชทนี้ เช่น "สรุปหัวข้อหลักวันนี้" หรือ "ใครพูดถึงอะไรบ้าง"</div>
+    </div>`;
+  document.getElementById('chatContainer').classList.add('chat-open');
+}
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text || !selectedChatId) return;
+  input.value = '';
+
+  const msgs = document.getElementById('chatMessages');
+  // Remove empty state
+  const empty = msgs.querySelector('.empty-state');
+  if (empty) empty.remove();
+
+  // Add user message
+  msgs.innerHTML += `<div class="chat-msg user"><div class="chat-msg-bubble">${esc(text)}</div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  // Loading
+  const loadId = 'load-' + Date.now();
+  msgs.innerHTML += `<div class="chat-msg assistant" id="${loadId}"><div class="chat-msg-bubble"><div class="spinner-sm" style="display:inline-block;vertical-align:middle;margin-right:8px"></div>กำลังคิด...</div></div>`;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  const resp = await api('/api/v1/digest/ask', {
+    method: 'POST',
+    body: JSON.stringify({ chat_id: selectedChatId, message: text, conversation_id: conversationId }),
+  });
+
+  const loadEl = document.getElementById(loadId);
+  if (loadEl) loadEl.remove();
+
+  if (resp && resp.answer) {
+    conversationId = resp.conversation_id;
+    msgs.innerHTML += `<div class="chat-msg assistant"><div class="chat-msg-bubble">${formatAnswer(resp.answer)}</div></div>`;
+  } else {
+    msgs.innerHTML += `<div class="chat-msg assistant"><div class="chat-msg-bubble" style="color:var(--red)">เกิดข้อผิดพลาด กรุณาลองใหม่</div></div>`;
+  }
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ── Settings ──
+async function loadSettings() {
+  const [org, members, plans] = await Promise.all([
+    api(`/api/v1/org/${orgId}`),
+    api(`/api/v1/org/${orgId}/members`),
+    api('/api/v1/org/plans'),
+  ]);
+
+  // Org info
+  if (org) {
+    document.getElementById('settingsOrg').innerHTML = `
+      <div class="settings-row"><span class="settings-label">ชื่อ</span><span class="settings-value">${esc(org.name || '')}</span></div>
+      <div class="settings-row"><span class="settings-label">Slug</span><span class="settings-value">${esc(org.slug || '')}</span></div>
+      <div class="settings-row"><span class="settings-label">Plan</span><span class="settings-value">${esc(org.plan || 'free')}</span></div>
+      <div class="settings-row"><span class="settings-label">สถานะ</span><span class="settings-value">${org.status === 'active' ? '<span class="badge badge-green">Active</span>' : esc(org.status || '')}</span></div>
+      <div class="settings-row"><span class="settings-label">Max Groups</span><span class="settings-value">${org.max_groups || '-'}</span></div>
+      <div class="settings-row"><span class="settings-label">Max Users</span><span class="settings-value">${org.max_users || '-'}</span></div>`;
+  }
+
+  // Members
+  const memArr = Array.isArray(members) ? members : [];
+  if (memArr.length > 0) {
+    document.getElementById('settingsMembers').innerHTML = '<table style="width:100%"><thead><tr><th>User</th><th>Role</th><th>Joined</th><th></th></tr></thead><tbody>' +
+      memArr.map(m => `<tr>
+        <td>${esc(m.display_name || m.user_id || '')}</td>
+        <td><span class="badge ${m.role === 'owner' ? 'badge-purple' : m.role === 'admin' ? 'badge-blue' : 'badge-green'}">${esc(m.role)}</span></td>
+        <td>${m.created_at ? m.created_at.slice(0,10) : '-'}</td>
+        <td>${m.role !== 'owner' ? '<button class="btn btn-danger btn-sm" onclick="removeMember(\'' + esc(m.user_id) + '\')">Remove</button>' : ''}</td>
+      </tr>`).join('') + '</tbody></table>';
+  } else {
+    document.getElementById('settingsMembers').innerHTML = '<div style="color:var(--text-faint);font-size:13px">ไม่มีสมาชิก</div>';
+  }
+
+  // Plan
+  const planArr = Array.isArray(plans) ? plans : [];
+  if (planArr.length > 0) {
+    document.getElementById('settingsPlan').innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">' +
+      planArr.map(p => `
+        <div style="background:var(--bg-surface);border:1px solid ${org && org.plan === p.id ? 'var(--blue)' : 'var(--border)'};border-radius:var(--radius);padding:18px;text-align:center">
+          <div style="font-weight:700;font-size:16px;margin-bottom:4px">${esc(p.name)}</div>
+          <div style="font-size:28px;font-weight:800;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:8px 0">
+            ${p.price === 0 ? 'Free' : '฿' + p.price.toLocaleString()}
+          </div>
+          <div style="font-size:11px;color:var(--text-faint);margin-bottom:12px">${p.price > 0 ? '/เดือน' : ''}</div>
+          <div style="text-align:left;font-size:12px;color:var(--text-dim)">
+            ${(p.features || []).map(f => '<div style="padding:2px 0">&#10003; ' + esc(f) + '</div>').join('')}
+          </div>
+          ${org && org.plan === p.id ? '<div class="badge badge-blue" style="margin-top:12px">แผนปัจจุบัน</div>' : ''}
+        </div>`).join('') + '</div>';
+  }
+}
+
+async function saveLineConfig() {
+  const data = {
+    line_channel_id: document.getElementById('lineChannelId').value,
+    line_channel_secret: document.getElementById('lineChannelSecret').value,
+    line_channel_token: document.getElementById('lineChannelToken').value,
+  };
+  const resp = await api(`/api/v1/org/${orgId}/line-config`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+  if (resp && resp.ok) alert('บันทึกสำเร็จ');
+  else alert('Error: ' + (resp ? resp.detail || 'Unknown' : 'Failed'));
+}
+
+async function removeMember(userId) {
+  if (!confirm('ลบสมาชิก ' + userId + '?')) return;
+  const resp = await api(`/api/v1/org/${orgId}/members/${userId}`, { method: 'DELETE' });
+  if (resp && resp.ok) loadSettings();
+  else alert('Error: ' + (resp ? resp.detail || 'Unknown' : 'Failed'));
+}
+
+function generateApiToken() {
+  alert('API token generation will be available soon.');
+}
+
+// ── Helpers ──
+function esc(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = String(s);
+  return d.innerHTML;
+}
+
+function timeAgo(ts) {
+  if (!ts) return '';
+  const d = new Date(ts);
+  const diff = (Date.now() - d.getTime()) / 1000;
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff/60) + ' min ago';
+  if (diff < 86400) return Math.floor(diff/3600) + ' hr ago';
+  return Math.floor(diff/86400) + ' days ago';
+}
+
+function sentimentBadge(s) {
+  if (s === 'positive') return 'badge-green';
+  if (s === 'negative') return 'badge-red';
+  if (s === 'mixed') return 'badge-amber';
+  return 'badge-blue';
+}
+
+function formatAnswer(text) {
+  // Basic markdown-like formatting
+  return esc(text)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>');
+}
+
+// ── Start ──
+init();
+</script>
+</body>
+</html>

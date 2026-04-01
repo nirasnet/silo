@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silo — AI สรุปแชท LINE ให้ธุรกิจคุณ</title>
+<meta name="description" content="Silo เปลี่ยนแชท LINE เป็นข้อมูลอัจฉริยะ สรุปอัตโนมัติด้วย AI ค้นหาข้อมูลย้อนหลัง วิเคราะห์แนวโน้ม สำหรับองค์กรที่จริงจัง">
+<meta name="keywords" content="LINE, AI, chat, digest, summary, business, Thailand, สรุปแชท, ธุรกิจ">
+<meta property="og:title" content="Silo — AI Chat Intelligence for Business">
+<meta property="og:description" content="AI-powered LINE chat digest platform for Thai businesses">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://silo.m4app.online">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;--bg4:#222233;
+  --text:#e8e8f0;--text2:#a0a0b8;--text3:#6a6a80;
+  --blue:#3b82f6;--blue2:#2563eb;--blue-glow:rgba(59,130,246,.15);
+  --purple:#8b5cf6;--purple2:#7c3aed;--purple-glow:rgba(139,92,246,.15);
+  --gradient:linear-gradient(135deg,#3b82f6,#8b5cf6);
+  --gradient2:linear-gradient(135deg,#8b5cf6,#ec4899);
+  --border:rgba(255,255,255,.06);--border2:rgba(255,255,255,.1);
+  --radius:16px;--radius-sm:10px;--radius-xs:6px;
+  --shadow:0 4px 24px rgba(0,0,0,.3);--shadow-lg:0 8px 48px rgba(0,0,0,.5);
+  --transition:all .3s cubic-bezier(.4,0,.2,1);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{
+  font-family:'Sarabun','Inter',system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--text);line-height:1.7;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;
+}
+.en{font-family:'Inter','Sarabun',sans-serif}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--text3)}
+
+/* Layout */
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+section{padding:100px 0;position:relative}
+.section-label{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.8rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--blue);background:var(--blue-glow);
+  padding:6px 16px;border-radius:100px;margin-bottom:16px;
+  border:1px solid rgba(59,130,246,.2);
+}
+.section-title{font-size:clamp(2rem,4vw,3rem);font-weight:800;line-height:1.2;margin-bottom:16px}
+.section-subtitle{font-size:1.1rem;color:var(--text2);max-width:600px;line-height:1.8}
+.section-header{text-align:center;margin-bottom:64px}
+.section-header .section-subtitle{margin:0 auto}
+.gradient-text{background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* Animations */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .8s cubic-bezier(.4,0,.2,1),transform .8s cubic-bezier(.4,0,.2,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+
+/* ===== NAVBAR ===== */
+.navbar{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  padding:16px 0;transition:var(--transition);
+}
+.navbar.scrolled{
+  background:rgba(10,10,15,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);padding:10px 0;
+}
+.navbar .container{display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:var(--gradient);display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:1.1rem;color:#fff;
+}
+.nav-logo-text{font-size:1.3rem;font-weight:800;color:var(--text);letter-spacing:-.02em}
+.nav-links{display:flex;align-items:center;gap:32px;list-style:none}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:.9rem;font-weight:500;transition:var(--transition)}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{
+  padding:8px 20px;border-radius:8px;font-weight:600;font-size:.9rem;
+  background:var(--gradient);color:#fff;text-decoration:none;
+  transition:var(--transition);border:none;cursor:pointer;
+}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(59,130,246,.4)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+.hamburger span{display:block;width:24px;height:2px;background:var(--text);border-radius:2px;transition:var(--transition)}
+.mobile-menu{
+  display:none;position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(10,10,15,.98);z-index:999;
+  flex-direction:column;align-items:center;justify-content:center;gap:32px;
+}
+.mobile-menu.open{display:flex}
+.mobile-menu a{color:var(--text);font-size:1.3rem;text-decoration:none;font-weight:600}
+.mobile-close{position:absolute;top:20px;right:24px;background:none;border:none;color:var(--text);font-size:2rem;cursor:pointer}
+
+@media(max-width:768px){
+  .nav-links{display:none}
+  .hamburger{display:flex}
+}
+
+/* ===== HERO ===== */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding-top:100px;padding-bottom:60px;position:relative;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%,rgba(59,130,246,.12),transparent),
+    radial-gradient(ellipse 60% 50% at 80% 50%,rgba(139,92,246,.08),transparent),
+    radial-gradient(ellipse 60% 50% at 20% 80%,rgba(59,130,246,.06),transparent);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse at center,black 30%,transparent 70%);
+}
+.hero-orb{
+  position:absolute;border-radius:50%;filter:blur(80px);opacity:.4;
+  animation:float 20s ease-in-out infinite;
+}
+.hero-orb-1{width:400px;height:400px;background:rgba(59,130,246,.2);top:-100px;right:-100px;animation-delay:0s}
+.hero-orb-2{width:300px;height:300px;background:rgba(139,92,246,.15);bottom:-50px;left:-50px;animation-delay:-7s}
+.hero-orb-3{width:200px;height:200px;background:rgba(236,72,153,.1);top:40%;left:60%;animation-delay:-14s}
+@keyframes float{0%,100%{transform:translate(0,0)}33%{transform:translate(30px,-30px)}66%{transform:translate(-20px,20px)}}
+
+.hero .container{position:relative;z-index:1;text-align:center}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 20px;border-radius:100px;
+  background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);
+  font-size:.85rem;color:var(--blue);font-weight:500;margin-bottom:32px;
+}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);animation:pulse-dot 2s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+
+.hero h1{
+  font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.1;
+  margin-bottom:24px;letter-spacing:-.03em;
+}
+.hero h1 .line2{
+  background:var(--gradient);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{font-size:clamp(1rem,2vw,1.25rem);color:var(--text2);max-width:600px;margin:0 auto 40px;line-height:1.8}
+.hero-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:64px}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 32px;border-radius:12px;font-size:1.05rem;font-weight:700;
+  background:var(--gradient);color:#fff;text-decoration:none;
+  transition:var(--transition);border:none;cursor:pointer;
+  box-shadow:0 4px 24px rgba(59,130,246,.25);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(59,130,246,.35)}
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 32px;border-radius:12px;font-size:1.05rem;font-weight:600;
+  background:rgba(255,255,255,.05);color:var(--text);text-decoration:none;
+  border:1px solid var(--border2);transition:var(--transition);cursor:pointer;
+}
+.btn-secondary:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);transform:translateY(-2px)}
+
+.hero-stats{display:flex;justify-content:center;gap:48px;flex-wrap:wrap}
+.hero-stat{text-align:center}
+.hero-stat-value{font-size:clamp(1.8rem,3vw,2.5rem);font-weight:900;color:var(--text);letter-spacing:-.02em}
+.hero-stat-value .en{font-family:'Inter',sans-serif}
+.hero-stat-label{font-size:.85rem;color:var(--text3);margin-top:4px}
+
+/* ===== PROBLEM ===== */
+.problem{background:var(--bg2)}
+.problem-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+.problem-card{
+  padding:32px;border-radius:var(--radius);
+  background:var(--bg);border:1px solid var(--border);
+  transition:var(--transition);
+}
+.problem-card:hover{border-color:rgba(239,68,68,.3);transform:translateY(-4px)}
+.problem-icon{
+  width:52px;height:52px;border-radius:14px;
+  background:rgba(239,68,68,.08);color:#ef4444;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;margin-bottom:20px;
+}
+.problem-card h3{font-size:1.15rem;font-weight:700;margin-bottom:10px}
+.problem-card p{font-size:.95rem;color:var(--text2);line-height:1.7}
+
+/* ===== FEATURES ===== */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+.feature-card{
+  padding:32px;border-radius:var(--radius);
+  background:var(--bg2);border:1px solid var(--border);
+  transition:var(--transition);position:relative;overflow:hidden;
+}
+.feature-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--gradient);opacity:0;transition:var(--transition);
+}
+.feature-card:hover{border-color:rgba(59,130,246,.3);transform:translateY(-4px)}
+.feature-card:hover::before{opacity:1}
+.feature-icon{
+  width:52px;height:52px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;margin-bottom:20px;
+}
+.feature-icon.blue{background:var(--blue-glow);color:var(--blue)}
+.feature-icon.purple{background:var(--purple-glow);color:var(--purple)}
+.feature-icon.pink{background:rgba(236,72,153,.1);color:#ec4899}
+.feature-icon.green{background:rgba(34,197,94,.1);color:#22c55e}
+.feature-icon.amber{background:rgba(245,158,11,.1);color:#f59e0b}
+.feature-icon.cyan{background:rgba(6,182,212,.1);color:#06b6d4}
+.feature-card h3{font-size:1.1rem;font-weight:700;margin-bottom:8px}
+.feature-card p{font-size:.9rem;color:var(--text2);line-height:1.7}
+
+/* ===== USE CASES ===== */
+.usecases{background:var(--bg2)}
+.usecases-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px}
+.usecase-card{
+  padding:28px;border-radius:var(--radius);
+  background:var(--bg);border:1px solid var(--border);
+  text-align:center;transition:var(--transition);
+}
+.usecase-card:hover{border-color:rgba(139,92,246,.3);transform:translateY(-4px)}
+.usecase-emoji{font-size:2.5rem;margin-bottom:16px;display:block}
+.usecase-card h3{font-size:1.05rem;font-weight:700;margin-bottom:8px}
+.usecase-card p{font-size:.88rem;color:var(--text2);line-height:1.7}
+
+/* ===== HOW IT WORKS ===== */
+.steps{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;align-items:flex-start}
+.step{
+  flex:1;min-width:240px;max-width:340px;text-align:center;
+  padding:40px 28px;border-radius:var(--radius);
+  background:var(--bg2);border:1px solid var(--border);
+  position:relative;transition:var(--transition);
+}
+.step:hover{transform:translateY(-4px);border-color:var(--border2)}
+.step-number{
+  width:56px;height:56px;border-radius:50%;
+  background:var(--gradient);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;font-weight:800;margin:0 auto 20px;
+  font-family:'Inter',sans-serif;
+}
+.step h3{font-size:1.1rem;font-weight:700;margin-bottom:8px}
+.step p{font-size:.9rem;color:var(--text2);line-height:1.7}
+.step-arrow{
+  display:flex;align-items:center;font-size:1.5rem;color:var(--text3);
+  padding-top:40px;
+}
+@media(max-width:900px){.step-arrow{display:none}}
+
+/* ===== PRICING ===== */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px;max-width:1050px;margin:0 auto}
+.pricing-card{
+  padding:36px;border-radius:var(--radius);
+  background:var(--bg2);border:1px solid var(--border);
+  transition:var(--transition);position:relative;display:flex;flex-direction:column;
+}
+.pricing-card:hover{transform:translateY(-4px)}
+.pricing-card.popular{
+  border-color:rgba(59,130,246,.4);
+  background:linear-gradient(180deg,rgba(59,130,246,.06),var(--bg2));
+  box-shadow:0 0 60px rgba(59,130,246,.08);
+}
+.pricing-badge{
+  position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  background:var(--gradient);color:#fff;font-size:.75rem;font-weight:700;
+  padding:4px 16px;border-radius:100px;letter-spacing:.05em;
+}
+.pricing-name{font-size:1rem;font-weight:600;color:var(--text2);margin-bottom:8px}
+.pricing-price{font-size:2.8rem;font-weight:900;margin-bottom:4px;letter-spacing:-.03em}
+.pricing-price .currency{font-size:1.2rem;font-weight:600;vertical-align:super;margin-right:2px}
+.pricing-price .period{font-size:.9rem;font-weight:400;color:var(--text3)}
+.pricing-desc{font-size:.85rem;color:var(--text3);margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.pricing-features{list-style:none;flex:1;margin-bottom:28px}
+.pricing-features li{
+  padding:6px 0;font-size:.92rem;color:var(--text2);
+  display:flex;align-items:flex-start;gap:10px;
+}
+.pricing-features li::before{content:'';display:none}
+.pricing-check{color:var(--blue);font-size:1rem;flex-shrink:0;margin-top:2px}
+.pricing-card .btn-primary,.pricing-card .btn-secondary{width:100%;justify-content:center;font-size:1rem}
+.pricing-trial{text-align:center;margin-top:40px;color:var(--text2);font-size:1rem}
+.pricing-trial strong{color:var(--text)}
+
+/* ===== TESTIMONIALS ===== */
+.testimonials{background:var(--bg2)}
+.testimonials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:28px}
+.testimonial-card{
+  padding:32px;border-radius:var(--radius);
+  background:var(--bg);border:1px solid var(--border);
+  transition:var(--transition);
+}
+.testimonial-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.testimonial-stars{color:#f59e0b;font-size:1rem;margin-bottom:16px;letter-spacing:2px}
+.testimonial-text{font-size:.95rem;color:var(--text2);line-height:1.8;margin-bottom:20px;font-style:italic}
+.testimonial-author{display:flex;align-items:center;gap:12px}
+.testimonial-avatar{
+  width:44px;height:44px;border-radius:50%;
+  background:var(--gradient);display:flex;align-items:center;justify-content:center;
+  font-weight:700;font-size:1rem;color:#fff;flex-shrink:0;
+}
+.testimonial-name{font-weight:700;font-size:.95rem}
+.testimonial-role{font-size:.8rem;color:var(--text3)}
+
+/* ===== FAQ ===== */
+.faq-list{max-width:720px;margin:0 auto}
+.faq-item{
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  margin-bottom:12px;overflow:hidden;transition:var(--transition);
+}
+.faq-item:hover{border-color:var(--border2)}
+.faq-question{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 24px;cursor:pointer;font-weight:600;font-size:1rem;
+  background:none;border:none;color:var(--text);width:100%;text-align:left;
+  font-family:inherit;transition:var(--transition);
+}
+.faq-question:hover{color:var(--blue)}
+.faq-chevron{
+  font-size:1.2rem;transition:transform .3s ease;flex-shrink:0;margin-left:16px;color:var(--text3);
+}
+.faq-item.open .faq-chevron{transform:rotate(180deg)}
+.faq-answer{
+  max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.4,0,.2,1);
+}
+.faq-answer-inner{padding:0 24px 20px;font-size:.92rem;color:var(--text2);line-height:1.8}
+
+/* ===== CTA ===== */
+.cta-section{
+  background:linear-gradient(180deg,var(--bg) 0%,rgba(59,130,246,.05) 50%,var(--bg) 100%);
+  text-align:center;
+}
+.cta-box{
+  max-width:700px;margin:0 auto;padding:64px 40px;
+  border-radius:24px;
+  background:linear-gradient(135deg,rgba(59,130,246,.06),rgba(139,92,246,.06));
+  border:1px solid rgba(59,130,246,.15);
+  position:relative;overflow:hidden;
+}
+.cta-box::before{
+  content:'';position:absolute;inset:-2px;border-radius:26px;
+  background:var(--gradient);opacity:.08;z-index:0;
+}
+.cta-box>*{position:relative;z-index:1}
+.cta-box h2{font-size:clamp(1.5rem,3vw,2.2rem);font-weight:800;margin-bottom:12px}
+.cta-box p{color:var(--text2);margin-bottom:32px;font-size:1.05rem}
+.cta-contacts{
+  display:flex;justify-content:center;gap:32px;flex-wrap:wrap;
+  margin-top:32px;font-size:.9rem;color:var(--text3);
+}
+.cta-contacts a{color:var(--blue);text-decoration:none;transition:var(--transition)}
+.cta-contacts a:hover{color:var(--purple)}
+
+/* ===== FOOTER ===== */
+.footer{
+  background:var(--bg2);border-top:1px solid var(--border);
+  padding:64px 0 32px;
+}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-brand p{color:var(--text3);font-size:.9rem;line-height:1.7;margin-top:16px;max-width:280px}
+.footer-col h4{font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:16px;text-transform:uppercase;letter-spacing:.08em}
+.footer-col a{display:block;color:var(--text3);text-decoration:none;font-size:.9rem;padding:4px 0;transition:var(--transition)}
+.footer-col a:hover{color:var(--text)}
+.footer-bottom{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-top:32px;border-top:1px solid var(--border);
+  font-size:.8rem;color:var(--text3);flex-wrap:wrap;gap:16px;
+}
+.footer-social{display:flex;gap:16px}
+.footer-social a{
+  width:36px;height:36px;border-radius:8px;
+  background:rgba(255,255,255,.04);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text3);text-decoration:none;font-size:.9rem;
+  transition:var(--transition);
+}
+.footer-social a:hover{background:rgba(255,255,255,.08);color:var(--text);border-color:var(--border2)}
+
+@media(max-width:768px){
+  section{padding:64px 0}
+  .hero{padding-top:80px}
+  .hero-stats{gap:24px}
+  .hero-stat-value{font-size:1.6rem}
+  .pricing-grid{grid-template-columns:1fr;max-width:400px}
+  .footer-grid{grid-template-columns:1fr 1fr;gap:32px}
+  .cta-box{padding:40px 24px}
+  .cta-contacts{flex-direction:column;gap:12px}
+  .steps{flex-direction:column;align-items:center}
+}
+@media(max-width:480px){
+  .footer-grid{grid-template-columns:1fr}
+  .hero h1{font-size:2.2rem}
+}
+</style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar" id="navbar">
+  <div class="container">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">S</div>
+      <span class="nav-logo-text">Silo</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">ฟีเจอร์</a></li>
+      <li><a href="#usecases">กรณีใช้งาน</a></li>
+      <li><a href="#pricing">ราคา</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#contact" class="nav-cta">เริ่มใช้ฟรี</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" id="mobileClose" aria-label="Close">&times;</button>
+  <a href="#features" onclick="closeMobile()">ฟีเจอร์</a>
+  <a href="#usecases" onclick="closeMobile()">กรณีใช้งาน</a>
+  <a href="#pricing" onclick="closeMobile()">ราคา</a>
+  <a href="#faq" onclick="closeMobile()">FAQ</a>
+  <a href="#contact" class="btn-primary" onclick="closeMobile()">เริ่มใช้ฟรี</a>
+</div>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+  <div class="container">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      <span class="en">AI-Powered Chat Intelligence</span>
+    </div>
+    <h1>
+      <span>Silo &mdash; AI สรุปแชท LINE</span><br>
+      <span class="line2">ให้ธุรกิจคุณ</span>
+    </h1>
+    <p class="hero-sub">
+      เปลี่ยนแชทกลุ่ม LINE ที่ท่วมทุกวัน ให้เป็นข้อมูลอัจฉริยะ<br>
+      สรุปอัตโนมัติ ค้นหาย้อนหลัง วิเคราะห์แนวโน้ม ด้วย AI
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+        เริ่มใช้ฟรี
+      </a>
+      <a href="#howitworks" class="btn-secondary">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m10 8 6 4-6 4V8z"/></svg>
+        ดูตัวอย่าง
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value"><span class="en counter" data-target="500">0</span>+</div>
+        <div class="hero-stat-label">องค์กรที่ใช้งาน</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value"><span class="en counter" data-target="1000000" data-suffix="M" data-display="1">0</span>+</div>
+        <div class="hero-stat-label">ข้อความ/วัน</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value"><span class="en">99.9</span>%</div>
+        <div class="hero-stat-label en">Uptime</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Problem -->
+<section class="problem" id="problem">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Pain Points</div>
+      <h2 class="section-title">ปัญหาที่ทุกองค์กร<span class="gradient-text">เจอทุกวัน</span></h2>
+      <p class="section-subtitle">แชทกลุ่ม LINE เป็นช่องทางหลักของธุรกิจไทย แต่ข้อมูลสำคัญจมหายทุกวัน</p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card reveal">
+        <div class="problem-icon">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3>แชทท่วม อ่านไม่ทัน</h3>
+        <p>กลุ่ม LINE มีข้อความหลายร้อยต่อวัน พนักงานเสียเวลาเลื่อนอ่าน แต่พลาดข้อมูลสำคัญ</p>
+      </div>
+      <div class="problem-card reveal reveal-delay-1">
+        <div class="problem-icon">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </div>
+        <h3>ค้นหาไม่เจอ</h3>
+        <p>ข้อมูลสำคัญ ราคา นัดหมาย มติที่ประชุม ฝังอยู่ในแชทเมื่อ 3 เดือนก่อน หาไม่เจอ</p>
+      </div>
+      <div class="problem-card reveal reveal-delay-2">
+        <div class="problem-icon">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="10"/></svg>
+        </div>
+        <h3>ประชุมซ้ำซ้อน</h3>
+        <p>ต้องจัดประชุมเพื่อสรุปสิ่งที่คุยไปแล้วในแชท เสียเวลาทำงานหลายชั่วโมงต่อสัปดาห์</p>
+      </div>
+      <div class="problem-card reveal reveal-delay-3">
+        <div class="problem-icon">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4m0 4h.01"/></svg>
+        </div>
+        <h3>ข้อมูลหลุดรั่ว</h3>
+        <p>ไม่มีระบบติดตามว่าใครสั่งอะไร ใครรับผิดชอบ deadline เมื่อไหร่ ทุกอย่างอยู่ในแชท</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section id="features">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">ทุกฟีเจอร์ที่ธุรกิจ<span class="gradient-text">ต้องการ</span></h2>
+      <p class="section-subtitle">ระบบ AI ที่ออกแบบมาสำหรับบริบทการทำงานของคนไทยโดยเฉพาะ</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon blue">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8m8 4H8m2-8H8"/></svg>
+        </div>
+        <h3>AI Digest</h3>
+        <p>สรุปแชทอัตโนมัติทุกวัน แยกหัวข้อ จัดลำดับความสำคัญ พร้อม action items ชัดเจน</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-icon purple">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        </div>
+        <h3>Vision OCR</h3>
+        <p>อ่านข้อความจากรูปภาพ ใบเสร็จ เอกสาร ที่แชร์ในแชท แปลงเป็นข้อมูลค้นหาได้</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-icon green">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3>Smart Q&A</h3>
+        <p>ถาม AI เกี่ยวกับแชทย้อนหลังเป็นภาษาธรรมชาติ เช่น "ลูกค้า ABC สั่งอะไรเมื่อวาน?"</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="feature-icon pink">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="m22 6-10 7L2 6"/></svg>
+        </div>
+        <h3>Smart Templates</h3>
+        <p>เทมเพลตสรุปที่ปรับแต่งได้ตามอุตสาหกรรม รายงานประจำวัน/สัปดาห์/เดือน</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon green">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>
+        </div>
+        <h3>LINE Push</h3>
+        <p>ส่งสรุปและแจ้งเตือนกลับเข้า LINE โดยตรง ไม่ต้องเปิดแอปอื่น ทีมเห็นพร้อมกัน</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-icon amber">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <h3>Alerts</h3>
+        <p>ตั้งคีย์เวิร์ดแจ้งเตือน เช่น "เร่งด่วน" "ลูกค้าร้องเรียน" ไม่พลาดเรื่องสำคัญอีก</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-icon cyan">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        </div>
+        <h3>Analytics</h3>
+        <p>แดชบอร์ดวิเคราะห์ปริมาณแชท ความถี่หัวข้อ เวลาตอบ sentiment ของทีม</p>
+      </div>
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="feature-icon blue">
+          <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+        </div>
+        <h3 class="en">REST API</h3>
+        <p>เชื่อมต่อกับระบบ ERP, CRM, BI ของคุณผ่าน API ยืดหยุ่นครบทุกฟังก์ชัน</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Use Cases -->
+<section class="usecases" id="usecases">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Use Cases</div>
+      <h2 class="section-title">ใช้ได้กับ<span class="gradient-text">ทุกอุตสาหกรรม</span></h2>
+      <p class="section-subtitle">ไม่ว่าธุรกิจคุณจะเป็นแบบไหน Silo ปรับตัวได้ตามบริบท</p>
+    </div>
+    <div class="usecases-grid">
+      <div class="usecase-card reveal">
+        <span class="usecase-emoji" role="img" aria-label="factory">&#x1F3ED;</span>
+        <h3>โรงงาน / ผลิต</h3>
+        <p>สรุปรายงานสายการผลิต ติดตามปัญหาเครื่องจักร แจ้งเตือน QC ผิดปกติ</p>
+      </div>
+      <div class="usecase-card reveal reveal-delay-1">
+        <span class="usecase-emoji" role="img" aria-label="chart">&#x1F4C8;</span>
+        <h3>ทีมขาย</h3>
+        <p>สรุปยอดขายรายวัน ติดตาม lead จากแชทลูกค้า แจ้งเตือน deal สำคัญ</p>
+      </div>
+      <div class="usecase-card reveal reveal-delay-2">
+        <span class="usecase-emoji" role="img" aria-label="meeting">&#x1F4CB;</span>
+        <h3>ประชุม</h3>
+        <p>สรุปมติประชุม action items ใครรับผิดชอบอะไร deadline เมื่อไหร่ ส่งให้ทุกคน</p>
+      </div>
+      <div class="usecase-card reveal reveal-delay-3">
+        <span class="usecase-emoji" role="img" aria-label="people">&#x1F465;</span>
+        <h3>HR / บุคคล</h3>
+        <p>ติดตามคำร้อง ลา OT ปัญหาพนักงาน sentiment analysis จากแชทภายใน</p>
+      </div>
+      <div class="usecase-card reveal reveal-delay-4">
+        <span class="usecase-emoji" role="img" aria-label="truck">&#x1F69A;</span>
+        <h3>โลจิสติกส์</h3>
+        <p>สรุปสถานะจัดส่ง ติดตามปัญหาขนส่ง แจ้งเตือนล่าช้า รวมข้อมูลจากหลายกลุ่ม</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How It Works -->
+<section id="howitworks">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">How It Works</div>
+      <h2 class="section-title">เริ่มใช้ได้<span class="gradient-text">ใน 3 นาที</span></h2>
+      <p class="section-subtitle">ไม่ต้องติดตั้งซอฟต์แวร์ ไม่ต้องเปลี่ยนวิธีทำงาน แค่เพิ่มบอทเข้ากลุ่ม</p>
+    </div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-number">1</div>
+        <h3>เพิ่ม Silo Bot เข้ากลุ่ม</h3>
+        <p>เพิ่ม @silo-ai เป็นสมาชิกกลุ่ม LINE ของคุณ เหมือนเพิ่มเพื่อนเข้ากลุ่มปกติ</p>
+      </div>
+      <div class="step-arrow reveal">&#x2192;</div>
+      <div class="step reveal reveal-delay-1">
+        <div class="step-number">2</div>
+        <h3>AI สรุปอัตโนมัติ</h3>
+        <p>ทุกเช้าคุณจะได้รับสรุปแชทวันก่อน พร้อม action items และ highlights ที่สำคัญ</p>
+      </div>
+      <div class="step-arrow reveal">&#x2192;</div>
+      <div class="step reveal reveal-delay-2">
+        <div class="step-number">3</div>
+        <h3>Dashboard & Insights</h3>
+        <p>เข้าแดชบอร์ดดูภาพรวม ค้นหาข้อมูลย้อนหลัง ถาม AI ตอบทันที</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">ราคาที่<span class="gradient-text">คุ้มค่า</span></h2>
+      <p class="section-subtitle">เริ่มต้นฟรี อัปเกรดเมื่อพร้อม ไม่มีค่าซ่อน</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- Free -->
+      <div class="pricing-card reveal">
+        <div class="pricing-name en">Free</div>
+        <div class="pricing-price"><span class="currency">&#x0E3F;</span>0</div>
+        <div class="pricing-desc">สำหรับทดลองใช้งาน</div>
+        <ul class="pricing-features">
+          <li><span class="pricing-check">&#x2713;</span> 1 กลุ่ม LINE</li>
+          <li><span class="pricing-check">&#x2713;</span> 5 สรุป/วัน</li>
+          <li><span class="pricing-check">&#x2713;</span> AI Digest พื้นฐาน</li>
+          <li><span class="pricing-check">&#x2713;</span> ค้นหาข้อมูลย้อนหลัง 7 วัน</li>
+          <li><span class="pricing-check">&#x2713;</span> Dashboard พื้นฐาน</li>
+        </ul>
+        <a href="#contact" class="btn-secondary">เริ่มใช้ฟรี</a>
+      </div>
+      <!-- Standard -->
+      <div class="pricing-card popular reveal reveal-delay-1">
+        <div class="pricing-badge">POPULAR</div>
+        <div class="pricing-name en">Standard</div>
+        <div class="pricing-price"><span class="currency">&#x0E3F;</span>2,990<span class="period">/เดือน</span></div>
+        <div class="pricing-desc">สำหรับทีมที่จริงจัง</div>
+        <ul class="pricing-features">
+          <li><span class="pricing-check">&#x2713;</span> 5 กลุ่ม LINE</li>
+          <li><span class="pricing-check">&#x2713;</span> สรุปไม่จำกัด</li>
+          <li><span class="pricing-check">&#x2713;</span> Vision OCR อ่านรูปภาพ</li>
+          <li><span class="pricing-check">&#x2713;</span> LINE Push แจ้งเตือน</li>
+          <li><span class="pricing-check">&#x2713;</span> Smart Templates</li>
+          <li><span class="pricing-check">&#x2713;</span> ค้นหาย้อนหลัง 90 วัน</li>
+          <li><span class="pricing-check">&#x2713;</span> Analytics Dashboard</li>
+          <li><span class="pricing-check">&#x2713;</span> Email support</li>
+        </ul>
+        <a href="#contact" class="btn-primary">เริ่มทดลอง 14 วัน</a>
+      </div>
+      <!-- Enterprise -->
+      <div class="pricing-card reveal reveal-delay-2">
+        <div class="pricing-name en">Enterprise</div>
+        <div class="pricing-price"><span class="currency">&#x0E3F;</span>7,990<span class="period">/เดือน</span></div>
+        <div class="pricing-desc">สำหรับองค์กรขนาดใหญ่</div>
+        <ul class="pricing-features">
+          <li><span class="pricing-check">&#x2713;</span> กลุ่ม LINE ไม่จำกัด</li>
+          <li><span class="pricing-check">&#x2713;</span> ทุกฟีเจอร์ใน Standard</li>
+          <li><span class="pricing-check">&#x2713;</span> REST API เต็มรูปแบบ</li>
+          <li><span class="pricing-check">&#x2713;</span> Webhooks</li>
+          <li><span class="pricing-check">&#x2713;</span> Custom Templates</li>
+          <li><span class="pricing-check">&#x2713;</span> ค้นหาย้อนหลังไม่จำกัด</li>
+          <li><span class="pricing-check">&#x2713;</span> Priority Support</li>
+          <li><span class="pricing-check">&#x2713;</span> SSO / LDAP</li>
+        </ul>
+        <a href="#contact" class="btn-secondary">ติดต่อเรา</a>
+      </div>
+    </div>
+    <p class="pricing-trial reveal">ทดลองใช้ฟรี <strong>14 วัน</strong> ไม่ต้องใส่บัตรเครดิต</p>
+  </div>
+</section>
+
+<!-- Testimonials -->
+<section class="testimonials" id="testimonials">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Testimonials</div>
+      <h2 class="section-title">องค์กรที่<span class="gradient-text">ไว้วางใจ</span></h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-text">"ก่อนใช้ Silo ทีม QC ต้องเลื่อนแชทกลุ่มวันละ 500+ ข้อความ ตอนนี้ดูสรุปทุกเช้า 5 นาทีจบ ประหยัดเวลาไปเกือบ 2 ชั่วโมงต่อวัน"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">ส</div>
+          <div>
+            <div class="testimonial-name">สมชาย วิศวกรรมดี</div>
+            <div class="testimonial-role">ผู้จัดการโรงงาน, Thai Auto Parts Co.</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal reveal-delay-1">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-text">"ทีมขาย 30 คน มีกลุ่ม LINE กับลูกค้าเกือบ 100 กลุ่ม Silo สรุปให้ทุกเช้า ผมเห็นภาพรวมทั้งหมดในหน้าเดียว ไม่มี deal หลุดอีกแล้ว"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">น</div>
+          <div>
+            <div class="testimonial-name">นภา ธุรกิจเจริญ</div>
+            <div class="testimonial-role">Sales Director, Siam Commerce Group</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card reveal reveal-delay-2">
+        <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p class="testimonial-text">"แผนก Ops เคยต้องจัดประชุมสรุปทุกวัน ตอนนี้ Silo ส่งสรุปเข้า LINE ก่อนเราตื่น ประชุมลดจากวันละ 1 ชม. เหลือสัปดาห์ละ 15 นาที"</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">พ</div>
+          <div>
+            <div class="testimonial-name">พิชัย โลจิสติกส์ทอง</div>
+            <div class="testimonial-role">Operations Head, FastTrack Logistics</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">FAQ</div>
+      <h2 class="section-title">คำถาม<span class="gradient-text">ที่พบบ่อย</span></h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-question">
+          Silo อ่านแชทส่วนตัวได้ไหม?
+          <span class="faq-chevron">&#x25BC;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">ไม่ได้ครับ Silo เป็น LINE Official Account Bot ที่ทำงานเฉพาะในกลุ่มที่คุณเชิญเข้าไปเท่านั้น ไม่สามารถเข้าถึงแชทส่วนตัวหรือกลุ่มอื่นที่ไม่ได้เพิ่มบอทได้ ข้อมูลทั้งหมดเข้ารหัสและเก็บแยกตามองค์กร</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          ต้องเปลี่ยนวิธีทำงานของทีมไหม?
+          <span class="faq-chevron">&#x25BC;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">ไม่ต้องเลยครับ ทีมแชทใน LINE ตามปกติ Silo ทำงานอยู่เบื้องหลังโดยไม่รบกวน แค่เพิ่มบอทเข้ากลุ่มครั้งเดียว หลังจากนั้นจะได้รับสรุปอัตโนมัติทุกวัน</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          รองรับภาษาไทยดีแค่ไหน?
+          <span class="faq-chevron">&#x25BC;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">ดีมากครับ Silo ใช้ AI model ที่เข้าใจภาษาไทยเป็นอย่างดี ทั้งภาษาทางการ ภาษาพูด คำย่อ อีโมจิ และ context ของการทำงานในไทย สรุปออกมาเป็นภาษาไทยที่อ่านง่ายและได้ใจความ</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          ข้อมูลแชทปลอดภัยไหม?
+          <span class="faq-chevron">&#x25BC;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">ปลอดภัยครับ ข้อมูลเข้ารหัสทั้งขณะส่งและจัดเก็บ (encryption at rest & in transit) แยกฐานข้อมูลตามองค์กร ไม่มีการแชร์ข้อมูลข้ามองค์กร และเป็นไปตามมาตรฐาน PDPA ของไทย</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          ยกเลิกได้ตลอดเวลาไหม?
+          <span class="faq-chevron">&#x25BC;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">ได้ครับ ไม่มีสัญญาผูกมัด ยกเลิกได้ทุกเมื่อ และสามารถ export ข้อมูลทั้งหมดออกมาเป็น CSV/JSON ก่อนยกเลิกได้</div>
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question">
+          มีข้อจำกัดจำนวนข้อความไหม?
+          <span class="faq-chevron">&#x25BC;</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">แผน Standard และ Enterprise ไม่จำกัดจำนวนข้อความที่รับเข้าระบบ จำกัดเฉพาะจำนวนกลุ่ม LINE เท่านั้น แผน Free จำกัดที่ 1 กลุ่ม 5 สรุปต่อวัน</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="container">
+    <div class="cta-box reveal">
+      <h2>พร้อมเปลี่ยนแชทเป็น<span class="gradient-text">ข้อมูลอัจฉริยะ</span>?</h2>
+      <p>เริ่มทดลองใช้ฟรี 14 วัน ไม่ต้องใส่บัตรเครดิต</p>
+      <a href="#" class="btn-primary">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+        เริ่มใช้งาน Silo วันนี้
+      </a>
+      <div class="cta-contacts">
+        <span>LINE: <a href="https://line.me/R/ti/p/@silo-ai">@silo-ai</a></span>
+        <span>Email: <a href="mailto:hello@silo.m4app.online">hello@silo.m4app.online</a></span>
+        <span>Tel: <a href="tel:+6620001234">02-000-1234</a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo">
+          <div class="nav-logo-icon">S</div>
+          <span class="nav-logo-text">Silo</span>
+        </a>
+        <p>AI-powered LINE chat intelligence for businesses. Breaking information silos.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#usecases">Use Cases</a>
+        <a href="#">API Docs</a>
+        <a href="#">Changelog</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="#">Careers</a>
+        <a href="mailto:hello@silo.m4app.online">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">PDPA Compliance</a>
+        <a href="#">SLA</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Silo. All rights reserved.</span>
+      <div class="footer-social">
+        <a href="#" aria-label="LINE" title="LINE">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+        </a>
+        <a href="#" aria-label="Facebook" title="Facebook">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <a href="#" aria-label="Twitter" title="Twitter">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  // Navbar scroll
+  const navbar = document.getElementById('navbar');
+  let lastScroll = 0;
+  window.addEventListener('scroll', function() {
+    const st = window.pageYOffset;
+    if (st > 50) navbar.classList.add('scrolled');
+    else navbar.classList.remove('scrolled');
+    lastScroll = st;
+  }, {passive: true});
+
+  // Mobile menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const mobileClose = document.getElementById('mobileClose');
+  hamburger.addEventListener('click', function() { mobileMenu.classList.add('open'); });
+  mobileClose.addEventListener('click', function() { mobileMenu.classList.remove('open'); });
+  window.closeMobile = function() { mobileMenu.classList.remove('open'); };
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(function(el) { observer.observe(el); });
+
+  // Counter animation
+  const counters = document.querySelectorAll('.counter');
+  let countersAnimated = false;
+  const counterObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting && !countersAnimated) {
+        countersAnimated = true;
+        counters.forEach(function(counter) {
+          const target = parseInt(counter.getAttribute('data-target'));
+          const display = counter.getAttribute('data-display');
+          const suffix = counter.getAttribute('data-suffix') || '';
+          const duration = 2000;
+          const start = performance.now();
+          function update(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = Math.round(eased * target);
+            if (display) {
+              counter.textContent = display + suffix;
+              if (progress < 1) {
+                const d = (eased * parseFloat(display)).toFixed(1);
+                counter.textContent = d + suffix;
+              }
+            } else {
+              counter.textContent = current.toLocaleString();
+            }
+            if (progress < 1) requestAnimationFrame(update);
+          }
+          requestAnimationFrame(update);
+        });
+      }
+    });
+  }, { threshold: 0.5 });
+  const statsSection = document.querySelector('.hero-stats');
+  if (statsSection) counterObserver.observe(statsSection);
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-question').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      const item = this.parentElement;
+      const answer = item.querySelector('.faq-answer');
+      const isOpen = item.classList.contains('open');
+
+      // Close all
+      document.querySelectorAll('.faq-item.open').forEach(function(openItem) {
+        openItem.classList.remove('open');
+        openItem.querySelector('.faq-answer').style.maxHeight = '0';
+      });
+
+      if (!isOpen) {
+        item.classList.add('open');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href === '#') return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+})();
+</script>
+</body>
+</html>

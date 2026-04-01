@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silo — AI Chat Intelligence</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Thai', sans-serif;
+    background: #0a0a0f; color: #e2e8f0;
+    display: flex; align-items: center; justify-content: center; min-height: 100vh;
+    overflow: hidden;
+  }
+  .bg-glow {
+    position: fixed; border-radius: 50%; filter: blur(140px); opacity: .12; pointer-events: none;
+  }
+  .bg-glow.g1 { background: #3b82f6; width: 500px; height: 500px; top: -150px; left: -100px; }
+  .bg-glow.g2 { background: #8b5cf6; width: 400px; height: 400px; bottom: -100px; right: -80px; }
+  .bg-glow.g3 { background: #06b6d4; width: 300px; height: 300px; top: 40%; left: 60%; }
+
+  .login-card {
+    background: rgba(15, 15, 25, 0.85);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(59, 130, 246, 0.15);
+    border-radius: 24px;
+    padding: 52px 44px 40px;
+    width: 420px; max-width: 92vw;
+    position: relative;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.04);
+  }
+
+  .logo {
+    text-align: center; margin-bottom: 6px;
+    font-size: 40px; font-weight: 800; letter-spacing: -1.5px;
+  }
+  .logo .s { color: #3b82f6; }
+  .logo .rest { color: #e2e8f0; }
+  .logo .dot { color: #8b5cf6; }
+
+  .tagline {
+    text-align: center; font-size: 13px; color: #64748b;
+    margin-bottom: 36px; letter-spacing: 0.3px;
+  }
+
+  .field { margin-bottom: 28px; }
+  .field label {
+    display: block; font-size: 11px; font-weight: 600; color: #64748b;
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;
+  }
+  .field input {
+    width: 100%; padding: 15px 18px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(59, 130, 246, 0.12);
+    border-radius: 14px; color: #e2e8f0;
+    font-size: 15px; outline: none;
+    transition: border-color .25s, box-shadow .25s;
+  }
+  .field input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+  }
+  .field input::placeholder { color: #334155; }
+
+  .slug-field { margin-bottom: 28px; }
+  .slug-field label {
+    display: block; font-size: 11px; font-weight: 600; color: #64748b;
+    text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;
+  }
+  .slug-field input {
+    width: 100%; padding: 15px 18px;
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(59, 130, 246, 0.08);
+    border-radius: 14px; color: #94a3b8;
+    font-size: 14px; outline: none;
+    transition: border-color .25s;
+  }
+  .slug-field input:focus { border-color: rgba(59, 130, 246, 0.3); }
+  .slug-field input::placeholder { color: #1e293b; }
+
+  .btn-login {
+    width: 100%; padding: 15px; border: none; border-radius: 14px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: #fff; font-weight: 700; font-size: 15px;
+    cursor: pointer; transition: transform .15s, box-shadow .15s;
+    letter-spacing: 0.3px;
+  }
+  .btn-login:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 32px rgba(59, 130, 246, 0.3);
+  }
+  .btn-login:active { transform: translateY(0); }
+
+  .error {
+    color: #f87171; font-size: 13px; text-align: center;
+    margin-top: 18px; padding: 10px;
+    background: rgba(248, 113, 113, 0.06);
+    border-radius: 10px;
+  }
+
+  .footer {
+    text-align: center; margin-top: 28px;
+    font-size: 11px; color: #334155;
+  }
+  .footer a { color: #64748b; text-decoration: none; }
+  .footer a:hover { color: #94a3b8; }
+
+  @media (max-width: 480px) {
+    .login-card { padding: 40px 28px 32px; }
+    .logo { font-size: 34px; }
+  }
+</style>
+</head>
+<body>
+  <div class="bg-glow g1"></div>
+  <div class="bg-glow g2"></div>
+  <div class="bg-glow g3"></div>
+
+  <div class="login-card">
+    <div class="logo"><span class="s">S</span><span class="rest">ilo</span><span class="dot">.</span></div>
+    <div class="tagline">AI Chat Intelligence Platform</div>
+
+    <form method="POST" action="/auth/login">
+      <div class="slug-field">
+        <label>Organization (optional)</label>
+        <input type="text" name="org_slug" placeholder="your-org-slug" autocomplete="organization">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" name="password" autofocus placeholder="Enter your password" autocomplete="current-password">
+      </div>
+      <button type="submit" class="btn-login">Sign In</button>
+      <!--ERROR-->
+    </form>
+
+    <div class="footer">
+      Secured with end-to-end encryption &middot; <a href="https://silo.m4app.online">silo.m4app.online</a>
+    </div>
+  </div>
+</body>
+</html>
