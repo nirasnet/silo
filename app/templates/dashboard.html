@@ -3,1582 +3,489 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Silo — Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>Silo Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #09090b;
-  --bg-card: rgba(255,255,255,0.03);
-  --bg-card-solid: #0f0f11;
-  --bg-hover: rgba(255,255,255,0.05);
-  --bg-surface: #111113;
-  --border: rgba(255,255,255,0.06);
-  --border-active: rgba(255,255,255,0.12);
-  --text: #fafafa;
-  --text-secondary: #a1a1aa;
-  --text-muted: #52525b;
-  --indigo: #6366f1;
-  --indigo-hover: #818cf8;
-  --indigo-dim: rgba(99,102,241,0.12);
-  --cyan: #06b6d4;
-  --cyan-dim: rgba(6,182,212,0.12);
-  --amber: #f59e0b;
-  --amber-dim: rgba(245,158,11,0.12);
-  --green: #10b981;
-  --green-dim: rgba(16,185,129,0.12);
-  --red: #ef4444;
-  --red-dim: rgba(239,68,68,0.12);
-  --sidebar-w: 240px;
-  --radius: 12px;
-  --radius-btn: 8px;
-  --radius-input: 6px;
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#09090b;--bg-card:rgba(255,255,255,0.03);--bg-hover:rgba(255,255,255,0.06);
+  --border:rgba(255,255,255,0.08);--border-active:rgba(99,102,241,0.5);
+  --text:#fafafa;--text-dim:#a1a1aa;--text-muted:#71717a;
+  --indigo:#6366f1;--cyan:#06b6d4;--green:#22c55e;--amber:#f59e0b;--red:#ef4444;
+  --radius:12px;
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Sarabun', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  background: var(--bg); color: var(--text);
-  display: flex; min-height: 100vh; overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-}
-a { color: inherit; text-decoration: none; }
+body{font-family:'Sarabun','Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex}
+a{color:var(--indigo);text-decoration:none}
 
-.sidebar {
-  width: var(--sidebar-w); min-height: 100vh;
-  background: var(--bg);
-  border-right: 1px solid var(--border);
-  display: flex; flex-direction: column;
-  position: fixed; left: 0; top: 0; bottom: 0;
-  z-index: 100; transition: transform .2s ease;
-}
-.sidebar-header {
-  padding: 20px 16px 16px;
-  display: flex; align-items: center; gap: 10px;
-}
-.sidebar-logo {
-  width: 28px; height: 28px; border-radius: 8px;
-  background: var(--indigo); display: flex; align-items: center;
-  justify-content: center; font-family: 'Inter', sans-serif;
-  font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
-}
-.sidebar-brand {
-  font-family: 'Inter', sans-serif; font-size: 15px;
-  font-weight: 600; color: var(--text); letter-spacing: -0.3px;
-}
-.sidebar-nav { flex: 1; padding: 8px 8px; }
-.nav-section-label {
-  font-size: 11px; font-weight: 600; color: var(--text-muted);
-  text-transform: uppercase; letter-spacing: 0.5px;
-  padding: 16px 12px 6px; user-select: none;
-}
-.nav-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 8px 12px; border-radius: var(--radius-btn);
-  color: var(--text-secondary); font-size: 13px; font-weight: 500;
-  cursor: pointer; transition: all 150ms ease;
-  margin-bottom: 2px; position: relative;
-  border: 1px solid transparent;
-}
-.nav-item:hover { background: var(--bg-hover); color: var(--text); }
-.nav-item.active {
-  background: var(--indigo-dim); color: var(--indigo);
-  border-left: 2px solid var(--indigo);
-}
-.nav-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: 0.7; }
-.nav-item.active svg { opacity: 1; }
-.nav-divider { height: 1px; background: var(--border); margin: 8px 12px; }
-.sidebar-footer {
-  padding: 12px 16px; border-top: 1px solid var(--border);
-}
-.sidebar-org {
-  font-size: 12px; color: var(--text-secondary); font-weight: 500;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  margin-bottom: 8px;
-}
-.sidebar-production {
-  font-size: 11px; color: var(--text-muted);
-  background: var(--bg-hover); border-radius: 6px;
-  padding: 6px 10px; margin-bottom: 8px;
-}
-.sidebar-logout {
-  font-size: 12px; color: var(--text-muted);
-  transition: color 150ms ease; cursor: pointer;
-}
-.sidebar-logout:hover { color: var(--text); }
+/* Sidebar */
+.sidebar{width:220px;background:rgba(255,255,255,0.02);border-right:1px solid var(--border);padding:20px 0;display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100}
+.sidebar-logo{padding:0 20px 20px;display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800;letter-spacing:-0.5px}
+.sidebar-logo .icon{width:32px;height:32px;background:var(--indigo);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff}
+.nav{flex:1;padding:0 8px}
+.nav a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;color:var(--text-dim);font-size:14px;font-weight:500;transition:all .15s;cursor:pointer;margin-bottom:2px;border-left:2px solid transparent}
+.nav a:hover{background:var(--bg-hover);color:var(--text)}
+.nav a.active{background:var(--bg-hover);color:var(--text);border-left-color:var(--indigo)}
+.sidebar-footer{padding:12px 20px;border-top:1px solid var(--border);font-size:12px;color:var(--text-muted)}
+.prod-badge{background:var(--bg-hover);border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-top:8px;font-size:11px;line-height:1.5}
+.prod-badge b{color:var(--text)}
 
-.main {
-  flex: 1; margin-left: var(--sidebar-w);
-  min-height: 100vh; display: flex; flex-direction: column;
-}
-.main-inner {
-  max-width: 1200px; width: 100%; margin: 0 auto;
-  padding: 24px 32px; flex: 1;
-}
-.topbar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 32px; border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; background: rgba(9,9,11,0.85);
-  backdrop-filter: blur(12px); z-index: 50;
-}
-.topbar-left { display: flex; align-items: center; gap: 12px; }
-.topbar-title {
-  font-family: 'Inter', sans-serif; font-size: 14px;
-  font-weight: 600; color: var(--text); letter-spacing: -0.2px;
-}
-.topbar-breadcrumb { font-size: 12px; color: var(--text-muted); }
-.topbar-right { display: flex; align-items: center; gap: 8px; }
-.production-pill {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 5px 12px; border-radius: 20px; font-size: 11px;
-  color: var(--text-secondary); background: var(--bg-hover);
-  border: 1px solid var(--border); font-weight: 500;
+/* Main */
+.main{margin-left:220px;flex:1;padding:24px 32px;max-width:1100px}
+.page-title{font-size:22px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:12px}
+
+/* Cards */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+.stat{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px}
+.stat-label{font-size:12px;color:var(--text-muted);font-weight:500;margin-bottom:6px}
+.stat-val{font-size:28px;font-weight:800;letter-spacing:-1px}
+.stat-sub{font-size:11px;color:var(--text-muted);margin-top:4px}
+
+/* Groups grid */
+.groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:24px}
+.group{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;cursor:pointer;transition:all .15s}
+.group:hover{border-color:var(--border-active);background:var(--bg-hover)}
+.group-name{font-weight:600;font-size:14px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.group-avatar{width:28px;height:28px;border-radius:7px;background:var(--indigo);display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;flex-shrink:0}
+.group-stats{display:flex;gap:16px;font-size:12px;color:var(--text-muted)}
+.group-stats b{color:var(--text);font-weight:600}
+.group-actions{display:flex;gap:6px;margin-top:10px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:7px;font-size:13px;font-weight:500;border:none;cursor:pointer;transition:all .15s;font-family:inherit}
+.btn-primary{background:var(--indigo);color:#fff}.btn-primary:hover{opacity:.85}
+.btn-ghost{background:var(--bg-hover);color:var(--text-dim);border:1px solid var(--border)}.btn-ghost:hover{color:var(--text)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-green{background:rgba(34,197,94,.15);color:var(--green)}
+.badge-amber{background:rgba(245,158,11,.15);color:var(--amber)}
+.badge-indigo{background:rgba(99,102,241,.15);color:var(--indigo)}
+
+/* Toolbar */
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
+.toolbar input,.toolbar select{padding:8px 12px;background:var(--bg-hover);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:13px;font-family:inherit}
+
+/* Detail panel */
+.detail{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px}
+.detail-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px}
+
+/* Messages */
+.msg{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.msg:last-child{border-bottom:none}
+.msg-avatar{width:30px;height:30px;border-radius:8px;background:var(--bg-hover);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;color:var(--text-dim)}
+.msg-name{font-size:12px;font-weight:600;color:var(--text)}
+.msg-text{font-size:13px;color:var(--text-dim);margin-top:2px;line-height:1.5}
+.msg-time{font-size:10px;color:var(--text-muted);margin-top:2px}
+
+/* Digest */
+.digest{background:var(--bg-hover);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:10px}
+.digest-date{font-size:12px;font-weight:600;color:var(--indigo)}
+.digest-summary{font-size:13px;color:var(--text-dim);margin-top:6px;line-height:1.6;white-space:pre-wrap}
+.digest-topics{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.digest-topic{background:rgba(99,102,241,.1);color:var(--indigo);padding:2px 8px;border-radius:4px;font-size:11px}
+
+/* Chat */
+.chat-container{display:flex;flex-direction:column;height:500px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.chat-messages{flex:1;overflow-y:auto;padding:16px}
+.chat-bubble{max-width:80%;padding:10px 14px;border-radius:12px;margin-bottom:8px;font-size:13px;line-height:1.6}
+.chat-user{background:var(--indigo);color:#fff;margin-left:auto;border-bottom-right-radius:4px}
+.chat-ai{background:var(--bg-hover);color:var(--text-dim);border-bottom-left-radius:4px}
+.chat-input{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border)}
+.chat-input input{flex:1;padding:10px 14px;background:var(--bg-hover);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px;font-family:inherit}
+
+/* Settings */
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border)}
+.setting-row:last-child{border-bottom:none}
+.setting-label{font-size:13px;color:var(--text-dim)}
+.setting-value{font-size:13px;font-weight:600}
+
+/* Loading */
+.loading{text-align:center;padding:40px;color:var(--text-muted);font-size:13px}
+.empty{text-align:center;padding:60px 20px;color:var(--text-muted)}
+.empty-icon{font-size:40px;margin-bottom:12px;opacity:.5}
+
+/* Mobile */
+.hamburger{display:none;position:fixed;top:12px;left:12px;z-index:200;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:8px 10px;cursor:pointer;color:var(--text);font-size:18px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:90}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);transition:transform .2s}
+  .sidebar.open{transform:translateX(0)}
+  .overlay.open{display:block}
+  .hamburger{display:block}
+  .main{margin-left:0;padding:16px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .page-title{margin-top:40px}
 }
 
-.stat-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr);
-  gap: 12px; margin-bottom: 24px;
-}
-.stat-card {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 16px 20px;
-  transition: border-color 150ms ease;
-}
-.stat-card:hover { border-color: var(--border-active); }
-.stat-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 10px;
-}
-.stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
-.stat-icon {
-  width: 32px; height: 32px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-}
-.stat-icon svg { width: 16px; height: 16px; }
-.stat-icon.indigo { background: var(--indigo-dim); color: var(--indigo); }
-.stat-icon.cyan { background: var(--cyan-dim); color: var(--cyan); }
-.stat-icon.green { background: var(--green-dim); color: var(--green); }
-.stat-icon.amber { background: var(--amber-dim); color: var(--amber); }
-.stat-value {
-  font-family: 'Inter', sans-serif; font-size: 28px;
-  font-weight: 700; color: var(--text); letter-spacing: -1px;
-  line-height: 1.1;
-}
-.stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
-
-.section-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 12px;
-}
-.section-title { font-size: 13px; font-weight: 600; color: var(--text-secondary); }
-
-.panel {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius); overflow: hidden;
-}
-.panel-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 16px; border-bottom: 1px solid var(--border);
-}
-.panel-title { font-size: 13px; font-weight: 600; color: var(--text); }
-.panel-body { padding: 12px 16px; }
-.panel-body.flush { padding: 0; }
-.panel-grid {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 12px; margin-bottom: 24px;
-}
-
-.btn {
-  display: inline-flex; align-items: center; justify-content: center;
-  gap: 6px; padding: 7px 14px; border: none;
-  border-radius: var(--radius-btn); font-size: 12px;
-  font-weight: 500; cursor: pointer; transition: all 150ms ease;
-  font-family: inherit; line-height: 1.4;
-}
-.btn-primary { background: var(--indigo); color: #fff; }
-.btn-primary:hover { background: var(--indigo-hover); }
-.btn-ghost {
-  background: transparent; color: var(--text-secondary);
-  border: 1px solid var(--border);
-}
-.btn-ghost:hover { background: var(--bg-hover); color: var(--text); border-color: var(--border-active); }
-.btn-sm { padding: 5px 10px; font-size: 11px; }
-.btn-danger { background: var(--red-dim); color: var(--red); }
-.btn-danger:hover { background: rgba(239,68,68,0.2); }
-.btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-.badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;
-}
-.badge-green { background: var(--green-dim); color: var(--green); }
-.badge-indigo { background: var(--indigo-dim); color: var(--indigo); }
-.badge-amber { background: var(--amber-dim); color: var(--amber); }
-.badge-red { background: var(--red-dim); color: var(--red); }
-.badge-cyan { background: var(--cyan-dim); color: var(--cyan); }
-
-.form-input {
-  width: 100%; padding: 8px 12px;
-  background: var(--bg-surface); border: 1px solid var(--border);
-  border-radius: var(--radius-input); color: var(--text);
-  font-size: 13px; outline: none; transition: border-color 150ms ease;
-  font-family: inherit;
-}
-.form-input:focus { border-color: var(--indigo); }
-.form-input::placeholder { color: var(--text-muted); }
-select.form-input {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2352525b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 10px center;
-}
-
-.toggle-wrap { display: flex; align-items: center; gap: 8px; }
-.toggle {
-  position: relative; width: 36px; height: 20px;
-  background: var(--bg-hover); border-radius: 10px;
-  cursor: pointer; transition: background 150ms ease;
-  border: 1px solid var(--border);
-}
-.toggle.active { background: var(--indigo); border-color: var(--indigo); }
-.toggle::after {
-  content: ''; position: absolute; top: 2px; left: 2px;
-  width: 14px; height: 14px; border-radius: 50%;
-  background: #fff; transition: transform 150ms ease;
-}
-.toggle.active::after { transform: translateX(16px); }
-.toggle-label { font-size: 12px; color: var(--text-muted); }
-
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; }
-thead th {
-  font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
-  color: var(--text-muted); font-weight: 500;
-  padding: 8px 12px; text-align: left;
-  border-bottom: 1px solid var(--border);
-}
-tbody td {
-  padding: 10px 12px; font-size: 13px; color: var(--text-secondary);
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-}
-tbody tr { cursor: pointer; transition: background 150ms ease; }
-tbody tr:hover { background: var(--bg-hover); }
-
-.groups-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 12px;
-}
-.group-card {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 16px 20px;
-  transition: all 150ms ease;
-}
-.group-card:hover { border-color: var(--border-active); }
-.group-avatar {
-  width: 36px; height: 36px; border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; font-weight: 700; flex-shrink: 0;
-}
-.group-card-header {
-  display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
-}
-.group-card-name {
-  font-size: 14px; font-weight: 600; color: var(--text);
-  flex: 1; min-width: 0; overflow: hidden;
-  text-overflow: ellipsis; white-space: nowrap;
-}
-.group-card-stats {
-  display: flex; gap: 16px; font-size: 12px; color: var(--text-muted);
-  margin-bottom: 14px;
-}
-.group-card-stat-val {
-  font-weight: 600; color: var(--text-secondary);
-  display: block; margin-top: 1px; font-size: 13px;
-}
-.group-card-actions {
-  display: flex; gap: 6px; padding-top: 12px;
-  border-top: 1px solid var(--border);
-}
-
-.timeline { position: relative; }
-.timeline-item {
-  display: flex; gap: 12px; padding: 10px 0;
-  position: relative;
-}
-.timeline-item:not(:last-child)::before {
-  content: ''; position: absolute; left: 15px; top: 36px;
-  bottom: -2px; width: 1px; background: var(--border);
-}
-.timeline-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  margin-top: 5px; flex-shrink: 0; margin-left: 11px;
-}
-.timeline-dot.digest { background: var(--indigo); }
-.timeline-dot.message { background: var(--cyan); }
-.timeline-time {
-  font-size: 11px; color: var(--text-muted); min-width: 64px;
-  flex-shrink: 0; margin-top: 1px;
-}
-.timeline-content {
-  font-size: 13px; color: var(--text-secondary); line-height: 1.5; flex: 1;
-}
-.timeline-content strong { color: var(--text); font-weight: 600; }
-
-.digest-card {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius); margin-bottom: 8px;
-  overflow: hidden; transition: border-color 150ms ease;
-}
-.digest-card:hover { border-color: var(--border-active); }
-.digest-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 16px; cursor: pointer; gap: 12px;
-}
-.digest-header-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
-.digest-chat {
-  font-size: 12px; color: var(--text-muted);
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-.digest-msgs { font-size: 11px; color: var(--text-muted); flex-shrink: 0; }
-.digest-chevron {
-  color: var(--text-muted); transition: transform 150ms ease;
-  flex-shrink: 0;
-}
-.digest-body {
-  padding: 0 16px 16px; display: none;
-  font-size: 13px; color: var(--text-secondary); line-height: 1.7;
-}
-.digest-body.open { display: block; }
-.digest-topics { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
-.digest-topic {
-  padding: 2px 8px; background: var(--indigo-dim);
-  color: var(--indigo); border-radius: 4px;
-  font-size: 11px; font-weight: 500;
-}
-
-.chat-container {
-  display: flex; height: calc(100vh - 120px);
-  border: 1px solid var(--border); border-radius: var(--radius);
-  overflow: hidden; background: var(--bg-card-solid);
-}
-.chat-sidebar {
-  width: 260px; border-right: 1px solid var(--border);
-  display: flex; flex-direction: column;
-}
-.chat-sidebar-header { padding: 12px; border-bottom: 1px solid var(--border); }
-.chat-sidebar-list { flex: 1; overflow-y: auto; }
-.chat-group-item {
-  padding: 10px 12px; cursor: pointer; transition: all 150ms ease;
-  border-left: 2px solid transparent;
-}
-.chat-group-item:hover { background: var(--bg-hover); }
-.chat-group-item.active {
-  background: var(--indigo-dim); border-left-color: var(--indigo);
-}
-.chat-group-name { font-size: 13px; font-weight: 600; color: var(--text); }
-.chat-group-preview {
-  font-size: 11px; color: var(--text-muted); margin-top: 2px;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-.chat-main { flex: 1; display: flex; flex-direction: column; }
-.chat-messages { flex: 1; overflow-y: auto; padding: 16px; }
-.chat-msg { margin-bottom: 12px; max-width: 75%; }
-.chat-msg.user { margin-left: auto; }
-.chat-msg.assistant { margin-right: auto; }
-.chat-msg-bubble {
-  padding: 10px 14px; border-radius: var(--radius);
-  font-size: 13px; line-height: 1.6;
-}
-.chat-msg.user .chat-msg-bubble {
-  background: var(--indigo); color: #fff;
-  border-bottom-right-radius: 4px;
-}
-.chat-msg.assistant .chat-msg-bubble {
-  background: var(--bg-hover); color: var(--text-secondary);
-  border-bottom-left-radius: 4px;
-}
-.chat-input-area {
-  padding: 12px; border-top: 1px solid var(--border);
-  display: flex; gap: 8px;
-}
-.chat-input {
-  flex: 1; padding: 8px 12px;
-  background: var(--bg-surface); border: 1px solid var(--border);
-  border-radius: var(--radius-input); color: var(--text);
-  font-size: 13px; outline: none; resize: none; font-family: inherit;
-}
-.chat-input:focus { border-color: var(--indigo); }
-.chat-send {
-  padding: 8px 16px; border: none; border-radius: var(--radius-btn);
-  background: var(--indigo); color: #fff; font-weight: 600;
-  font-size: 12px; cursor: pointer; transition: all 150ms ease;
-  font-family: inherit;
-}
-.chat-send:hover { background: var(--indigo-hover); }
-.chat-suggestions { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 12px 8px; }
-.chat-suggestion {
-  padding: 5px 12px; border: 1px solid var(--border);
-  border-radius: 20px; font-size: 11px; color: var(--text-muted);
-  cursor: pointer; transition: all 150ms ease; background: transparent;
-  font-family: inherit;
-}
-.chat-suggestion:hover {
-  border-color: var(--indigo); color: var(--indigo);
-  background: var(--indigo-dim);
-}
-
-.msg-item {
-  display: flex; gap: 10px; padding: 8px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.03);
-}
-.msg-item:last-child { border-bottom: none; }
-.msg-avatar {
-  width: 28px; height: 28px; border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 600; color: var(--text-muted);
-  flex-shrink: 0;
-}
-.msg-sender { font-size: 12px; font-weight: 600; color: var(--text); }
-.msg-text { font-size: 12px; color: var(--text-secondary); margin-top: 2px; line-height: 1.4; }
-.msg-time { font-size: 10px; color: var(--text-muted); }
-
-.settings-section {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 20px; margin-bottom: 12px;
-}
-.settings-title { font-size: 14px; font-weight: 600; margin-bottom: 14px; }
-.settings-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
-}
-.settings-row:last-child { border-bottom: none; }
-.settings-label { font-size: 12px; color: var(--text-muted); }
-.settings-value { font-size: 12px; color: var(--text); font-weight: 500; }
-
-.wizard-overlay {
-  position: fixed; inset: 0; background: var(--bg);
-  z-index: 1000; display: flex; align-items: center;
-  justify-content: center; animation: fadeIn .2s;
-}
-.wizard-card {
-  background: var(--bg-card-solid); border: 1px solid var(--border);
-  border-radius: 16px; padding: 36px 40px;
-  max-width: 480px; width: 90%; text-align: center;
-  animation: slideUp .3s ease-out;
-}
-.wizard-step-dots {
-  display: flex; justify-content: center; gap: 6px; margin-bottom: 28px;
-}
-.wizard-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--text-muted); transition: all 150ms ease;
-}
-.wizard-dot.active { background: var(--indigo); width: 20px; border-radius: 3px; }
-.wizard-dot.done { background: var(--green); }
-.wizard-icon {
-  width: 64px; height: 64px; border-radius: 16px;
-  background: var(--indigo-dim); display: flex; align-items: center;
-  justify-content: center; margin: 0 auto 20px;
-}
-.wizard-icon svg { width: 28px; height: 28px; color: var(--indigo); }
-.wizard-title {
-  font-family: 'Inter', sans-serif; font-size: 20px;
-  font-weight: 700; margin-bottom: 10px; letter-spacing: -0.3px;
-}
-.wizard-desc {
-  font-size: 13px; color: var(--text-secondary);
-  line-height: 1.7; margin-bottom: 24px;
-}
-.wizard-steps-list { text-align: left; margin: 0 auto 24px; max-width: 340px; }
-.wizard-step-item {
-  display: flex; align-items: flex-start; gap: 10px;
-  padding: 8px 0; font-size: 13px; color: var(--text-secondary);
-}
-.wizard-step-num {
-  width: 24px; height: 24px; border-radius: 50%;
-  background: var(--indigo-dim); color: var(--indigo);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 11px; font-weight: 700; flex-shrink: 0;
-}
-.wizard-groups-list {
-  max-height: 280px; overflow-y: auto; margin-bottom: 20px; text-align: left;
-}
-.wizard-group-row {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 10px 14px; border: 1px solid var(--border);
-  border-radius: var(--radius-btn); margin-bottom: 6px;
-  transition: border-color 150ms ease;
-}
-.wizard-group-row:hover { border-color: var(--border-active); }
-.wizard-group-name { font-size: 13px; font-weight: 600; }
-.wizard-group-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-.wizard-empty { padding: 28px 16px; text-align: center; color: var(--text-muted); }
-.wizard-btn-row { display: flex; gap: 10px; justify-content: center; }
-
-.quick-ai-bar {
-  position: fixed; bottom: 20px;
-  left: calc(var(--sidebar-w) + 32px); right: 32px;
-  max-width: 1136px;
-  background: var(--bg-card-solid); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 10px 14px;
-  display: flex; align-items: center; gap: 10px;
-  z-index: 50; transition: opacity 150ms ease, transform 150ms ease;
-}
-.quick-ai-bar.hidden { opacity: 0; transform: translateY(10px); pointer-events: none; }
-.quick-ai-icon { flex-shrink: 0; color: var(--text-muted); }
-.quick-ai-icon svg { width: 16px; height: 16px; }
-.quick-ai-input {
-  flex: 1; background: transparent; border: none; color: var(--text);
-  font-size: 13px; outline: none; font-family: inherit;
-}
-.quick-ai-input::placeholder { color: var(--text-muted); }
-.quick-ai-send {
-  padding: 6px 14px; border: none; border-radius: var(--radius-btn);
-  background: var(--indigo); color: #fff; font-size: 11px;
-  font-weight: 600; cursor: pointer; font-family: inherit;
-  transition: background 150ms ease;
-}
-.quick-ai-send:hover { background: var(--indigo-hover); }
-
-.hamburger {
-  display: none; background: none; border: none; color: var(--text);
-  cursor: pointer; padding: 4px; margin-right: 8px;
-}
-.hamburger svg { width: 20px; height: 20px; }
-.overlay {
-  display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.6); z-index: 90;
-}
-
-.view { display: none; }
-.view.active { display: block; }
-
-.loading {
-  display: flex; align-items: center; justify-content: center;
-  padding: 32px; color: var(--text-muted); font-size: 13px;
-}
-.spinner {
-  width: 16px; height: 16px; border: 2px solid var(--border);
-  border-top-color: var(--indigo); border-radius: 50%;
-  animation: spin .7s linear infinite; margin-right: 8px;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-.skeleton {
-  background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.03) 75%);
-  background-size: 200% 100%; animation: shimmer 1.5s infinite;
-  border-radius: var(--radius);
-}
-@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-.empty-state { text-align: center; padding: 40px 16px; color: var(--text-muted); }
-.empty-state .empty-icon { margin-bottom: 12px; }
-.empty-state .empty-icon svg { width: 40px; height: 40px; color: var(--text-muted); opacity: 0.4; }
-.empty-state .empty-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; color: var(--text-secondary); }
-.empty-state .empty-desc { font-size: 12px; line-height: 1.6; }
-
-@media (max-width: 1024px) {
-  .stat-grid { grid-template-columns: repeat(2, 1fr); }
-  .panel-grid { grid-template-columns: 1fr; }
-}
-@media (max-width: 768px) {
-  .sidebar { transform: translateX(-100%); }
-  .sidebar.open { transform: translateX(0); }
-  .overlay.open { display: block; }
-  .main { margin-left: 0; }
-  .topbar { padding: 12px 16px; }
-  .main-inner { padding: 16px; }
-  .hamburger { display: flex; }
-  .stat-grid { grid-template-columns: 1fr 1fr; }
-  .groups-grid { grid-template-columns: 1fr; }
-  .chat-sidebar { width: 100%; }
-  .chat-main { display: none; }
-  .chat-container.chat-open .chat-sidebar { display: none; }
-  .chat-container.chat-open .chat-main { display: flex; }
-  .quick-ai-bar { left: 16px; right: 16px; bottom: 12px; }
-  .wizard-card { padding: 24px 20px; }
-}
-@media (max-width: 480px) {
-  .stat-grid { grid-template-columns: 1fr; }
-}
-
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
-
-.token-reveal {
-  font-family: 'SF Mono', 'Fira Code', monospace;
-  font-size: 11px; background: var(--bg-surface);
-  padding: 6px 10px; border-radius: 6px;
-  word-break: break-all; margin-top: 6px;
-  border: 1px solid var(--border);
-}
-
-.avatar-0 { background: var(--indigo-dim); color: var(--indigo); }
-.avatar-1 { background: var(--cyan-dim); color: var(--cyan); }
-.avatar-2 { background: var(--green-dim); color: var(--green); }
-.avatar-3 { background: var(--amber-dim); color: var(--amber); }
-.avatar-4 { background: var(--red-dim); color: var(--red); }
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:12px 20px;font-size:13px;z-index:500;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
 
-<div class="wizard-overlay" id="wizardOverlay" style="display:none">
-  <div class="wizard-card" id="wizardCard"></div>
-</div>
+<div class="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open');document.querySelector('.overlay').classList.toggle('open')">☰</div>
+<div class="overlay" onclick="document.querySelector('.sidebar').classList.remove('open');document.querySelector('.overlay').classList.remove('open')"></div>
 
-<div class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <div class="sidebar-logo">S</div>
-    <span class="sidebar-brand">Silo</span>
-  </div>
-  <nav class="sidebar-nav">
-    <div class="nav-section-label">เมนูหลัก</div>
-    <a class="nav-item active" data-view="dashboard" onclick="switchView('dashboard')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
-      แดชบอร์ด
-    </a>
-    <a class="nav-item" data-view="groups" onclick="switchView('groups')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 21a8 8 0 0 0-16 0"/><circle cx="10" cy="8" r="5"/><path d="M22 21a6 6 0 0 0-6-6"/><circle cx="18" cy="8" r="3"/></svg>
-      กลุ่ม
-    </a>
-    <a class="nav-item" data-view="digests" onclick="switchView('digests')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-      สรุป Digest
-    </a>
-    <a class="nav-item" data-view="aichat" onclick="switchView('aichat')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
-      AI Chat
-    </a>
-    <div class="nav-divider"></div>
-    <div class="nav-section-label">ระบบ</div>
-    <a class="nav-item" data-view="settings" onclick="switchView('settings')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-      ตั้งค่า
-    </a>
+<div class="sidebar">
+  <div class="sidebar-logo"><div class="icon">S</div> Silo</div>
+  <nav class="nav">
+    <a class="active" data-view="dashboard" onclick="go('dashboard')">📊 Dashboard</a>
+    <a data-view="groups" onclick="go('groups')">👥 Groups</a>
+    <a data-view="digests" onclick="go('digests')">📋 Digests</a>
+    <a data-view="chat" onclick="go('chat')">🤖 AI Chat</a>
+    <a data-view="settings" onclick="go('settings')">⚙️ Settings</a>
   </nav>
   <div class="sidebar-footer">
-    <div class="sidebar-org" id="orgName">Loading...</div>
-    <div class="sidebar-production" id="sidebarProduction"></div>
-    <a class="sidebar-logout" href="/auth/logout">ออกจากระบบ</a>
+    <div id="orgLabel" style="font-weight:600;color:var(--text)">Silo</div>
+    <div class="prod-badge" id="prodBadge">📅 Loading...</div>
   </div>
 </div>
-
-<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
 <div class="main">
-  <div class="topbar">
-    <div class="topbar-left">
-      <button class="hamburger" onclick="toggleSidebar()">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
-      </button>
-      <div>
-        <div class="topbar-title" id="pageTitle">แดชบอร์ด</div>
-        <div class="topbar-breadcrumb" id="pageSubtitle">ภาพรวมกิจกรรมวันนี้</div>
-      </div>
+  <!-- Dashboard -->
+  <div class="view" id="v-dashboard">
+    <div class="page-title">📊 Dashboard</div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">ข้อความวันผลิต</div><div class="stat-val" id="s-msgs">-</div><div class="stat-sub" id="s-msgs-sub"></div></div>
+      <div class="stat"><div class="stat-label">กลุ่มที่เชื่อมต่อ</div><div class="stat-val" id="s-groups">-</div><div class="stat-sub" id="s-groups-sub"></div></div>
+      <div class="stat"><div class="stat-label">Digests สร้างแล้ว</div><div class="stat-val" id="s-digests">-</div><div class="stat-sub" id="s-digests-sub"></div></div>
+      <div class="stat"><div class="stat-label">AI ใช้งาน</div><div class="stat-val" id="s-ai">-</div><div class="stat-sub">เดือนนี้</div></div>
     </div>
-    <div class="topbar-right" id="headerActions">
-      <div class="production-pill" id="topbarProduction"></div>
+    <div class="page-title" style="font-size:16px">กลุ่มของคุณ</div>
+    <div id="dashGroups" class="groups"></div>
+  </div>
+
+  <!-- Groups -->
+  <div class="view" id="v-groups" style="display:none">
+    <div class="page-title">👥 Groups</div>
+    <div id="groupsToolbar"></div>
+    <div id="groupsList" class="groups"></div>
+    <div id="groupDetail" style="display:none"></div>
+  </div>
+
+  <!-- Digests -->
+  <div class="view" id="v-digests" style="display:none">
+    <div class="page-title">📋 Digests <button class="btn btn-primary btn-sm" onclick="generateAll()" style="margin-left:auto">⚡ สร้างทั้งหมด</button></div>
+    <div id="digestsList"></div>
+  </div>
+
+  <!-- AI Chat -->
+  <div class="view" id="v-chat" style="display:none">
+    <div class="page-title">🤖 AI Chat</div>
+    <div style="margin-bottom:12px">
+      <select id="chatGroupSelect" onchange="chatGroupChanged()" style="padding:8px 12px;background:var(--bg-hover);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:13px;width:100%;max-width:400px"></select>
+    </div>
+    <div class="chat-container">
+      <div class="chat-messages" id="chatMessages">
+        <div class="empty"><div class="empty-icon">💬</div>เลือกกลุ่มแล้วถามคำถาม</div>
+      </div>
+      <div class="chat-input">
+        <input id="chatInput" placeholder="ถามเกี่ยวกับแชทกลุ่ม..." onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="btn btn-primary" onclick="sendChat()">ส่ง</button>
+      </div>
     </div>
   </div>
 
-  <div class="main-inner">
-    <div class="view active" id="view-dashboard">
-      <div class="stat-grid" id="statGrid">
-        <div class="stat-card">
-          <div class="stat-header">
-            <span class="stat-label">ข้อความวันนี้</span>
-            <div class="stat-icon indigo">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-            </div>
-          </div>
-          <div class="stat-value" id="statMessages">--</div>
-          <div class="stat-sub" id="statMessagesSub">&nbsp;</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-header">
-            <span class="stat-label">กลุ่มที่เชื่อมต่อ</span>
-            <div class="stat-icon green">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 21a8 8 0 0 0-16 0"/><circle cx="10" cy="8" r="5"/></svg>
-            </div>
-          </div>
-          <div class="stat-value" id="statGroups">--</div>
-          <div class="stat-sub" id="statGroupsSub">&nbsp;</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-header">
-            <span class="stat-label">สรุปที่สร้างแล้ว</span>
-            <div class="stat-icon cyan">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>
-            </div>
-          </div>
-          <div class="stat-value" id="statDigests">--</div>
-          <div class="stat-sub" id="statDigestsSub">&nbsp;</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-header">
-            <span class="stat-label">AI Queries</span>
-            <div class="stat-icon amber">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
-            </div>
-          </div>
-          <div class="stat-value" id="statAI">--</div>
-          <div class="stat-sub" id="statAISub">&nbsp;</div>
-        </div>
+  <!-- Settings -->
+  <div class="view" id="v-settings" style="display:none">
+    <div class="page-title">⚙️ Settings</div>
+    <div class="detail" style="margin-bottom:16px">
+      <h3 style="font-size:15px;margin-bottom:12px">⏰ เวลาเริ่มวันผลิต</h3>
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">กำหนดเวลาเริ่มนับวันผลิต เช่น 07:25 = วันผลิตเริ่ม 07:25 ถึง D+1 07:25</p>
+      <div style="display:flex;gap:10px;align-items:center">
+        <input type="time" id="prodTime" value="00:00" style="padding:8px 12px;background:var(--bg-hover);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:14px">
+        <button class="btn btn-primary btn-sm" onclick="saveProdTime()">บันทึก</button>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('prodTime').value='00:00'">รีเซ็ต</button>
       </div>
-
-      <div class="section-header">
-        <span class="section-title">กลุ่มที่เชื่อมต่อ</span>
-        <button class="btn btn-ghost btn-sm" onclick="switchView('groups')">ดูทั้งหมด</button>
-      </div>
-      <div id="dashGroupsGrid" class="groups-grid" style="margin-bottom:24px">
-        <div class="skeleton" style="height:150px"></div>
-        <div class="skeleton" style="height:150px"></div>
-        <div class="skeleton" style="height:150px"></div>
-      </div>
-
-      <div class="panel-grid">
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title">กิจกรรมล่าสุด</span>
-            <button class="btn btn-ghost btn-sm" onclick="loadActivity()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:12px;height:12px"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
-              รีเฟรช
-            </button>
-          </div>
-          <div class="panel-body" id="activityFeed">
-            <div class="loading"><div class="spinner"></div> กำลังโหลด...</div>
-          </div>
-        </div>
-        <div class="panel">
-          <div class="panel-header">
-            <span class="panel-title">กลุ่มยอดนิยม</span>
-          </div>
-          <div class="panel-body flush">
-            <div class="table-wrap">
-              <table>
-                <thead><tr><th>กลุ่ม</th><th>ข้อความ</th><th>สถานะ</th></tr></thead>
-                <tbody id="topGroupsBody">
-                  <tr><td colspan="3" class="loading"><div class="spinner"></div></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div id="prodPreview" style="margin-top:10px;font-size:12px;color:var(--text-muted)"></div>
     </div>
-
-    <div class="view" id="view-groups">
-      <div id="groupsList"></div>
-      <div id="groupDetail" style="display:none"></div>
-    </div>
-
-    <div class="view" id="view-digests">
-      <div id="digestsList"></div>
-    </div>
-
-    <div class="view" id="view-aichat">
-      <div class="chat-container" id="chatContainer">
-        <div class="chat-sidebar">
-          <div class="chat-sidebar-header">
-            <div style="font-size:13px;font-weight:600;margin-bottom:8px">เลือกกลุ่ม</div>
-            <input class="form-input" placeholder="ค้นหากลุ่ม..." id="chatSearch" oninput="filterChatGroups()">
-          </div>
-          <div class="chat-sidebar-list" id="chatGroupList"></div>
-        </div>
-        <div class="chat-main">
-          <div class="chat-messages" id="chatMessages">
-            <div class="empty-state">
-              <div class="empty-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
-              </div>
-              <div class="empty-title">เลือกกลุ่มเพื่อเริ่มถาม AI</div>
-              <div class="empty-desc">AI จะวิเคราะห์จาก Digest และข้อความในกลุ่ม</div>
-            </div>
-          </div>
-          <div class="chat-suggestions" id="chatSuggestions" style="display:none">
-            <button class="chat-suggestion" onclick="askSuggestion(this)">สรุปหัวข้อหลักวันนี้</button>
-            <button class="chat-suggestion" onclick="askSuggestion(this)">ใครพูดถึงอะไรบ้าง</button>
-            <button class="chat-suggestion" onclick="askSuggestion(this)">มี action items อะไร</button>
-            <button class="chat-suggestion" onclick="askSuggestion(this)">เรื่องสำคัญที่ต้องติดตาม</button>
-          </div>
-          <div class="chat-input-area">
-            <textarea class="chat-input" id="chatInput" rows="1" placeholder="พิมพ์คำถาม..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
-            <button class="chat-send" onclick="sendChat()">ส่ง</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="view" id="view-settings">
-      <div class="settings-section">
-        <div class="settings-title">ข้อมูลองค์กร</div>
-        <div id="settingsOrg">
-          <div class="loading"><div class="spinner"></div> กำลังโหลด...</div>
-        </div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-title">เวลาเริ่มต้นการผลิต (Production Date)</div>
-        <div id="settingsProductionTime">
-          <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px;line-height:1.6">
-            กำหนดเวลาเริ่มนับ "วันผลิต" สำหรับ Digest<br>
-            ค่าเริ่มต้น: 00:00 (ตามปฏิทินปกติ)<br>
-            ตัวอย่าง: 07:25 = วันผลิตเริ่ม 07:25 ถึง D+1 07:25
-          </p>
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <input type="time" id="prodStartTime" value="00:00" class="form-input" style="width:auto">
-            <button class="btn btn-primary btn-sm" onclick="saveProductionTime()">บันทึก</button>
-            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('prodStartTime').value='00:00'">รีเซ็ต</button>
-          </div>
-          <div id="prodPeriodPreview" style="margin-top:10px;padding:10px 14px;background:var(--bg-hover);border-radius:var(--radius-input);font-size:12px;display:none;color:var(--text-secondary)"></div>
-        </div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-title">LINE Bot Connection</div>
-        <div id="settingsLineStatus"></div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-title">API Tokens</div>
-        <div id="settingsTokens">
-          <p style="font-size:12px;color:var(--text-muted)">ใช้ API key สำหรับเชื่อมต่อระบบภายนอก</p>
-          <div style="margin-top:10px">
-            <button class="btn btn-ghost btn-sm" onclick="generateApiToken()">+ สร้าง API Token</button>
-          </div>
-          <div id="tokenList" style="margin-top:10px"></div>
-        </div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-title">สมาชิก</div>
-        <div id="settingsMembers">
-          <div class="loading"><div class="spinner"></div> กำลังโหลด...</div>
-        </div>
-      </div>
-      <div class="settings-section">
-        <div class="settings-title">แผนปัจจุบัน</div>
-        <div id="settingsPlan">
-          <div class="loading"><div class="spinner"></div> กำลังโหลด...</div>
-        </div>
-      </div>
-    </div>
+    <div class="detail" id="settingsInfo"><div class="loading">กำลังโหลด...</div></div>
   </div>
-</div>
-
-<div class="quick-ai-bar" id="quickAiBar">
-  <div class="quick-ai-icon">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
-  </div>
-  <input class="quick-ai-input" id="quickAiInput" placeholder="ถาม AI เกี่ยวกับแชทกลุ่มไหนก็ได้..." onkeydown="if(event.key==='Enter')quickAiAsk()">
-  <button class="quick-ai-send" onclick="quickAiAsk()">ถาม AI</button>
 </div>
 
 <script>
-let currentView = 'dashboard';
-let orgId = '';
-let orgData = null;
-let selectedChatId = '';
-let conversationId = null;
-let groupsData = [];
-let refreshTimer = null;
-let onboardingDone = false;
-let wizardStep = 0;
-let wizardGroupToggles = {};
+let orgId='', groups=[], convId=null, chatGroupId='';
 
-async function api(path, opts = {}) {
+// API helper — always sends cookie
+async function api(path, opts={}) {
   try {
-    const resp = await fetch(path, {
-      credentials: 'same-origin',
-      headers: { 'Content-Type': 'application/json', ...opts.headers },
-      ...opts,
-    });
-    if (resp.status === 403 || resp.status === 401) {
-      window.location.href = '/login';
-      return null;
-    }
-    return resp.json();
-  } catch (e) {
-    console.error('API error:', e);
-    return null;
-  }
+    const r = await fetch(path, {credentials:'same-origin', headers:{'Content-Type':'application/json',...(opts.headers||{})}, ...opts});
+    if (r.status===401||r.status===403) { window.location.href='/login'; return null; }
+    if (!r.ok) return null;
+    return r.json();
+  } catch(e) { console.error('API:', e); return null; }
 }
 
-async function init() {
-  const me = await api('/auth/me');
-  if (!me) return;
-  orgId = me.org_id;
-  orgData = me;
-  document.getElementById('orgName').textContent = me.org_name || me.org_slug || orgId.slice(0, 8);
-  const groups = await api('/api/v1/dashboard/groups');
-  groupsData = Array.isArray(groups) ? groups : [];
-  if (groupsData.length === 0 && !localStorage.getItem('silo_onboarded')) {
-    showOnboarding();
-  } else {
-    onboardingDone = true;
-    loadDashboard();
-    startAutoRefresh();
-  }
-}
-
-function startAutoRefresh() {
-  if (refreshTimer) clearInterval(refreshTimer);
-  refreshTimer = setInterval(() => {
-    if (currentView === 'dashboard') loadDashboard();
-  }, 30000);
-}
-
-function showOnboarding() {
-  document.getElementById('wizardOverlay').style.display = 'flex';
-  wizardStep = 0;
-  renderWizardStep();
-}
-
-function renderWizardStep() {
-  const card = document.getElementById('wizardCard');
-  const dots = '<div class="wizard-step-dots">' +
-    [0,1,2,3].map(i => '<div class="wizard-dot ' + (i === wizardStep ? 'active' : i < wizardStep ? 'done' : '') + '"></div>').join('') +
-    '</div>';
-
-  if (wizardStep === 0) {
-    card.innerHTML = dots +
-      '<div class="wizard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>' +
-      '<div class="wizard-title">ยินดีต้อนรับสู่ Silo</div>' +
-      '<div class="wizard-desc">ระบบ AI สรุปแชทกลุ่ม LINE อัตโนมัติ<br>ไม่ต้องอ่านย้อนหลัง ไม่ต้องพลาดข้อความสำคัญ<br>Silo สรุปให้ทุกวัน</div>' +
-      '<div class="wizard-btn-row"><button class="btn btn-primary" onclick="wizardNext()">เริ่มตั้งค่า</button></div>';
-  } else if (wizardStep === 1) {
-    card.innerHTML = dots +
-      '<div class="wizard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></div>' +
-      '<div class="wizard-title">เพิ่ม Silo Bot เข้ากลุ่ม LINE</div>' +
-      '<div class="wizard-desc">ทำตามขั้นตอนเหล่านี้เพื่อเพิ่ม Bot เข้ากลุ่ม</div>' +
-      '<div class="wizard-steps-list">' +
-      '<div class="wizard-step-item"><div class="wizard-step-num">1</div><div>เปิดกลุ่ม LINE ที่ต้องการ</div></div>' +
-      '<div class="wizard-step-item"><div class="wizard-step-num">2</div><div>กดเชิญเพื่อน แล้วค้นหา <strong>Silo AI</strong></div></div>' +
-      '<div class="wizard-step-item"><div class="wizard-step-num">3</div><div>เพิ่ม Bot เข้ากลุ่ม</div></div>' +
-      '<div class="wizard-step-item"><div class="wizard-step-num">4</div><div>Bot จะเริ่มรับข้อความอัตโนมัติ</div></div>' +
-      '</div>' +
-      '<div class="wizard-btn-row"><button class="btn btn-ghost" onclick="wizardBack()">กลับ</button><button class="btn btn-primary" onclick="wizardNext()">เพิ่มแล้ว ถัดไป</button></div>';
-  } else if (wizardStep === 2) {
-    card.innerHTML = dots +
-      '<div class="wizard-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>' +
-      '<div class="wizard-title">เลือกกลุ่มที่ต้องการสรุป</div>' +
-      '<div class="wizard-desc">กลุ่มที่ Bot เข้าร่วมแล้วจะแสดงที่นี่</div>' +
-      '<div class="wizard-groups-list" id="wizardGroupsList"><div class="loading"><div class="spinner"></div> กำลังโหลด...</div></div>' +
-      '<div class="wizard-btn-row"><button class="btn btn-ghost" onclick="wizardBack()">กลับ</button><button class="btn btn-primary" onclick="wizardNext()">ถัดไป</button></div>';
-    loadWizardGroups();
-  } else if (wizardStep === 3) {
-    card.innerHTML = dots +
-      '<div class="wizard-icon" style="background:var(--green-dim)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--green)"><polyline points="20 6 9 17 4 12"/></svg></div>' +
-      '<div class="wizard-title">พร้อมใช้งาน!</div>' +
-      '<div class="wizard-desc">Silo จะสรุปแชทให้ทุกวันเวลา 23:00<br>คุณสามารถกด "สร้าง Digest ตอนนี้" ได้ทุกเมื่อ<br>หรือถาม AI เกี่ยวกับแชทได้เลย</div>' +
-      '<div class="wizard-btn-row"><button class="btn btn-primary" onclick="finishOnboarding()">ไปที่ Dashboard</button></div>';
-  }
-}
-
-async function loadWizardGroups() {
-  const data = await api('/api/v1/dashboard/groups');
-  groupsData = Array.isArray(data) ? data : [];
-  const el = document.getElementById('wizardGroupsList');
-  if (groupsData.length === 0) {
-    el.innerHTML = '<div class="wizard-empty">' +
-      '<div style="margin-bottom:8px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:32px;height:32px;opacity:0.3"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>' +
-      '<div style="font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text-secondary)">รอ Bot เข้ากลุ่ม...</div>' +
-      '<div style="font-size:12px;color:var(--text-muted);margin-bottom:14px">กรุณาเพิ่ม Bot เข้ากลุ่ม LINE ก่อน</div>' +
-      '<button class="btn btn-ghost btn-sm" onclick="loadWizardGroups()">รีเฟรช</button></div>';
-    return;
-  }
-  groupsData.forEach(g => { if (!(g.chat_id in wizardGroupToggles)) wizardGroupToggles[g.chat_id] = true; });
-  el.innerHTML = groupsData.map(g =>
-    '<div class="wizard-group-row"><div><div class="wizard-group-name">' + esc(g.name) + '</div>' +
-    '<div class="wizard-group-meta">' + (g.member_count ? g.member_count + ' สมาชิก' : '') + '</div></div>' +
-    '<div class="toggle-wrap"><span class="toggle-label">Auto-digest</span>' +
-    '<div class="toggle ' + (wizardGroupToggles[g.chat_id] ? 'active' : '') + '" onclick="toggleWizardGroup(\'' + esc(g.chat_id) + '\', this)"></div></div></div>'
-  ).join('');
-}
-
-function toggleWizardGroup(chatId, el) {
-  wizardGroupToggles[chatId] = !wizardGroupToggles[chatId];
-  el.classList.toggle('active');
-}
-function wizardNext() { wizardStep++; renderWizardStep(); }
-function wizardBack() { wizardStep--; renderWizardStep(); }
-function finishOnboarding() {
-  document.getElementById('wizardOverlay').style.display = 'none';
-  onboardingDone = true;
-  localStorage.setItem('silo_onboarded', '1');
-  loadDashboard();
-  startAutoRefresh();
-}
-
-function switchView(view) {
-  currentView = view;
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('view-' + view).classList.add('active');
-  const navEl = document.querySelector('[data-view="' + view + '"]');
-  if (navEl) navEl.classList.add('active');
-  const titles = {
-    dashboard: ['แดชบอร์ด', 'ภาพรวมกิจกรรมวันนี้'],
-    groups: ['กลุ่ม', 'กลุ่ม LINE ที่เชื่อมต่อ'],
-    digests: ['สรุป Digest', 'สรุป AI ย้อนหลัง'],
-    aichat: ['AI Chat', 'ถาม AI เกี่ยวกับแชท'],
-    settings: ['ตั้งค่า', 'ตั้งค่าองค์กรและการเชื่อมต่อ'],
-  };
-  const pair = titles[view] || [view, ''];
-  document.getElementById('pageTitle').textContent = pair[0];
-  document.getElementById('pageSubtitle').textContent = pair[1];
-  const ha = document.getElementById('headerActions');
-  const pillHtml = '<div class="production-pill" id="topbarProduction">' + (document.getElementById('topbarProduction') ? document.getElementById('topbarProduction').innerHTML : '') + '</div>';
-  if (view === 'digests') {
-    ha.innerHTML = '<button class="btn btn-primary btn-sm" onclick="generateAllDigests()">สร้าง Digest ทั้งหมด</button>' + pillHtml;
-  } else {
-    ha.innerHTML = pillHtml;
-  }
-  document.getElementById('quickAiBar').classList.toggle('hidden', view !== 'dashboard');
-  if (view === 'dashboard') loadDashboard();
-  else if (view === 'groups') loadGroups();
-  else if (view === 'digests') loadDigests();
-  else if (view === 'aichat') loadChatGroups();
-  else if (view === 'settings') loadSettings();
-  closeSidebar();
-}
-
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('overlay').classList.toggle('open');
-}
-function closeSidebar() {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('overlay').classList.remove('open');
-}
-
-function avatarClass(name) {
-  let hash = 0;
-  for (let i = 0; i < (name || '').length; i++) hash = (hash + name.charCodeAt(i)) % 5;
-  return 'avatar-' + hash;
-}
-
-async function loadDashboard() {
-  const data = await api('/api/v1/dashboard/overview');
-  if (!data) return;
-  document.getElementById('statMessages').textContent = (data.messages_today || 0).toLocaleString();
-  document.getElementById('statMessagesSub').textContent = data.production_period || data.production_date || '';
-  document.getElementById('statGroups').textContent = data.active_groups || 0;
-  document.getElementById('statGroupsSub').textContent = (data.total_groups || 0) + ' ทั้งหมด';
-  document.getElementById('statDigests').textContent = data.digests_today || 0;
-  document.getElementById('statDigestsSub').textContent = 'วันผลิต ' + (data.production_date || '');
-  const usage = data.usage || {};
-  document.getElementById('statAI').textContent = ((usage.qa || 0) + (usage.digest || 0)).toLocaleString();
-  document.getElementById('statAISub').textContent = 'เดือนนี้';
-  if (data.production_date) {
-    const prodText = 'วันผลิต: ' + data.production_date;
-    const periodText = data.production_period ? ' | ' + data.production_period : '';
-    document.getElementById('topbarProduction').textContent = prodText + periodText;
-    document.getElementById('sidebarProduction').textContent = prodText;
-  }
-  loadDashGroups();
-  loadActivity();
-  loadTopGroups();
-}
-
-async function loadDashGroups() {
-  const data = await api('/api/v1/dashboard/groups');
-  groupsData = Array.isArray(data) ? data : [];
-  const el = document.getElementById('dashGroupsGrid');
-  if (groupsData.length === 0) {
-    el.innerHTML = '<div class="group-card" style="grid-column:1/-1"><div class="empty-state">' +
-      '<div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 21a8 8 0 0 0-16 0"/><circle cx="10" cy="8" r="5"/></svg></div>' +
-      '<div class="empty-title">ยังไม่มีกลุ่ม</div>' +
-      '<div class="empty-desc" style="margin-bottom:14px">เพิ่ม Silo Bot เข้ากลุ่ม LINE เพื่อเริ่มใช้งาน</div>' +
-      '<button class="btn btn-ghost btn-sm" onclick="loadDashGroups()">รีเฟรช</button></div></div>';
-    return;
-  }
-  el.innerHTML = groupsData.slice(0, 6).map(g =>
-    '<div class="group-card">' +
-    '<div class="group-card-header">' +
-    '<div class="group-avatar ' + avatarClass(g.name) + '">' + (g.name||'?')[0] + '</div>' +
-    '<div class="group-card-name">' + esc(g.name) + '</div>' +
-    (g.status === 'active' ? '<span class="badge badge-green">Active</span>' : '<span class="badge badge-red">Inactive</span>') +
-    '</div>' +
-    '<div class="group-card-stats">' +
-    '<div>วันนี้<span class="group-card-stat-val">' + (g.messages_today||0).toLocaleString() + '</span></div>' +
-    '<div>Digest ล่าสุด<span class="group-card-stat-val">' + (g.last_digest_date||'-') + '</span></div>' +
-    '</div>' +
-    '<div class="group-card-actions">' +
-    '<button class="btn btn-ghost btn-sm" onclick="viewGroupDirect(\'' + esc(g.chat_id) + '\')">ดูข้อความ</button>' +
-    '<button class="btn btn-primary btn-sm" onclick="generateDigest(\'' + esc(g.chat_id) + '\')">สร้าง Digest</button>' +
-    '<button class="btn btn-ghost btn-sm" onclick="quickAiForGroup(\'' + esc(g.chat_id) + '\',\'' + esc(g.name) + '\')">ถาม AI</button>' +
-    '</div></div>'
-  ).join('');
-}
-
-async function loadActivity() {
-  const data = await api('/api/v1/dashboard/activity?limit=10');
-  if (!data) return;
-  const el = document.getElementById('activityFeed');
-  if (!data.feed || data.feed.length === 0) {
-    el.innerHTML = '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/></svg></div><div class="empty-title">ยังไม่มีกิจกรรม</div></div>';
-    return;
-  }
-  el.innerHTML = '<div class="timeline">' + data.feed.map(function(f) {
-    var dotClass = f.type === 'digest' ? 'digest' : 'message';
-    var text = f.type === 'digest'
-      ? '<strong>' + esc(f.chat_name) + '</strong> — ' + esc(f.summary || 'Digest generated')
-      : '<strong>' + esc(f.chat_name) + '</strong> — ' + f.count + ' ข้อความ';
-    return '<div class="timeline-item"><div class="timeline-dot ' + dotClass + '"></div><div class="timeline-content">' + text + '</div><div class="timeline-time">' + timeAgo(f.timestamp) + '</div></div>';
-  }).join('') + '</div>';
-}
-
-async function loadTopGroups() {
-  var groups = groupsData;
-  var el = document.getElementById('topGroupsBody');
-  if (groups.length === 0) {
-    el.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);font-size:12px">ยังไม่มีกลุ่ม</td></tr>';
-    return;
-  }
-  el.innerHTML = groups.slice(0, 5).map(g =>
-    '<tr onclick="viewGroupDirect(\'' + esc(g.chat_id) + '\')">' +
-    '<td><strong style="color:var(--text)">' + esc(g.name) + '</strong></td>' +
-    '<td>' + (g.messages_today || 0).toLocaleString() + '</td>' +
-    '<td>' + (g.has_digest_today ? '<span class="badge badge-green">Digest</span>' : '<span class="badge badge-amber">Pending</span>') + '</td></tr>'
-  ).join('');
-}
-
-let groupSort = 'messages';
-let groupFilter = '';
-let groupLayout = 'grid';
-
-async function loadGroups() {
-  const data = await api('/api/v1/dashboard/groups');
-  groupsData = Array.isArray(data) ? data : [];
-  const el = document.getElementById('groupsList');
-  document.getElementById('groupDetail').style.display = 'none';
-  el.style.display = '';
-  if (groupsData.length === 0) {
-    el.innerHTML = '<div class="empty-state" style="padding:48px 16px"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px"><path d="M18 21a8 8 0 0 0-16 0"/><circle cx="10" cy="8" r="5"/></svg></div><div class="empty-title">ยังไม่มีกลุ่ม</div><div class="empty-desc" style="margin-bottom:16px">เพิ่ม Silo Bot เข้ากลุ่ม LINE ของคุณ<br>Bot จะตรวจจับอัตโนมัติ</div><button class="btn btn-primary btn-sm" onclick="loadGroups()">รีเฟรช</button></div>';
-    return;
-  }
-  renderGroupList(el);
-}
-
-function renderGroupList(el) {
-  var filtered = groupsData.slice();
-  if (groupFilter) {
-    var q = groupFilter.toLowerCase();
-    filtered = filtered.filter(function(g) { return (g.name || '').toLowerCase().includes(q); });
-  }
-  if (groupSort === 'messages') filtered.sort(function(a,b) { return (b.total_messages||0) - (a.total_messages||0); });
-  else if (groupSort === 'name') filtered.sort(function(a,b) { return (a.name||'').localeCompare(b.name||''); });
-  else if (groupSort === 'digest') filtered.sort(function(a,b) { return (b.last_digest_date||'').localeCompare(a.last_digest_date||''); });
-
-  var html = '<div style="display:flex;gap:8px;align-items:center;margin-bottom:14px;flex-wrap:wrap">' +
-    '<input type="text" placeholder="ค้นหากลุ่ม..." value="' + esc(groupFilter) + '" oninput="groupFilter=this.value;renderGroupList(document.getElementById(\'groupsList\'))" class="form-input" style="flex:1;min-width:160px">' +
-    '<select onchange="groupSort=this.value;renderGroupList(document.getElementById(\'groupsList\'))" class="form-input" style="width:auto;padding-right:28px">' +
-    '<option value="messages"' + (groupSort==='messages'?' selected':'') + '>ข้อความมากสุด</option>' +
-    '<option value="name"' + (groupSort==='name'?' selected':'') + '>ชื่อ A-Z</option>' +
-    '<option value="digest"' + (groupSort==='digest'?' selected':'') + '>Digest ล่าสุด</option></select>' +
-    '<div style="display:flex;gap:2px">' +
-    '<button class="btn btn-ghost btn-sm" onclick="groupLayout=\'grid\';renderGroupList(document.getElementById(\'groupsList\'))" style="' + (groupLayout==='grid'?'background:var(--bg-hover)':'') + '"><svg viewBox="0 0 16 16" fill="currentColor" style="width:12px;height:12px"><rect x="1" y="1" width="6" height="6" rx="1"/><rect x="9" y="1" width="6" height="6" rx="1"/><rect x="1" y="9" width="6" height="6" rx="1"/><rect x="9" y="9" width="6" height="6" rx="1"/></svg></button>' +
-    '<button class="btn btn-ghost btn-sm" onclick="groupLayout=\'list\';renderGroupList(document.getElementById(\'groupsList\'))" style="' + (groupLayout==='list'?'background:var(--bg-hover)':'') + '"><svg viewBox="0 0 16 16" fill="currentColor" style="width:12px;height:12px"><rect x="1" y="2" width="14" height="2" rx="0.5"/><rect x="1" y="7" width="14" height="2" rx="0.5"/><rect x="1" y="12" width="14" height="2" rx="0.5"/></svg></button></div>' +
-    '<span style="font-size:11px;color:var(--text-muted)">' + filtered.length + ' กลุ่ม</span></div>';
-
-  // Separate groups and DMs
-  var lineGroups = filtered.filter(function(g) { return g.chat_id.startsWith('C'); });
-  var dmChats = filtered.filter(function(g) { return g.chat_id.startsWith('U'); });
-
-  function renderSection(title, icon, items) {
-    if (!items.length) return '';
-    var s = '<div style="font-size:12px;font-weight:600;color:var(--text-muted);margin:12px 0 8px">' + icon + ' ' + title + ' (' + items.length + ')</div>';
-    if (groupLayout === 'list') {
-      s += '<div style="display:flex;flex-direction:column;gap:4px">' + items.map(renderListItem).join('') + '</div>';
-    } else {
-      s += '<div class="groups-grid">' + items.map(renderGridItem).join('') + '</div>';
-    }
-    return s;
-  }
-
-  function renderListItem(g) {
-    return '<div class="group-card" style="cursor:pointer;display:flex;align-items:center;gap:14px;padding:10px 16px" onclick="showGroupDetail(\'' + esc(g.chat_id) + '\')">' +
-      '<div class="group-avatar ' + avatarClass(g.name) + '" style="width:32px;height:32px;border-radius:8px;font-size:13px">' + (g.name||'?')[0] + '</div>' +
-      '<div style="flex:1;min-width:0"><div style="font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)">' + esc(g.name) + '</div>' +
-      '<div style="font-size:11px;color:var(--text-muted)">' + (g.total_messages||0) + ' ข้อความ | วันนี้ ' + (g.messages_today||0) + '</div></div>' +
-      '<div style="display:flex;gap:6px;align-items:center;flex-shrink:0">' +
-      (g.has_digest_today ? '<span class="badge badge-green">Digest</span>' : '<span class="badge badge-amber">Pending</span>') +
-      '<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();generateDigest(\'' + esc(g.chat_id) + '\')">Digest</button></div></div>';
-  }
-
-  function renderGridItem(g) {
-    return '<div class="group-card">' +
-      '<div class="group-card-header" style="cursor:pointer" onclick="showGroupDetail(\'' + esc(g.chat_id) + '\')">' +
-      '<div class="group-avatar ' + avatarClass(g.name) + '">' + (g.name||'?')[0] + '</div>' +
-      '<div class="group-card-name">' + esc(g.name) + '</div>' +
-      (g.has_digest_today ? '<span class="badge badge-green">Digest</span>' : '<span class="badge badge-amber">Pending</span>') + '</div>' +
-      '<div class="group-card-stats"><div>วันนี้<span class="group-card-stat-val">' + (g.messages_today||0).toLocaleString() + '</span></div>' +
-      '<div>ทั้งหมด<span class="group-card-stat-val">' + (g.total_messages||0).toLocaleString() + '</span></div>' +
-      '<div>Digest<span class="group-card-stat-val">' + (g.last_digest_date||'-') + '</span></div></div>' +
-      '<div style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--border)">' +
-      '<div style="display:flex;gap:4px"><button class="btn btn-ghost btn-sm" onclick="showGroupDetail(\'' + esc(g.chat_id) + '\')">ดู</button>' +
-      '<button class="btn btn-primary btn-sm" onclick="generateDigest(\'' + esc(g.chat_id) + '\')">Digest</button></div></div></div>';
-  }
-
-  html += renderSection('กลุ่ม LINE', '👥', lineGroups);
-  html += renderSection('แชทส่วนตัว', '💬', dmChats);
-
-  el.innerHTML = html;
-}
-
-// old code removed
-      return '<div class="group-card" style="cursor:pointer;display:flex;align-items:center;gap:14px;padding:10px 16px" onclick="showGroupDetail(\'' + esc(g.chat_id) + '\')">' +
-        '<div class="group-avatar ' + avatarClass(g.name) + '" style="width:32px;height:32px;border-radius:8px;font-size:13px">' + (g.name||'?')[0] + '</div>' +
-        '<div style="flex:1;min-width:0"><div style="font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)">' + esc(g.name) + '</div>' +
-        '<div style="font-size:11px;color:var(--text-muted)">' + (g.total_messages||0) + ' ข้อความ | วันนี้ ' + (g.messages_today||0) + '</div></div>' +
-        '<div style="display:flex;gap:6px;align-items:center;flex-shrink:0">' +
-        (g.has_digest_today ? '<span class="badge badge-green">Digest</span>' : '<span class="badge badge-amber">Pending</span>') +
-        '<button class="btn btn-primary btn-sm" onclick="event.stopPropagation();generateDigest(\'' + esc(g.chat_id) + '\')">Digest</button></div></div>';
-    }).join('') + '</div>';
-  } else {
-    html += '<div class="groups-grid">' + filtered.map(function(g) {
-      return '<div class="group-card">' +
-        '<div class="group-card-header" style="cursor:pointer" onclick="showGroupDetail(\'' + esc(g.chat_id) + '\')">' +
-        '<div class="group-avatar ' + avatarClass(g.name) + '">' + (g.name||'?')[0] + '</div>' +
-        '<div class="group-card-name">' + esc(g.name) + '</div>' +
-        (g.has_digest_today ? '<span class="badge badge-green">Digest</span>' : '<span class="badge badge-amber">Pending</span>') + '</div>' +
-        '<div class="group-card-stats"><div>วันนี้<span class="group-card-stat-val">' + (g.messages_today||0).toLocaleString() + '</span></div>' +
-        '<div>ทั้งหมด<span class="group-card-stat-val">' + (g.total_messages||0).toLocaleString() + '</span></div>' +
-        '<div>Digest<span class="group-card-stat-val">' + (g.last_digest_date||'-') + '</span></div></div>' +
-        '<div style="display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--border)">' +
-        '<div class="toggle-wrap"><span class="toggle-label">Auto-digest</span>' +
-        '<div class="toggle ' + (g.auto_digest!==false?'active':'') + '" onclick="event.stopPropagation();toggleAutoDigest(\'' + esc(g.chat_id) + '\',this)"></div></div>' +
-        '<div style="display:flex;gap:4px"><button class="btn btn-ghost btn-sm" onclick="showGroupDetail(\'' + esc(g.chat_id) + '\')">ดู</button>' +
-        '<button class="btn btn-primary btn-sm" onclick="generateDigest(\'' + esc(g.chat_id) + '\')">Digest</button></div></div></div>';
-    }).join('') + '</div>';
-  }
-  el.innerHTML = html;
-}
-
-async function toggleAutoDigest(chatId, el) {
-  el.classList.toggle('active');
-  var enabled = el.classList.contains('active');
-  api('/api/v1/dashboard/groups/' + chatId + '/auto-digest', { method: 'PUT', body: JSON.stringify({ enabled: enabled }) });
-}
-
-async function viewGroupDirect(chatId) {
-  document.querySelectorAll('.view').forEach(function(v) { v.classList.remove('active'); });
-  document.getElementById('view-groups').classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(function(n) { n.classList.remove('active'); });
-  var navEl = document.querySelector('[data-view="groups"]');
-  if (navEl) navEl.classList.add('active');
-  currentView = 'groups';
-  document.getElementById('pageTitle').textContent = 'กลุ่ม';
-  document.getElementById('pageSubtitle').textContent = 'กลุ่ม LINE ที่เชื่อมต่อ';
-  document.getElementById('quickAiBar').classList.add('hidden');
-  await showGroupDetail(chatId);
-}
-
-async function showGroupDetail(chatId) {
-  var elList = document.getElementById('groupsList');
-  elList.style.display = 'none';
-  var det = document.getElementById('groupDetail');
-  det.style.display = 'block';
-  det.innerHTML = '<div class="loading"><div class="spinner"></div> กำลังโหลด...</div>';
-  var results = await Promise.all([
-    api('/api/v1/dashboard/groups/' + chatId + '/messages?limit=30'),
-    api('/api/v1/dashboard/groups/' + chatId + '/digests?limit=5'),
-  ]);
-  var msgs = results[0], digests = results[1];
-  var g = groupsData.find(function(x) { return x.chat_id === chatId; }) || {};
-  var html = '<div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">' +
-    '<div style="display:flex;align-items:center;gap:10px">' +
-    '<button class="btn btn-ghost btn-sm" onclick="loadGroups()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px"><path d="m15 18-6-6 6-6"/></svg> กลับ</button>' +
-    '<div class="group-avatar ' + avatarClass(g.name) + '">' + (g.name||'?')[0] + '</div>' +
-    '<span style="font-size:16px;font-weight:700;font-family:Inter,sans-serif;letter-spacing:-0.3px">' + esc(g.name || chatId) + '</span>' +
-    (g.status === 'active' ? '<span class="badge badge-green">Active</span>' : '') + '</div>' +
-    '<div style="display:flex;gap:6px">' +
-    '<button class="btn btn-primary btn-sm" onclick="generateDigest(\'' + esc(chatId) + '\')">สร้าง Digest ตอนนี้</button>' +
-    '<button class="btn btn-ghost btn-sm" onclick="quickAiForGroup(\'' + esc(chatId) + '\',\'' + esc(g.name||'') + '\')">ถาม AI</button></div></div>';
-
-  html += '<div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:16px">' +
-    '<div class="stat-card" style="padding:14px 16px"><div class="stat-label" style="font-size:11px">ข้อความวันนี้</div><div class="stat-value" style="font-size:22px">' + (g.messages_today || 0) + '</div></div>' +
-    '<div class="stat-card" style="padding:14px 16px"><div class="stat-label" style="font-size:11px">ทั้งหมด</div><div class="stat-value" style="font-size:22px">' + (g.total_messages || 0).toLocaleString() + '</div></div>' +
-    '<div class="stat-card" style="padding:14px 16px"><div class="stat-label" style="font-size:11px">Digest ล่าสุด</div><div style="font-family:Inter,sans-serif;font-size:22px;font-weight:700;color:var(--text);line-height:1.1;margin-top:4px">' + (g.last_digest_date || '-') + '</div></div></div>';
-
-  html += '<div class="panel" style="margin-bottom:12px"><div class="panel-header"><span class="panel-title">Digests</span></div><div class="panel-body">';
-  if (digests && digests.digests && digests.digests.length > 0) {
-    html += digests.digests.map(function(d) {
-      return '<div class="digest-card"><div class="digest-header" onclick="this.nextElementSibling.classList.toggle(\'open\');this.querySelector(\'.digest-chevron\').style.transform=this.nextElementSibling.classList.contains(\'open\')?\'rotate(180deg)\':\'\'"><div class="digest-header-left"><span class="badge badge-indigo">' + esc(d.date || '') + '</span><span class="digest-msgs">' + (d.message_count || 0) + ' ข้อความ</span></div><svg class="digest-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px"><path d="m6 9 6 6 6-6"/></svg></div><div class="digest-body"><div style="white-space:pre-wrap">' + esc(d.summary || '') + '</div>' +
-        (d.topics && d.topics.length ? '<div class="digest-topics">' + d.topics.map(function(t) { return '<span class="digest-topic">' + esc(t) + '</span>'; }).join('') + '</div>' : '') +
-        (d.action_items && d.action_items.length ? '<div style="margin-top:10px"><strong style="font-size:11px;color:var(--amber)">Action Items:</strong><ul style="margin-top:4px;padding-left:16px;font-size:12px;color:var(--text-secondary)">' + d.action_items.map(function(a) { return '<li style="margin-bottom:2px">' + esc(a) + '</li>'; }).join('') + '</ul></div>' : '') +
-        '</div></div>';
-    }).join('');
-  } else {
-    html += '<div style="color:var(--text-muted);font-size:12px;padding:12px 0;text-align:center">ยังไม่มี Digest -- กดปุ่ม "สร้าง Digest ตอนนี้" เพื่อเริ่ม</div>';
-  }
-  html += '</div></div>';
-
-  html += '<div class="panel"><div class="panel-header"><span class="panel-title">ข้อความล่าสุด</span><span class="badge badge-cyan">' + ((msgs && msgs.total) || 0) + '</span></div><div class="panel-body">';
-  if (msgs && msgs.messages && msgs.messages.length > 0) {
-    html += msgs.messages.map(function(m) {
-      return '<div class="msg-item"><div class="msg-avatar ' + avatarClass(m.sender_name) + '">' + (m.sender_name || '?')[0].toUpperCase() + '</div>' +
-        '<div style="flex:1;min-width:0"><div style="display:flex;align-items:baseline;gap:6px"><div class="msg-sender">' + esc(m.sender_name || 'Unknown') + '</div><div class="msg-time">' + timeAgo(m.timestamp || m.created_at) + '</div></div>' +
-        '<div class="msg-text">' + esc(m.text || '') + '</div></div></div>';
-    }).join('');
-  } else {
-    html += '<div style="color:var(--text-muted);font-size:12px;text-align:center;padding:12px 0">ไม่มีข้อความ</div>';
-  }
-  html += '</div></div>';
-  det.innerHTML = html;
-}
-
-async function generateDigest(chatId) {
-  var btn = event ? event.target : null;
-  if (btn) { btn.disabled = true; btn.innerHTML = '<div class="spinner" style="display:inline-block;vertical-align:middle;margin:0;width:12px;height:12px"></div>'; }
-  var resp = await api('/api/v1/digest/generate', { method: 'POST', body: JSON.stringify({ chat_id: chatId, last_24h: true }) });
-  if (btn) { btn.disabled = false; btn.textContent = 'สร้าง Digest'; }
-  if (resp && resp.ok) {
-    showToast('Digest สร้างเสร็จแล้ว: ' + (resp.message_count || 0) + ' ข้อความ', 'success');
-    if (currentView === 'groups') showGroupDetail(chatId);
-    else if (currentView === 'dashboard') loadDashboard();
-  } else {
-    showToast('Error: ' + (resp ? resp.error || resp.detail || 'Unknown' : 'Network error'), 'error');
-  }
-}
-
-async function generateAllDigests() {
-  if (!confirm('สร้าง Digest สำหรับทุกกลุ่ม?')) return;
-  var resp = await api('/api/v1/digest/generate/all', { method: 'POST', body: JSON.stringify({}) });
-  if (resp && resp.ok) {
-    showToast('สำเร็จ ' + resp.success + '/' + resp.total + ' กลุ่ม', 'success');
-    loadDigests();
-  } else {
-    showToast('Error: ' + (resp ? resp.error || resp.detail || 'Unknown' : 'Network error'), 'error');
-  }
-}
-
-async function loadDigests() {
-  var el = document.getElementById('digestsList');
-  el.innerHTML = '<div class="loading"><div class="spinner"></div> กำลังโหลด...</div>';
-  var data = await api('/api/v1/digest/list?limit=30');
-  var digests = Array.isArray(data) ? data : [];
-  if (digests.length === 0) {
-    el.innerHTML = '<div class="empty-state" style="padding:48px 16px"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/></svg></div><div class="empty-title">ยังไม่มี Digest</div><div class="empty-desc" style="margin-bottom:16px">กด "สร้าง Digest ทั้งหมด" เพื่อสร้างสรุป AI สำหรับทุกกลุ่ม</div><button class="btn btn-primary btn-sm" onclick="generateAllDigests()">สร้าง Digest ทั้งหมด</button></div>';
-    return;
-  }
-  el.innerHTML = digests.map(function(d) {
-    return '<div class="digest-card"><div class="digest-header" onclick="this.nextElementSibling.classList.toggle(\'open\');this.querySelector(\'.digest-chevron\').style.transform=this.nextElementSibling.classList.contains(\'open\')?\'rotate(180deg)\':\'\'"><div class="digest-header-left"><span class="badge badge-indigo">' + esc(d.date || '') + '</span><span class="digest-chat">' + esc(d.chat_name || '') + '</span><span class="digest-msgs">' + (d.message_count || 0) + ' ข้อความ</span></div><svg class="digest-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:14px;height:14px"><path d="m6 9 6 6 6-6"/></svg></div><div class="digest-body"><div style="white-space:pre-wrap">' + esc(d.summary || '') + '</div>' +
-      (d.topics && d.topics.length ? '<div class="digest-topics">' + d.topics.map(function(t) { return '<span class="digest-topic">' + esc(t) + '</span>'; }).join('') + '</div>' : '') +
-      (d.action_items && d.action_items.length ? '<div style="margin-top:10px"><strong style="font-size:11px;color:var(--amber)">Action Items:</strong><ul style="margin-top:4px;padding-left:16px;font-size:12px;color:var(--text-secondary)">' + d.action_items.map(function(a) { return '<li style="margin-bottom:2px">' + esc(a) + '</li>'; }).join('') + '</ul></div>' : '') +
-      (d.sentiment ? '<div style="margin-top:8px"><span class="badge ' + sentimentBadge(d.sentiment) + '">' + esc(d.sentiment) + '</span></div>' : '') +
-      '<div style="display:flex;gap:6px;margin-top:12px;padding-top:10px;border-top:1px solid var(--border)"><button class="btn btn-ghost btn-sm" onclick="copyDigest(this.parentElement.parentElement)">คัดลอก</button><button class="btn btn-ghost btn-sm" onclick="shareDigest(\'' + esc(d.id || '') + '\')">แชร์ลิงก์</button></div></div></div>';
-  }).join('');
-}
-
-function copyDigest(bodyEl) {
-  var text = bodyEl.querySelector('div').textContent;
-  navigator.clipboard.writeText(text).then(function() { showToast('คัดลอกแล้ว', 'success'); });
-}
-function shareDigest(id) {
-  var url = window.location.origin + '/digest/' + id;
-  navigator.clipboard.writeText(url).then(function() { showToast('คัดลอกลิงก์แล้ว', 'success'); });
-}
-
-async function loadChatGroups() {
-  var data = await api('/api/v1/dashboard/groups');
-  var groups = Array.isArray(data) ? data : [];
-  var el = document.getElementById('chatGroupList');
-  if (groups.length === 0) {
-    el.innerHTML = '<div style="padding:16px;text-align:center;color:var(--text-muted);font-size:12px">ยังไม่มีกลุ่ม</div>';
-    return;
-  }
-  el.innerHTML = groups.map(function(g) {
-    return '<div class="chat-group-item ' + (selectedChatId === g.chat_id ? 'active' : '') + '" onclick="selectChat(\'' + esc(g.chat_id) + '\', \'' + esc(g.name) + '\')" data-name="' + esc(g.name.toLowerCase()) + '"><div class="chat-group-name">' + esc(g.name) + '</div><div class="chat-group-preview">' + g.messages_today + ' ข้อความวันนี้</div></div>';
-  }).join('');
-}
-
-function filterChatGroups() {
-  var q = document.getElementById('chatSearch').value.toLowerCase();
-  document.querySelectorAll('.chat-group-item').forEach(function(el) {
-    el.style.display = el.dataset.name.includes(q) ? '' : 'none';
-  });
-}
-
-function selectChat(chatId, chatName) {
-  selectedChatId = chatId;
-  conversationId = null;
-  document.querySelectorAll('.chat-group-item').forEach(function(el) { el.classList.remove('active'); });
-  if (event && event.currentTarget) event.currentTarget.classList.add('active');
-  document.getElementById('chatMessages').innerHTML = '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg></div><div class="empty-title">' + esc(chatName) + '</div><div class="empty-desc">พิมพ์คำถามเกี่ยวกับแชทนี้</div></div>';
-  document.getElementById('chatSuggestions').style.display = 'flex';
-  document.getElementById('chatContainer').classList.add('chat-open');
-}
-
-function askSuggestion(btn) {
-  document.getElementById('chatInput').value = btn.textContent;
-  sendChat();
-}
-
-async function sendChat() {
-  var input = document.getElementById('chatInput');
-  var text = input.value.trim();
-  if (!text || !selectedChatId) return;
-  input.value = '';
-  var msgs = document.getElementById('chatMessages');
-  var empty = msgs.querySelector('.empty-state');
-  if (empty) empty.remove();
-  document.getElementById('chatSuggestions').style.display = 'none';
-  msgs.innerHTML += '<div class="chat-msg user"><div class="chat-msg-bubble">' + esc(text) + '</div></div>';
-  msgs.scrollTop = msgs.scrollHeight;
-  var loadId = 'load-' + Date.now();
-  msgs.innerHTML += '<div class="chat-msg assistant" id="' + loadId + '"><div class="chat-msg-bubble"><div class="spinner" style="display:inline-block;vertical-align:middle;margin-right:6px;width:14px;height:14px"></div>กำลังคิด...</div></div>';
-  msgs.scrollTop = msgs.scrollHeight;
-  var resp = await api('/api/v1/digest/ask', { method: 'POST', body: JSON.stringify({ chat_id: selectedChatId, message: text, conversation_id: conversationId }) });
-  var loadEl = document.getElementById(loadId);
-  if (loadEl) loadEl.remove();
-  if (resp && resp.answer) {
-    conversationId = resp.conversation_id;
-    msgs.innerHTML += '<div class="chat-msg assistant"><div class="chat-msg-bubble">' + formatAnswer(resp.answer) + '</div></div>';
-  } else {
-    msgs.innerHTML += '<div class="chat-msg assistant"><div class="chat-msg-bubble" style="color:var(--red)">เกิดข้อผิดพลาด กรุณาลองใหม่</div></div>';
-  }
-  msgs.scrollTop = msgs.scrollHeight;
-}
-
-function quickAiForGroup(chatId, chatName) {
-  switchView('aichat');
-  setTimeout(function() { selectChat(chatId, chatName); }, 100);
-}
-
-async function quickAiAsk() {
-  var input = document.getElementById('quickAiInput');
-  var text = input.value.trim();
-  if (!text) return;
-  input.value = '';
-  if (groupsData.length > 0) {
-    selectedChatId = groupsData[0].chat_id;
-    switchView('aichat');
-    setTimeout(function() {
-      document.getElementById('chatInput').value = text;
-      sendChat();
-    }, 200);
-  }
-}
-
-async function loadProductionTime() {
-  var period = await api('/api/v1/digest/production-period');
-  if (period) {
-    document.getElementById('prodStartTime').value = period.production_start_time || '00:00';
-    var preview = document.getElementById('prodPeriodPreview');
-    preview.style.display = 'block';
-    preview.innerHTML = '<strong>วันผลิตปัจจุบัน:</strong> ' + period.production_date + '<br><strong>ช่วงเวลา:</strong> ' + period.start_str + ' — ' + period.end_str;
-  }
-}
-
-async function saveProductionTime() {
-  var val = document.getElementById('prodStartTime').value || '00:00';
-  var resp = await api('/api/v1/org/' + orgId, { method: 'PUT', body: JSON.stringify({ production_start_time: val }) });
-  if (resp && resp.ok !== false) {
-    showToast('บันทึกเวลาเริ่มผลิตแล้ว: ' + val, 'success');
-    loadProductionTime();
-  }
-}
-
-async function loadSettings() {
-  loadProductionTime();
-  var results = await Promise.all([
-    api('/api/v1/org/' + orgId).catch(function() { return null; }),
-    api('/api/v1/org/' + orgId + '/members').catch(function() { return null; }),
-    api('/api/v1/org/plans').catch(function() { return null; }),
-  ]);
-  var org = results[0], members = results[1], plans = results[2];
-  if (org) {
-    document.getElementById('settingsOrg').innerHTML =
-      '<div class="settings-row"><span class="settings-label">ชื่อ</span><span class="settings-value">' + esc(org.name || '') + '</span></div>' +
-      '<div class="settings-row"><span class="settings-label">Slug</span><span class="settings-value">' + esc(org.slug || '') + '</span></div>' +
-      '<div class="settings-row"><span class="settings-label">Plan</span><span class="settings-value">' + esc(org.plan || 'free') + '</span></div>' +
-      '<div class="settings-row"><span class="settings-label">สถานะ</span><span class="settings-value">' + (org.status === 'active' ? '<span class="badge badge-green">Active</span>' : esc(org.status || '')) + '</span></div>' +
-      '<div class="settings-row"><span class="settings-label">Max Groups</span><span class="settings-value">' + (org.max_groups || '-') + '</span></div>' +
-      '<div class="settings-row"><span class="settings-label">Max Users</span><span class="settings-value">' + (org.max_users || '-') + '</span></div>';
-  }
-  var lineEl = document.getElementById('settingsLineStatus');
-  if (org && org.line_channel_id) {
-    lineEl.innerHTML =
-      '<div class="settings-row"><span class="settings-label">Channel ID</span><span class="settings-value">' + esc(org.line_channel_id) + '</span></div>' +
-      '<div class="settings-row"><span class="settings-label">สถานะ</span><span class="settings-value"><span class="badge badge-green">เชื่อมต่อแล้ว</span></span></div>' +
-      '<div class="settings-row"><span class="settings-label">Webhook URL</span><span class="settings-value" style="font-size:11px;word-break:break-all">' + window.location.origin + '/webhook/line</span></div>';
-  } else {
-    lineEl.innerHTML = '<div class="empty-state" style="padding:16px 0"><div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:28px;height:28px"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div><div class="empty-title">ยังไม่ได้เชื่อมต่อ</div><div class="empty-desc">ติดต่อผู้ดูแลระบบเพื่อตั้งค่า LINE Bot</div></div>';
-  }
-  var memArr = Array.isArray(members) ? members : [];
-  if (memArr.length > 0) {
-    document.getElementById('settingsMembers').innerHTML = '<table style="width:100%"><thead><tr><th>User</th><th>Role</th><th>Joined</th><th></th></tr></thead><tbody>' +
-      memArr.map(function(m) {
-        return '<tr><td>' + esc(m.display_name || m.user_id || '') + '</td><td><span class="badge ' + (m.role === 'owner' ? 'badge-indigo' : m.role === 'admin' ? 'badge-cyan' : 'badge-green') + '">' + esc(m.role) + '</span></td><td>' + (m.created_at ? m.created_at.slice(0, 10) : '-') + '</td><td>' + (m.role !== 'owner' ? '<button class="btn btn-danger btn-sm" onclick="removeMember(\'' + esc(m.user_id) + '\')">Remove</button>' : '') + '</td></tr>';
-      }).join('') + '</tbody></table>';
-  } else {
-    document.getElementById('settingsMembers').innerHTML = '<div style="color:var(--text-muted);font-size:12px">ไม่มีสมาชิก</div>';
-  }
-  var planArr = Array.isArray(plans) ? plans : [];
-  if (planArr.length > 0) {
-    document.getElementById('settingsPlan').innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px">' +
-      planArr.map(function(p) {
-        return '<div style="background:var(--bg-surface);border:1px solid ' + (org && org.plan === p.id ? 'var(--indigo)' : 'var(--border)') + ';border-radius:var(--radius);padding:16px;text-align:center"><div style="font-weight:600;font-size:14px;margin-bottom:4px">' + esc(p.name) + '</div><div style="font-family:Inter,sans-serif;font-size:24px;font-weight:700;color:var(--text);margin:6px 0">' + (p.price === 0 ? 'Free' : '฿' + p.price.toLocaleString()) + '</div><div style="font-size:11px;color:var(--text-muted);margin-bottom:10px">' + (p.price > 0 ? '/เดือน' : '') + '</div><div style="text-align:left;font-size:11px;color:var(--text-secondary)">' + (p.features || []).map(function(f) { return '<div style="padding:2px 0">&#10003; ' + esc(f) + '</div>'; }).join('') + '</div>' + (org && org.plan === p.id ? '<div class="badge badge-indigo" style="margin-top:10px">แผนปัจจุบัน</div>' : '') + '</div>';
-      }).join('') + '</div>';
-  } else {
-    document.getElementById('settingsPlan').innerHTML = '<div style="color:var(--text-muted);font-size:12px">ไม่มีข้อมูลแผน</div>';
-  }
-}
-
-async function removeMember(userId) {
-  if (!confirm('ลบสมาชิก ' + userId + '?')) return;
-  var resp = await api('/api/v1/org/' + orgId + '/members/' + userId, { method: 'DELETE' });
-  if (resp && resp.ok) loadSettings();
-  else showToast('Error: ' + (resp ? resp.detail || 'Unknown' : 'Failed'), 'error');
-}
-
-function generateApiToken() {
-  showToast('กำลังพัฒนา - เร็วๆ นี้', 'info');
-}
-
-function showToast(message, type) {
-  type = type || 'info';
-  var existing = document.getElementById('toast');
-  if (existing) existing.remove();
-  var colors = { success: 'var(--green)', error: 'var(--red)', info: 'var(--indigo)' };
-  var toast = document.createElement('div');
-  toast.id = 'toast';
-  toast.innerHTML = message;
-  toast.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;padding:10px 18px;border-radius:var(--radius-btn);background:var(--bg-card-solid);border:1px solid ' + (colors[type] || colors.info) + ';color:var(--text);font-size:12px;font-weight:500;animation:slideUp .2s ease-out;font-family:Sarabun,sans-serif;';
-  document.body.appendChild(toast);
-  setTimeout(function() {
-    toast.style.opacity = '0';
-    toast.style.transition = 'opacity .2s';
-    setTimeout(function() { toast.remove(); }, 200);
-  }, 3000);
-}
-
-function esc(s) {
-  if (!s) return '';
-  var d = document.createElement('div');
-  d.textContent = String(s);
-  return d.innerHTML.replace(/'/g, "&#39;");
+function toast(msg) {
+  const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t); setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300)},3000);
 }
 
 function timeAgo(ts) {
-  if (!ts) return '';
-  var d = typeof ts === 'number' && ts < 9999999999 ? new Date(ts * 1000) : new Date(ts);
-  var diff = (Date.now() - d.getTime()) / 1000;
-  if (diff < 60) return 'เมื่อสักครู่';
-  if (diff < 3600) return Math.floor(diff / 60) + ' นาที';
-  if (diff < 86400) return Math.floor(diff / 3600) + ' ชม.';
-  return Math.floor(diff / 86400) + ' วัน';
+  if(!ts) return '';
+  const d = typeof ts==='number'&&ts<9999999999 ? new Date(ts*1000) : new Date(ts);
+  const s = (Date.now()-d.getTime())/1000;
+  if(s<60) return 'ตอนนี้';
+  if(s<3600) return Math.floor(s/60)+' นาทีที่แล้ว';
+  if(s<86400) return Math.floor(s/3600)+' ชม.ที่แล้ว';
+  return Math.floor(s/86400)+' วันที่แล้ว';
 }
 
-function sentimentBadge(s) {
-  if (s === 'positive') return 'badge-green';
-  if (s === 'negative') return 'badge-red';
-  if (s === 'mixed') return 'badge-amber';
-  return 'badge-cyan';
+function esc(s){if(!s)return'';const d=document.createElement('div');d.textContent=String(s);return d.innerHTML}
+
+function avatarColor(s){const h=([...s||'x'].reduce((a,c)=>a+c.charCodeAt(0),0))%360;return`hsl(${h},60%,50%)`}
+
+// Navigation
+function go(view) {
+  document.querySelectorAll('.view').forEach(v=>v.style.display='none');
+  document.getElementById('v-'+view).style.display='';
+  document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));
+  document.querySelector(`[data-view="${view}"]`)?.classList.add('active');
+  document.querySelector('.sidebar').classList.remove('open');
+  document.querySelector('.overlay').classList.remove('open');
+  if(view==='dashboard') loadDashboard();
+  else if(view==='groups') loadGroups();
+  else if(view==='digests') loadDigests();
+  else if(view==='chat') loadChat();
+  else if(view==='settings') loadSettings();
 }
 
-function formatAnswer(text) {
-  return esc(text).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+// Init
+async function init() {
+  const me = await api('/auth/me');
+  if(!me) return;
+  orgId = me.org_id;
+  document.getElementById('orgLabel').textContent = me.org_name||'Silo';
+
+  // Load production period for sidebar
+  const pp = await api('/api/v1/digest/production-period');
+  if(pp) document.getElementById('prodBadge').innerHTML = `📅 <b>${pp.production_date}</b><br>⏰ ${pp.start_str} — ${pp.end_str}`;
+
+  // Check onboarding
+  const g = await api('/api/v1/dashboard/groups');
+  groups = Array.isArray(g)?g:[];
+  if(groups.length===0 && !localStorage.getItem('silo_onboarded')) {
+    // Simple onboarding message
+    toast('เพิ่ม Silo Bot เข้ากลุ่ม LINE เพื่อเริ่มใช้งาน');
+    localStorage.setItem('silo_onboarded','1');
+  }
+  loadDashboard();
+  setInterval(()=>{if(document.getElementById('v-dashboard').style.display!=='none')loadDashboard()},30000);
+}
+
+// Dashboard
+async function loadDashboard() {
+  const d = await api('/api/v1/dashboard/overview');
+  if(!d) return;
+  document.getElementById('s-msgs').textContent = (d.messages_today||0).toLocaleString();
+  document.getElementById('s-msgs-sub').textContent = d.production_period||'';
+  document.getElementById('s-groups').textContent = d.active_groups||0;
+  document.getElementById('s-groups-sub').textContent = (d.total_groups||0)+' ทั้งหมด';
+  document.getElementById('s-digests').textContent = d.digests_today||0;
+  document.getElementById('s-digests-sub').textContent = 'วันผลิต '+( d.production_date||'');
+  const u=d.usage||{};
+  document.getElementById('s-ai').textContent = ((u.qa||0)+(u.digest||0)).toLocaleString();
+
+  const g = await api('/api/v1/dashboard/groups');
+  groups = Array.isArray(g)?g:[];
+  const el = document.getElementById('dashGroups');
+  if(!groups.length) { el.innerHTML='<div class="empty"><div class="empty-icon">👥</div>ยังไม่มีกลุ่ม — เพิ่ม Silo Bot เข้ากลุ่ม LINE</div>'; return; }
+  const lineGroups = groups.filter(g=>g.chat_id.startsWith('C'));
+  const dmChats = groups.filter(g=>g.chat_id.startsWith('U'));
+  let html = '';
+  if(lineGroups.length) html += '<div style="font-size:14px;font-weight:600;color:var(--text-dim);margin-bottom:10px">👥 กลุ่ม LINE ('+lineGroups.length+')</div><div class="groups">'+lineGroups.map(groupCardHTML).join('')+'</div>';
+  if(dmChats.length) html += '<div style="font-size:14px;font-weight:600;color:var(--text-dim);margin:16px 0 10px">💬 แชทส่วนตัว ('+dmChats.length+')</div><div class="groups">'+dmChats.map(groupCardHTML).join('')+'</div>';
+  el.innerHTML = html;
+  el.querySelectorAll('.group[data-id]').forEach(c=>{
+    c.onclick = ()=>openGroup(c.dataset.id);
+    const db=c.querySelector('.btn-dg');
+    if(db) db.onclick = e=>{e.stopPropagation();genDigest(c.dataset.id);};
+  });
+}
+
+function groupCardHTML(g){
+  return '<div class="group" data-id="'+g.chat_id+'"><div class="group-name"><div class="group-avatar" style="background:'+avatarColor(g.name)+'">'+(g.name||'?')[0]+'</div> '+esc(g.name)+'</div><div class="group-stats"><span><b>'+(g.messages_today||0)+'</b> วันนี้</span><span><b>'+(g.total_messages||0)+'</b> ทั้งหมด</span><span>'+(g.has_digest_today?'<span class="badge badge-green">Digest ✓</span>':'<span class="badge badge-amber">Pending</span>')+'</span></div><div class="group-actions"><button class="btn btn-ghost btn-sm">💬 ข้อความ</button><button class="btn btn-primary btn-sm btn-dg">⚡ Digest</button></div></div>';
+}
+
+// Groups
+async function loadGroups() {
+  const g = await api('/api/v1/dashboard/groups');
+  groups = Array.isArray(g)?g:[];
+  document.getElementById('groupDetail').style.display='none';
+  const el=document.getElementById('groupsList');
+  el.style.display='';
+
+  document.getElementById('groupsToolbar').innerHTML=`
+    <div class="toolbar">
+      <input placeholder="🔍 ค้นหา..." oninput="filterGroups(this.value)" style="flex:1;min-width:150px">
+      <span style="font-size:12px;color:var(--text-muted)">${groups.length} กลุ่ม</span>
+    </div>`;
+
+  renderGroups(groups, el);
+}
+
+function filterGroups(q) {
+  const el=document.getElementById('groupsList');
+  const filtered = q ? groups.filter(g=>(g.name||'').toLowerCase().includes(q.toLowerCase())) : groups;
+  renderGroups(filtered, el);
+}
+
+function renderGroups(list, el) {
+  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-icon">👥</div>ไม่พบกลุ่ม</div>';return;}
+  const lineGroups = list.filter(g=>g.chat_id.startsWith('C'));
+  const dmChats = list.filter(g=>g.chat_id.startsWith('U'));
+  let html = '';
+  if(lineGroups.length) html += '<div style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:8px">👥 กลุ่ม LINE ('+lineGroups.length+')</div>'+lineGroups.map(groupCardHTML).join('');
+  if(dmChats.length) html += '<div style="font-size:13px;font-weight:600;color:var(--text-muted);margin:14px 0 8px">💬 แชทส่วนตัว ('+dmChats.length+')</div>'+dmChats.map(groupCardHTML).join('');
+  el.innerHTML = html;
+  el.querySelectorAll('.group[data-id]').forEach(c=>{
+    c.onclick = ()=>openGroup(c.dataset.id);
+    const db=c.querySelector('.btn-dg');
+    if(db) db.onclick = e=>{e.stopPropagation();genDigest(c.dataset.id);};
+  });
+}
+
+// Open group detail
+async function openGroup(chatId) {
+  go('groups');
+  document.getElementById('groupsList').style.display='none';
+  document.getElementById('groupsToolbar').innerHTML='';
+  const det=document.getElementById('groupDetail');
+  det.style.display='block';
+  det.innerHTML='<div class="loading">กำลังโหลด...</div>';
+
+  const [msgs, digs] = await Promise.all([
+    api(`/api/v1/dashboard/groups/${chatId}/messages?limit=30`),
+    api(`/api/v1/dashboard/groups/${chatId}/digests?limit=5`),
+  ]);
+
+  const g = groups.find(x=>x.chat_id===chatId)||{};
+  let h = `<div class="detail-header">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="btn btn-ghost btn-sm" id="btn-back">← กลับ</button>
+      <span style="font-size:18px;font-weight:700">${esc(g.name||chatId.slice(0,16))}</span>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button class="btn btn-primary btn-sm" id="btn-gen">⚡ สร้าง Digest</button>
+      <button class="btn btn-ghost btn-sm" id="btn-ai">🤖 ถาม AI</button>
+    </div>
+  </div>`;
+
+  // Digests
+  h+='<h3 style="font-size:14px;margin-bottom:10px">📋 Digests</h3>';
+  if(digs&&digs.digests&&digs.digests.length) {
+    digs.digests.forEach(d=>{
+      const dj = typeof d.digest_json==='string' ? JSON.parse(d.digest_json||'{}') : (d.digest_json||{});
+      h+=`<div class="digest">
+        <div class="digest-date">${esc(d.date)} · ${d.message_count||0} msgs</div>
+        <div class="digest-summary">${esc(dj.summary||d.summary||'')}</div>
+        ${(dj.topics||d.topics||[]).length?'<div class="digest-topics">'+(dj.topics||d.topics||[]).map(t=>'<span class="digest-topic">'+esc(typeof t==='string'?t:JSON.stringify(t))+'</span>').join('')+'</div>':''}
+      </div>`;
+    });
+  } else { h+='<div style="color:var(--text-muted);font-size:13px;margin-bottom:16px">ยังไม่มี Digest</div>'; }
+
+  // Messages
+  h+='<h3 style="font-size:14px;margin:16px 0 10px">💬 ข้อความล่าสุด <span class="badge badge-indigo">'+(msgs&&msgs.total||0)+' ทั้งหมด</span></h3>';
+  if(msgs&&msgs.messages&&msgs.messages.length) {
+    msgs.messages.forEach(m=>{
+      h+=`<div class="msg">
+        <div class="msg-avatar" style="background:${avatarColor(m.sender_name)}">${(m.sender_name||'?')[0]}</div>
+        <div><div class="msg-name">${esc(m.sender_name||'Unknown')}</div><div class="msg-text">${esc(m.text||`[${m.content_type}]`)}</div><div class="msg-time">${timeAgo(m.created_at)}</div></div>
+      </div>`;
+    });
+  } else { h+='<div style="color:var(--text-muted);font-size:13px">ไม่มีข้อความ</div>'; }
+
+  det.innerHTML=h;
+  document.getElementById('btn-back').onclick=()=>loadGroups();
+  document.getElementById('btn-gen').onclick=()=>genDigest(chatId);
+  document.getElementById('btn-ai').onclick=()=>{chatGroupId=chatId;go('chat');};
+}
+
+// Generate digest
+async function genDigest(chatId) {
+  toast('กำลังสร้าง Digest...');
+  const r = await api('/api/v1/digest/generate',{method:'POST',body:JSON.stringify({chat_id:chatId,last_24h:true})});
+  if(r&&r.ok) toast('Digest สร้างเสร็จ! '+r.message_count+' ข้อความ');
+  else toast('ไม่สามารถสร้าง Digest: '+(r&&r.error||'error'));
+}
+
+async function generateAll() {
+  toast('กำลังสร้าง Digest ทั้งหมด...');
+  const r = await api('/api/v1/digest/generate/all',{method:'POST'});
+  if(r) toast(`สร้างเสร็จ ${r.generated||0} กลุ่ม`);
+}
+
+// Digests list
+async function loadDigests() {
+  const el=document.getElementById('digestsList');
+  el.innerHTML='<div class="loading">กำลังโหลด...</div>';
+  const data = await api('/api/v1/digest/list?limit=50');
+  if(!data||!data.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div>ยังไม่มี Digest</div>';return;}
+  el.innerHTML=data.map(d=>{
+    const dj=typeof d.digest_json==='string'?JSON.parse(d.digest_json||'{}'):(d.digest_json||{});
+    return `<div class="digest">
+      <div class="digest-date">${esc(d.date)} · ${esc(d.chat_name)} · ${d.message_count||0} msgs</div>
+      <div class="digest-summary">${esc(dj.summary||d.summary||'')}</div>
+      ${(dj.topics||[]).length?'<div class="digest-topics">'+(dj.topics||[]).map(t=>'<span class="digest-topic">'+esc(typeof t==='string'?t:JSON.stringify(t))+'</span>').join('')+'</div>':''}
+    </div>`;
+  }).join('');
+}
+
+// AI Chat
+function loadChat() {
+  const sel=document.getElementById('chatGroupSelect');
+  sel.innerHTML='<option value="">-- เลือกกลุ่ม --</option>'+groups.map(g=>`<option value="${esc(g.chat_id)}" ${g.chat_id===chatGroupId?'selected':''}>${esc(g.name)}</option>`).join('');
+}
+
+function chatGroupChanged(){chatGroupId=document.getElementById('chatGroupSelect').value;convId=null;document.getElementById('chatMessages').innerHTML='<div class="empty"><div class="empty-icon">💬</div>ถามคำถามเกี่ยวกับกลุ่มนี้</div>';}
+
+async function sendChat() {
+  const input=document.getElementById('chatInput');
+  const q=input.value.trim();if(!q||!chatGroupId)return;
+  input.value='';
+  const el=document.getElementById('chatMessages');
+  if(el.querySelector('.empty'))el.innerHTML='';
+  el.innerHTML+=`<div class="chat-bubble chat-user">${esc(q)}</div>`;
+  el.innerHTML+=`<div class="chat-bubble chat-ai" id="aiLoading">กำลังคิด...</div>`;
+  el.scrollTop=el.scrollHeight;
+
+  const r=await api('/api/v1/digest/ask',{method:'POST',body:JSON.stringify({chat_id:chatGroupId,message:q,conversation_id:convId})});
+  document.getElementById('aiLoading')?.remove();
+  if(r&&r.answer){
+    convId=r.conversation_id;
+    el.innerHTML+=`<div class="chat-bubble chat-ai">${esc(r.answer)}</div>`;
+  } else {
+    el.innerHTML+=`<div class="chat-bubble chat-ai" style="color:var(--red)">ไม่สามารถตอบได้</div>`;
+  }
+  el.scrollTop=el.scrollHeight;
+}
+
+// Settings
+async function loadSettings() {
+  const pp=await api('/api/v1/digest/production-period');
+  if(pp){
+    document.getElementById('prodTime').value=pp.production_start_time||'00:00';
+    document.getElementById('prodPreview').innerHTML=`📅 วันผลิต: <b>${pp.production_date}</b> | ⏰ ${pp.start_str} — ${pp.end_str}`;
+  }
+  const org=await api(`/api/v1/org/${orgId}`);
+  if(org){
+    document.getElementById('settingsInfo').innerHTML=`
+      <div class="setting-row"><span class="setting-label">องค์กร</span><span class="setting-value">${esc(org.name)}</span></div>
+      <div class="setting-row"><span class="setting-label">แผน</span><span class="setting-value badge badge-indigo">${esc(org.plan||'free')}</span></div>
+      <div class="setting-row"><span class="setting-label">กลุ่มสูงสุด</span><span class="setting-value">${org.max_groups||1}</span></div>
+      <div class="setting-row"><span class="setting-label">สมาชิกสูงสุด</span><span class="setting-value">${org.max_users||3}</span></div>
+      <div class="setting-row"><span class="setting-label">สถานะ</span><span class="setting-value"><span class="badge badge-green">${org.status||'active'}</span></span></div>
+    `;
+  }
+}
+
+async function saveProdTime(){
+  const v=document.getElementById('prodTime').value||'00:00';
+  await api(`/api/v1/org/${orgId}`,{method:'PUT',body:JSON.stringify({production_start_time:v})});
+  toast('บันทึกเวลาผลิต: '+v);
+  loadSettings();
+  const pp=await api('/api/v1/digest/production-period');
+  if(pp) document.getElementById('prodBadge').innerHTML=`📅 <b>${pp.production_date}</b><br>⏰ ${pp.start_str} — ${pp.end_str}`;
 }
 
 init();
