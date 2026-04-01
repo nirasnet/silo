@@ -4,9 +4,9 @@ import threading
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 
@@ -74,12 +74,20 @@ def create_app() -> FastAPI:
         return FileResponse(str(static_dir / "landing.html"))
 
     @app.get("/login")
-    async def login_page():
+    async def login_page(request: Request):
+        from .api.auth import _jwt_verify
+        session = request.cookies.get("silo_session")
+        if session and _jwt_verify(session):
+            return RedirectResponse(url="/dashboard", status_code=302)
         html = (templates_dir / "login.html").read_text()
         return HTMLResponse(html)
 
     @app.get("/dashboard")
-    async def dashboard_page():
+    async def dashboard_page(request: Request):
+        from .api.auth import _jwt_verify
+        session = request.cookies.get("silo_session")
+        if not session or not _jwt_verify(session):
+            return RedirectResponse(url="/login", status_code=302)
         html = (templates_dir / "dashboard.html").read_text()
         return HTMLResponse(html)
 

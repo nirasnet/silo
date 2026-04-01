@@ -128,8 +128,11 @@ class LoginRequest(BaseModel):
 # ── Routes ──
 
 @router.get("/auth/login", response_class=HTMLResponse)
-async def login_page():
-    """Render the login page."""
+async def login_page(request: Request):
+    """Render the login page, or redirect to dashboard if already logged in."""
+    session = request.cookies.get("silo_session")
+    if session and _jwt_verify(session):
+        return RedirectResponse(url="/dashboard", status_code=302)
     html_path = Path(__file__).parent.parent / "templates" / "login.html"
     if html_path.exists():
         return HTMLResponse(html_path.read_text())
@@ -189,7 +192,7 @@ async def login_submit(request: Request):
     if "application/json" in content_type:
         resp = JSONResponse({"ok": True, "token": token, "org_id": org_id})
     else:
-        resp = RedirectResponse(url="/", status_code=302)
+        resp = RedirectResponse(url="/dashboard", status_code=302)
 
     resp.set_cookie(
         key="silo_session", value=token,

@@ -174,3 +174,61 @@ async def activity_feed(
     feed.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
 
     return {"feed": feed[:limit], "since": since}
+
+
+@router.get("/discovered-groups")
+async def discovered_groups(request: Request, auth: dict = Depends(require_auth)):
+    """List groups discovered from messages but not yet formally added.
+    Also includes already-added groups. This helps onboarding — users see
+    all groups the bot has joined without needing to know MIDs."""
+    db = _get_db(request)
+    org_id = auth["org_id"]
+
+    # Get all unique chat_ids from messages (groups bot has seen)
+    stats = db.get_chat_stats(org_id)
+    # Get formally added groups
+    added = {g["group_mid"] for g in db.org_get_groups(org_id)}
+
+    result = []
+    for s in stats:
+        chat_id = s["chat_id"]
+        # Try to get group name from org_groups or from messages
+        group = db.org_get_group_by_mid(org_id, chat_id)
+        name = group["group_name"] if group and group.get("group_name") else chat_id[:20]
+        result.append({
+            "chat_id": chat_id,
+            "name": name,
+            "message_count": s.get("message_count", 0),
+            "unique_senders": s.get("unique_senders", 0),
+            "last_message": s.get("last_message", 0),
+            "is_added": chat_id in added,
+        })
+    result.sort(key=lambda x: x["last_message"], reverse=True)
+    return result
+
+
+@router.post("/groups/{chat_id}/enable")
+async def enable_group(chat_id: str, request: Request, auth: dict = Depends(require_auth)):
+    """Enable a discovered group for auto-digest. Adds to org_groups if not already there."""
+    db = _get_db(request)
+    org_id = auth["org_id"]
+    existing = db.org_get_group_by_mid(org_id, chat_id)
+    if not existing:
+        # Get name from LINE API if possible
+        try:
+            from app.line_oa.api import get_group_summary
+            info = get_group_summary(chat_id)
+            name = info.get("groupName", chat_id[:16]) if info else chat_id[:16]
+        except Exception:
+            name = chat_id[:16]
+        db.org_add_group(org_id, chat_id, group_name=name)
+    return {"ok": True, "chat_id": chat_id}
+
+
+@router.post("/groups/{chat_id}/disable")
+async def disable_group(chat_id: str, request: Request, auth: dict = Depends(require_auth)):
+    """Remove a group from auto-digest."""
+    db = _get_db(request)
+    org_id = auth["org_id"]
+    db.org_remove_group(org_id, chat_id)
+    return {"ok": True}

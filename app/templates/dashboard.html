@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Silo — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #0a0a0f;
@@ -24,13 +27,14 @@
   --red: #ef4444;
   --pink: #ec4899;
   --gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  --gradient-soft: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(139,92,246,0.15));
   --sidebar-w: 260px;
   --radius: 16px;
   --radius-sm: 10px;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Thai', sans-serif;
+  font-family: 'Sarabun', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg); color: var(--text);
   display: flex; min-height: 100vh; overflow-x: hidden;
 }
@@ -38,18 +42,15 @@ body {
 /* ── Sidebar ── */
 .sidebar {
   width: var(--sidebar-w); min-height: 100vh;
-  background: rgba(10,10,18,0.95);
+  background: rgba(10,10,18,0.97);
   border-right: 1px solid var(--border);
   display: flex; flex-direction: column;
   position: fixed; left: 0; top: 0; bottom: 0;
-  z-index: 100;
-  transition: transform .3s;
+  z-index: 100; transition: transform .3s;
+  backdrop-filter: blur(20px);
 }
-.sidebar-header {
-  padding: 28px 24px 20px;
-  border-bottom: 1px solid var(--border);
-}
-.sidebar-logo { font-size: 28px; font-weight: 800; letter-spacing: -1px; }
+.sidebar-header { padding: 28px 24px 20px; border-bottom: 1px solid var(--border); }
+.sidebar-logo { font-size: 28px; font-weight: 800; letter-spacing: -1px; font-family: 'Inter', sans-serif; }
 .sidebar-logo .s { color: var(--blue); }
 .sidebar-logo .dot { color: var(--purple); }
 .sidebar-org {
@@ -62,27 +63,25 @@ body {
   padding: 12px 16px; border-radius: var(--radius-sm);
   color: var(--text-dim); font-size: 14px; font-weight: 500;
   cursor: pointer; transition: all .2s; margin-bottom: 4px;
-  text-decoration: none;
+  text-decoration: none; position: relative;
 }
 .nav-item:hover { background: var(--bg-hover); color: var(--text); }
-.nav-item.active {
-  background: rgba(59,130,246,0.1); color: var(--blue);
-  font-weight: 600;
-}
+.nav-item.active { background: rgba(59,130,246,0.1); color: var(--blue); font-weight: 600; }
 .nav-item svg { width: 20px; height: 20px; flex-shrink: 0; }
-.nav-divider { height: 1px; background: var(--border); margin: 12px 16px; }
-.sidebar-footer {
-  padding: 16px 20px; border-top: 1px solid var(--border);
-  font-size: 12px; color: var(--text-faint);
+.nav-badge {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  background: var(--red); color: #fff; font-size: 10px; font-weight: 700;
+  padding: 2px 7px; border-radius: 10px; min-width: 18px; text-align: center;
 }
+.nav-divider { height: 1px; background: var(--border); margin: 12px 16px; }
+.sidebar-footer { padding: 16px 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-faint); }
 .sidebar-footer a { color: var(--text-muted); text-decoration: none; }
 .sidebar-footer a:hover { color: var(--text); }
 
 /* ── Main ── */
 .main {
   flex: 1; margin-left: var(--sidebar-w);
-  padding: 32px 36px;
-  min-height: 100vh;
+  padding: 32px 36px; min-height: 100vh;
 }
 .page-header {
   display: flex; align-items: center; justify-content: space-between;
@@ -103,8 +102,7 @@ body {
 .stat-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; font-weight: 600; }
 .stat-value {
   font-size: 32px; font-weight: 800; margin: 8px 0 4px;
-  background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
+  background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 .stat-sub { font-size: 12px; color: var(--text-faint); }
 .stat-icon {
@@ -138,8 +136,7 @@ table { width: 100%; border-collapse: collapse; }
 thead th {
   font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px;
   color: var(--text-muted); font-weight: 600;
-  padding: 12px 16px; text-align: left;
-  border-bottom: 1px solid var(--border);
+  padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border);
 }
 tbody td {
   padding: 14px 16px; font-size: 13px; color: var(--text-dim);
@@ -171,15 +168,19 @@ tbody tr:hover { background: var(--bg-hover); }
   padding: 10px 20px; border: none; border-radius: var(--radius-sm);
   font-size: 13px; font-weight: 600; cursor: pointer;
   transition: all .2s; text-decoration: none; display: inline-flex;
-  align-items: center; gap: 6px;
+  align-items: center; gap: 6px; font-family: inherit;
 }
 .btn-primary { background: var(--gradient); color: #fff; }
 .btn-primary:hover { box-shadow: 0 8px 24px rgba(59,130,246,0.25); transform: translateY(-1px); }
 .btn-ghost { background: transparent; color: var(--text-dim); border: 1px solid var(--border); }
 .btn-ghost:hover { background: var(--bg-hover); color: var(--text); }
 .btn-sm { padding: 7px 14px; font-size: 12px; }
+.btn-lg { padding: 14px 32px; font-size: 15px; border-radius: 12px; }
 .btn-danger { background: rgba(239,68,68,0.1); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
 .btn-danger:hover { background: rgba(239,68,68,0.2); }
+.btn-green { background: rgba(16,185,129,0.15); color: var(--green); border: 1px solid rgba(16,185,129,0.2); }
+.btn-green:hover { background: rgba(16,185,129,0.25); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
 /* ── Forms ── */
 .form-group { margin-bottom: 20px; }
@@ -192,10 +193,10 @@ tbody tr:hover { background: var(--bg-hover); }
   background: var(--bg); border: 1px solid var(--border);
   border-radius: var(--radius-sm); color: var(--text);
   font-size: 14px; outline: none; transition: border-color .2s;
+  font-family: inherit;
 }
 .form-input:focus { border-color: var(--blue); }
 .form-input::placeholder { color: var(--text-faint); }
-textarea.form-input { min-height: 100px; resize: vertical; font-family: inherit; }
 select.form-input {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
@@ -212,6 +213,23 @@ select.form-input {
 .badge-amber { background: rgba(245,158,11,0.1); color: var(--amber); }
 .badge-red { background: rgba(239,68,68,0.1); color: var(--red); }
 .badge-purple { background: rgba(139,92,246,0.1); color: var(--purple); }
+
+/* ── Toggle switch ── */
+.toggle-wrap { display: flex; align-items: center; gap: 10px; }
+.toggle {
+  position: relative; width: 44px; height: 24px;
+  background: var(--bg-hover); border-radius: 12px;
+  cursor: pointer; transition: background .2s;
+  border: 1px solid var(--border);
+}
+.toggle.active { background: var(--blue); border-color: var(--blue); }
+.toggle::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; transition: transform .2s;
+}
+.toggle.active::after { transform: translateX(20px); }
+.toggle-label { font-size: 13px; color: var(--text-dim); }
 
 /* ── Chat ── */
 .chat-container {
@@ -238,29 +256,34 @@ select.form-input {
 .chat-msg { margin-bottom: 16px; max-width: 80%; }
 .chat-msg.user { margin-left: auto; }
 .chat-msg.assistant { margin-right: auto; }
-.chat-msg-bubble {
-  padding: 12px 16px; border-radius: 14px; font-size: 14px; line-height: 1.6;
-}
+.chat-msg-bubble { padding: 12px 16px; border-radius: 14px; font-size: 14px; line-height: 1.6; }
 .chat-msg.user .chat-msg-bubble { background: var(--blue); color: #fff; border-bottom-right-radius: 4px; }
 .chat-msg.assistant .chat-msg-bubble { background: var(--bg-surface); color: var(--text-dim); border-bottom-left-radius: 4px; }
 .chat-msg-time { font-size: 10px; color: var(--text-faint); margin-top: 4px; }
-.chat-input-area {
-  padding: 16px; border-top: 1px solid var(--border);
-  display: flex; gap: 10px;
-}
+.chat-input-area { padding: 16px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
 .chat-input {
   flex: 1; padding: 12px 16px;
   background: var(--bg); border: 1px solid var(--border);
   border-radius: var(--radius-sm); color: var(--text);
-  font-size: 14px; outline: none; resize: none;
+  font-size: 14px; outline: none; resize: none; font-family: inherit;
 }
 .chat-input:focus { border-color: var(--blue); }
 .chat-send {
   padding: 12px 20px; border: none; border-radius: var(--radius-sm);
   background: var(--gradient); color: #fff; font-weight: 600;
-  cursor: pointer; transition: transform .15s;
+  cursor: pointer; transition: transform .15s; font-family: inherit;
 }
 .chat-send:hover { transform: translateY(-1px); }
+.chat-suggestions {
+  display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 12px;
+}
+.chat-suggestion {
+  padding: 6px 14px; border: 1px solid var(--border);
+  border-radius: 20px; font-size: 12px; color: var(--text-dim);
+  cursor: pointer; transition: all .2s; background: transparent;
+  font-family: inherit;
+}
+.chat-suggestion:hover { border-color: var(--blue); color: var(--blue); background: rgba(59,130,246,0.05); }
 
 /* ── Messages panel ── */
 .msg-item {
@@ -278,7 +301,7 @@ select.form-input {
 .msg-text { font-size: 13px; color: var(--text-dim); margin-top: 2px; line-height: 1.4; }
 .msg-time { font-size: 10px; color: var(--text-faint); margin-top: 2px; }
 
-/* ── Settings sections ── */
+/* ── Settings ── */
 .settings-section {
   background: var(--bg-card); border: 1px solid var(--border);
   border-radius: var(--radius); padding: 24px; margin-bottom: 20px;
@@ -292,7 +315,7 @@ select.form-input {
 .settings-label { font-size: 13px; color: var(--text-dim); }
 .settings-value { font-size: 13px; color: var(--text); font-weight: 600; }
 
-/* ── Digest expand ── */
+/* ── Digest cards ── */
 .digest-card {
   background: var(--bg-card); border: 1px solid var(--border);
   border-radius: var(--radius); margin-bottom: 12px;
@@ -318,6 +341,107 @@ select.form-input {
   background: rgba(139,92,246,0.08); color: var(--purple);
   border-radius: 6px; font-size: 11px; font-weight: 600;
 }
+.digest-actions {
+  display: flex; gap: 8px; margin-top: 14px; padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* ── Group cards (new) ── */
+.group-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px 24px;
+  transition: all .2s; position: relative;
+}
+.group-card:hover { border-color: var(--border-active); transform: translateY(-1px); }
+.group-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.group-card-name { font-size: 16px; font-weight: 700; }
+.group-card-stats {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  font-size: 12px; color: var(--text-muted); margin-bottom: 16px;
+}
+.group-card-stat-val { font-weight: 700; color: var(--text); font-size: 14px; display: block; margin-top: 2px; }
+.group-card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ── Onboarding wizard ── */
+.wizard-overlay {
+  position: fixed; inset: 0; background: var(--bg);
+  z-index: 1000; display: flex; align-items: center; justify-content: center;
+  animation: fadeIn .3s;
+}
+.wizard-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 20px; padding: 40px 48px;
+  max-width: 520px; width: 90%; text-align: center;
+  animation: slideUp .4s ease-out;
+}
+.wizard-step-dots { display: flex; justify-content: center; gap: 8px; margin-bottom: 32px; }
+.wizard-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--bg-hover); transition: all .3s;
+}
+.wizard-dot.active { background: var(--blue); width: 24px; border-radius: 4px; }
+.wizard-dot.done { background: var(--green); }
+.wizard-icon {
+  width: 80px; height: 80px; border-radius: 20px;
+  background: var(--gradient-soft); display: flex; align-items: center;
+  justify-content: center; font-size: 36px; margin: 0 auto 24px;
+}
+.wizard-title { font-size: 22px; font-weight: 800; margin-bottom: 12px; }
+.wizard-desc { font-size: 14px; color: var(--text-dim); line-height: 1.7; margin-bottom: 28px; }
+.wizard-steps-list {
+  text-align: left; margin: 0 auto 28px; max-width: 360px;
+}
+.wizard-step-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 10px 0; font-size: 14px; color: var(--text-dim);
+}
+.wizard-step-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--gradient-soft); color: var(--blue);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; flex-shrink: 0;
+}
+.wizard-groups-list {
+  max-height: 300px; overflow-y: auto; margin-bottom: 24px;
+  text-align: left;
+}
+.wizard-group-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); margin-bottom: 8px;
+  transition: border-color .2s;
+}
+.wizard-group-row:hover { border-color: var(--border-active); }
+.wizard-group-info { flex: 1; }
+.wizard-group-name { font-size: 14px; font-weight: 600; }
+.wizard-group-meta { font-size: 11px; color: var(--text-faint); margin-top: 2px; }
+.wizard-empty {
+  padding: 32px 20px; text-align: center; color: var(--text-muted);
+}
+.wizard-empty-icon { font-size: 40px; margin-bottom: 12px; opacity: 0.5; }
+.wizard-btn-row { display: flex; gap: 12px; justify-content: center; }
+
+/* ── Quick AI bar ── */
+.quick-ai-bar {
+  position: fixed; bottom: 24px; left: calc(var(--sidebar-w) + 36px); right: 36px;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 12px 16px;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 -8px 32px rgba(0,0,0,0.4);
+  z-index: 50; transition: opacity .3s, transform .3s;
+}
+.quick-ai-bar.hidden { opacity: 0; transform: translateY(20px); pointer-events: none; }
+.quick-ai-icon { font-size: 20px; flex-shrink: 0; }
+.quick-ai-input {
+  flex: 1; background: transparent; border: none; color: var(--text);
+  font-size: 14px; outline: none; font-family: inherit;
+}
+.quick-ai-input::placeholder { color: var(--text-faint); }
+.quick-ai-send {
+  padding: 8px 16px; border: none; border-radius: 8px;
+  background: var(--gradient); color: #fff; font-size: 12px;
+  font-weight: 600; cursor: pointer; font-family: inherit;
+}
 
 /* ── Hamburger ── */
 .hamburger {
@@ -341,14 +465,20 @@ select.form-input {
   animation: spin .8s linear infinite; margin-right: 10px;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-hover) 25%, var(--bg-surface) 50%, var(--bg-hover) 75%);
+  background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
 /* ── Empty state ── */
-.empty-state {
-  text-align: center; padding: 48px 20px; color: var(--text-muted);
-}
+.empty-state { text-align: center; padding: 48px 20px; color: var(--text-muted); }
 .empty-state .icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
 .empty-state .title { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: var(--text-dim); }
-.empty-state .desc { font-size: 13px; }
+.empty-state .desc { font-size: 13px; line-height: 1.6; }
 
 /* ── Responsive ── */
 @media (max-width: 1024px) {
@@ -366,6 +496,8 @@ select.form-input {
   .chat-main { display: none; }
   .chat-container.chat-open .chat-sidebar { display: none; }
   .chat-container.chat-open .chat-main { display: flex; }
+  .quick-ai-bar { left: 16px; right: 16px; bottom: 16px; }
+  .wizard-card { padding: 28px 24px; }
 }
 @media (max-width: 480px) {
   .stat-grid { grid-template-columns: 1fr; }
@@ -377,7 +509,7 @@ select.form-input {
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
 
-/* ── Tooltip ── */
+/* ── Token ── */
 .token-reveal {
   font-family: 'SF Mono', 'Fira Code', monospace;
   font-size: 12px; background: var(--bg);
@@ -385,9 +517,24 @@ select.form-input {
   word-break: break-all; margin-top: 8px;
   border: 1px solid var(--border);
 }
+
+/* ── Notification bell ── */
+.notif-bell { position: relative; cursor: pointer; padding: 8px; }
+.notif-bell svg { width: 20px; height: 20px; color: var(--text-dim); transition: color .2s; }
+.notif-bell:hover svg { color: var(--text); }
+.notif-dot {
+  position: absolute; top: 4px; right: 4px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--red); border: 2px solid var(--bg-card);
+}
 </style>
 </head>
 <body>
+
+<!-- Onboarding Wizard (hidden by default) -->
+<div class="wizard-overlay" id="wizardOverlay" style="display:none">
+  <div class="wizard-card" id="wizardCard"></div>
+</div>
 
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
@@ -431,9 +578,14 @@ select.form-input {
     <div>
       <button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
       <div class="page-title" id="pageTitle">Dashboard</div>
-      <div class="page-subtitle" id="pageSubtitle">ภาพรวมกิจกรรมวันนี้</div>
+      <div class="page-subtitle" id="pageSubtitle">&#8203;</div>
     </div>
-    <div class="header-actions" id="headerActions"></div>
+    <div class="header-actions" id="headerActions">
+      <div class="notif-bell" onclick="switchView('digests')" title="Digests">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <div class="notif-dot" id="notifDot" style="display:none"></div>
+      </div>
+    </div>
   </div>
 
   <!-- Dashboard View -->
@@ -441,48 +593,59 @@ select.form-input {
     <div class="stat-grid" id="statGrid">
       <div class="stat-card">
         <div class="stat-icon blue">&#128172;</div>
-        <div class="stat-label">ข้อความวันนี้</div>
+        <div class="stat-label">&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3623;&#3633;&#3609;&#3609;&#3637;&#3657;</div>
         <div class="stat-value" id="statMessages">--</div>
-        <div class="stat-sub" id="statMessagesSub">loading...</div>
+        <div class="stat-sub" id="statMessagesSub">&nbsp;</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon green">&#128101;</div>
-        <div class="stat-label">กลุ่มที่เชื่อมต่อ</div>
+        <div class="stat-label">&#3585;&#3621;&#3640;&#3656;&#3617;&#3607;&#3637;&#3656;&#3648;&#3594;&#3639;&#3656;&#3629;&#3617;&#3605;&#3656;&#3629;</div>
         <div class="stat-value" id="statGroups">--</div>
-        <div class="stat-sub" id="statGroupsSub">loading...</div>
+        <div class="stat-sub" id="statGroupsSub">&nbsp;</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon purple">&#128203;</div>
-        <div class="stat-label">Digest สร้างแล้ว</div>
+        <div class="stat-label">Digest &#3626;&#3619;&#3657;&#3634;&#3591;&#3649;&#3621;&#3657;&#3623;</div>
         <div class="stat-value" id="statDigests">--</div>
-        <div class="stat-sub" id="statDigestsSub">loading...</div>
+        <div class="stat-sub" id="statDigestsSub">&nbsp;</div>
       </div>
       <div class="stat-card">
         <div class="stat-icon cyan">&#129302;</div>
         <div class="stat-label">AI Queries</div>
         <div class="stat-value" id="statAI">--</div>
-        <div class="stat-sub" id="statAISub">loading...</div>
+        <div class="stat-sub" id="statAISub">&nbsp;</div>
       </div>
+    </div>
+
+    <!-- Groups grid -->
+    <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between">
+      <h3 style="font-size:16px;font-weight:700">&#3585;&#3621;&#3640;&#3656;&#3617;&#3607;&#3637;&#3656;&#3648;&#3594;&#3639;&#3656;&#3629;&#3617;&#3605;&#3656;&#3629;</h3>
+      <button class="btn btn-ghost btn-sm" onclick="switchView('groups')">&#3604;&#3641;&#3607;&#3633;&#3657;&#3591;&#3627;&#3617;&#3604; &rarr;</button>
+    </div>
+    <div id="dashGroupsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:28px">
+      <div class="skeleton" style="height:160px"></div>
+      <div class="skeleton" style="height:160px"></div>
+      <div class="skeleton" style="height:160px"></div>
     </div>
 
     <div class="panel-grid">
       <div class="panel">
         <div class="panel-header">
-          <span class="panel-title">กิจกรรมล่าสุด</span>
+          <span class="panel-title">&#3585;&#3636;&#3592;&#3585;&#3619;&#3619;&#3617;&#3621;&#3656;&#3634;&#3626;&#3640;&#3604;</span>
           <button class="btn btn-ghost btn-sm" onclick="loadActivity()">&#8635; Refresh</button>
         </div>
         <div class="panel-body" id="activityFeed">
-          <div class="loading"><div class="spinner-sm"></div> กำลังโหลด...</div>
+          <div class="loading"><div class="spinner-sm"></div> &#3585;&#3635;&#3621;&#3633;&#3591;&#3650;&#3627;&#3621;&#3604;...</div>
         </div>
       </div>
       <div class="panel">
         <div class="panel-header">
-          <span class="panel-title">กลุ่มยอดนิยม</span>
+          <span class="panel-title">&#3585;&#3621;&#3640;&#3656;&#3617;&#3618;&#3629;&#3604;&#3609;&#3636;&#3618;&#3617;</span>
         </div>
         <div class="panel-body no-pad">
           <div class="table-wrap">
             <table>
-              <thead><tr><th>กลุ่ม</th><th>ข้อความ</th><th>สถานะ</th></tr></thead>
+              <thead><tr><th>&#3585;&#3621;&#3640;&#3656;&#3617;</th><th>&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;</th><th>&#3626;&#3606;&#3634;&#3609;&#3632;</th></tr></thead>
               <tbody id="topGroupsBody">
                 <tr><td colspan="3" style="text-align:center;color:var(--text-faint)">loading...</td></tr>
               </tbody>
@@ -509,8 +672,8 @@ select.form-input {
     <div class="chat-container" id="chatContainer">
       <div class="chat-sidebar">
         <div class="chat-sidebar-header">
-          <div style="font-size:14px;font-weight:700;margin-bottom:8px">เลือกกลุ่ม</div>
-          <input class="form-input" placeholder="ค้นหา..." id="chatSearch" oninput="filterChatGroups()" style="padding:10px 14px;font-size:13px">
+          <div style="font-size:14px;font-weight:700;margin-bottom:8px">&#3648;&#3621;&#3639;&#3629;&#3585;&#3585;&#3621;&#3640;&#3656;&#3617;</div>
+          <input class="form-input" placeholder="&#3588;&#3657;&#3609;&#3627;&#3634;..." id="chatSearch" oninput="filterChatGroups()" style="padding:10px 14px;font-size:13px">
         </div>
         <div class="chat-sidebar-list" id="chatGroupList"></div>
       </div>
@@ -518,13 +681,19 @@ select.form-input {
         <div class="chat-messages" id="chatMessages">
           <div class="empty-state">
             <div class="icon">&#129302;</div>
-            <div class="title">เลือกกลุ่มเพื่อเริ่มถาม AI</div>
-            <div class="desc">AI จะวิเคราะห์จาก Digest และข้อความในกลุ่ม</div>
+            <div class="title">&#3648;&#3621;&#3639;&#3629;&#3585;&#3585;&#3621;&#3640;&#3656;&#3617;&#3648;&#3614;&#3639;&#3656;&#3629;&#3648;&#3619;&#3636;&#3656;&#3617;&#3606;&#3634;&#3617; AI</div>
+            <div class="desc">AI &#3592;&#3632;&#3623;&#3636;&#3648;&#3588;&#3619;&#3634;&#3632;&#3627;&#3660;&#3592;&#3634;&#3585; Digest &#3649;&#3621;&#3632;&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3651;&#3609;&#3585;&#3621;&#3640;&#3656;&#3617;</div>
           </div>
         </div>
+        <div class="chat-suggestions" id="chatSuggestions" style="display:none">
+          <button class="chat-suggestion" onclick="askSuggestion(this)">&#3626;&#3619;&#3640;&#3611;&#3627;&#3633;&#3623;&#3586;&#3657;&#3629;&#3627;&#3621;&#3633;&#3585;&#3623;&#3633;&#3609;&#3609;&#3637;&#3657;</button>
+          <button class="chat-suggestion" onclick="askSuggestion(this)">&#3651;&#3588;&#3619;&#3614;&#3641;&#3604;&#3606;&#3638;&#3591;&#3629;&#3632;&#3652;&#3619;&#3610;&#3657;&#3634;&#3591;</button>
+          <button class="chat-suggestion" onclick="askSuggestion(this)">&#3617;&#3637; action items &#3629;&#3632;&#3652;&#3619;</button>
+          <button class="chat-suggestion" onclick="askSuggestion(this)">&#3648;&#3619;&#3639;&#3656;&#3629;&#3591;&#3626;&#3635;&#3588;&#3633;&#3597;&#3607;&#3637;&#3656;&#3605;&#3657;&#3629;&#3591;&#3605;&#3636;&#3604;&#3605;&#3634;&#3617;</button>
+        </div>
         <div class="chat-input-area">
-          <textarea class="chat-input" id="chatInput" rows="1" placeholder="พิมพ์คำถาม..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
-          <button class="chat-send" onclick="sendChat()">ส่ง</button>
+          <textarea class="chat-input" id="chatInput" rows="1" placeholder="&#3614;&#3636;&#3617;&#3614;&#3660;&#3588;&#3635;&#3606;&#3634;&#3617;..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+          <button class="chat-send" onclick="sendChat()">&#3626;&#3656;&#3591;</button>
         </div>
       </div>
     </div>
@@ -533,74 +702,76 @@ select.form-input {
   <!-- Settings View -->
   <div class="view" id="view-settings">
     <div class="settings-section">
-      <div class="settings-title">ข้อมูลองค์กร</div>
+      <div class="settings-title">&#3586;&#3657;&#3629;&#3617;&#3641;&#3621;&#3629;&#3591;&#3588;&#3660;&#3585;&#3619;</div>
       <div id="settingsOrg">
-        <div class="loading"><div class="spinner-sm"></div> กำลังโหลด...</div>
+        <div class="loading"><div class="spinner-sm"></div> &#3585;&#3635;&#3621;&#3633;&#3591;&#3650;&#3627;&#3621;&#3604;...</div>
       </div>
     </div>
     <div class="settings-section">
-      <div class="settings-title">LINE Official Account</div>
-      <div id="settingsLine">
-        <div class="form-group">
-          <label>Channel ID</label>
-          <input class="form-input" id="lineChannelId" placeholder="LINE Channel ID">
-        </div>
-        <div class="form-group">
-          <label>Channel Secret</label>
-          <input class="form-input" id="lineChannelSecret" type="password" placeholder="LINE Channel Secret">
-        </div>
-        <div class="form-group">
-          <label>Channel Access Token</label>
-          <input class="form-input" id="lineChannelToken" type="password" placeholder="LINE Channel Access Token">
-        </div>
-        <button class="btn btn-primary" onclick="saveLineConfig()">บันทึก LINE Config</button>
-      </div>
-    </div>
-    <div class="settings-section">
-      <div class="settings-title">สมาชิก</div>
-      <div id="settingsMembers">
-        <div class="loading"><div class="spinner-sm"></div> กำลังโหลด...</div>
-      </div>
+      <div class="settings-title">LINE Bot Connection</div>
+      <div id="settingsLineStatus"></div>
     </div>
     <div class="settings-section">
       <div class="settings-title">API Tokens</div>
       <div id="settingsTokens">
-        <p style="font-size:13px;color:var(--text-muted)">ใช้ API key สำหรับเชื่อมต่อระบบภายนอก</p>
+        <p style="font-size:13px;color:var(--text-muted)">&#3651;&#3594;&#3657; API key &#3626;&#3635;&#3627;&#3619;&#3633;&#3610;&#3648;&#3594;&#3639;&#3656;&#3629;&#3617;&#3605;&#3656;&#3629;&#3619;&#3632;&#3610;&#3610;&#3616;&#3634;&#3618;&#3609;&#3629;&#3585;</p>
         <div style="margin-top:12px">
-          <button class="btn btn-ghost btn-sm" onclick="generateApiToken()">+ สร้าง API Token</button>
+          <button class="btn btn-ghost btn-sm" onclick="generateApiToken()">+ &#3626;&#3619;&#3657;&#3634;&#3591; API Token</button>
         </div>
         <div id="tokenList" style="margin-top:12px"></div>
       </div>
     </div>
     <div class="settings-section">
-      <div class="settings-title">แผนปัจจุบัน</div>
+      <div class="settings-title">&#3626;&#3617;&#3634;&#3594;&#3636;&#3585;</div>
+      <div id="settingsMembers">
+        <div class="loading"><div class="spinner-sm"></div> &#3585;&#3635;&#3621;&#3633;&#3591;&#3650;&#3627;&#3621;&#3604;...</div>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-title">&#3649;&#3612;&#3609;&#3611;&#3633;&#3592;&#3592;&#3640;&#3610;&#3633;&#3609;</div>
       <div id="settingsPlan">
-        <div class="loading"><div class="spinner-sm"></div> กำลังโหลด...</div>
+        <div class="loading"><div class="spinner-sm"></div> &#3585;&#3635;&#3621;&#3633;&#3591;&#3650;&#3627;&#3621;&#3604;...</div>
       </div>
     </div>
   </div>
+</div>
+
+<!-- Quick AI bar (dashboard only) -->
+<div class="quick-ai-bar" id="quickAiBar">
+  <div class="quick-ai-icon">&#129302;</div>
+  <input class="quick-ai-input" id="quickAiInput" placeholder="&#3606;&#3634;&#3617; AI &#3648;&#3585;&#3637;&#3656;&#3618;&#3623;&#3585;&#3633;&#3610;&#3649;&#3594;&#3607;&#3585;&#3621;&#3640;&#3656;&#3617;&#3652;&#3627;&#3609;&#3585;&#3655;&#3652;&#3604;&#3657;..." onkeydown="if(event.key==='Enter')quickAiAsk()">
+  <button class="quick-ai-send" onclick="quickAiAsk()">&#3606;&#3634;&#3617;</button>
 </div>
 
 <script>
 // ── State ──
 let currentView = 'dashboard';
 let orgId = '';
+let orgData = null;
 let selectedChatId = '';
 let conversationId = null;
 let groupsData = [];
 let refreshTimer = null;
+let onboardingDone = false;
+let wizardStep = 0;
+let wizardGroupToggles = {};
 
 // ── API helpers ──
 async function api(path, opts = {}) {
-  const resp = await fetch(path, {
-    headers: { 'Content-Type': 'application/json', ...opts.headers },
-    ...opts,
-  });
-  if (resp.status === 403 || resp.status === 401) {
-    window.location.href = '/auth/login';
+  try {
+    const resp = await fetch(path, {
+      headers: { 'Content-Type': 'application/json', ...opts.headers },
+      ...opts,
+    });
+    if (resp.status === 403 || resp.status === 401) {
+      window.location.href = '/auth/login';
+      return null;
+    }
+    return resp.json();
+  } catch (e) {
+    console.error('API error:', e);
     return null;
   }
-  return resp.json();
 }
 
 // ── Init ──
@@ -608,9 +779,20 @@ async function init() {
   const me = await api('/auth/me');
   if (!me) return;
   orgId = me.org_id;
-  document.getElementById('orgName').textContent = me.org_name || me.org_slug || orgId.slice(0,8);
-  loadDashboard();
-  startAutoRefresh();
+  orgData = me;
+  document.getElementById('orgName').textContent = me.org_name || me.org_slug || orgId.slice(0, 8);
+
+  // Check if onboarding needed
+  const groups = await api('/api/v1/dashboard/groups');
+  groupsData = Array.isArray(groups) ? groups : [];
+
+  if (groupsData.length === 0) {
+    showOnboarding();
+  } else {
+    onboardingDone = true;
+    loadDashboard();
+    startAutoRefresh();
+  }
 }
 
 function startAutoRefresh() {
@@ -620,34 +802,166 @@ function startAutoRefresh() {
   }, 30000);
 }
 
+// ── Onboarding Wizard ──
+function showOnboarding() {
+  document.getElementById('wizardOverlay').style.display = 'flex';
+  wizardStep = 0;
+  renderWizardStep();
+}
+
+function renderWizardStep() {
+  const card = document.getElementById('wizardCard');
+  const dots = `<div class="wizard-step-dots">
+    ${[0,1,2,3].map(i => `<div class="wizard-dot ${i === wizardStep ? 'active' : i < wizardStep ? 'done' : ''}"></div>`).join('')}
+  </div>`;
+
+  if (wizardStep === 0) {
+    card.innerHTML = `${dots}
+      <div class="wizard-icon">&#128075;</div>
+      <div class="wizard-title">&#3618;&#3636;&#3609;&#3604;&#3637;&#3605;&#3657;&#3629;&#3609;&#3619;&#3633;&#3610;&#3626;&#3641;&#3656; Silo!</div>
+      <div class="wizard-desc">
+        &#3619;&#3632;&#3610;&#3610; AI &#3626;&#3619;&#3640;&#3611;&#3649;&#3594;&#3607;&#3585;&#3621;&#3640;&#3656;&#3617; LINE &#3629;&#3633;&#3605;&#3650;&#3609;&#3617;&#3633;&#3605;&#3636;<br>
+        &#3652;&#3617;&#3656;&#3605;&#3657;&#3629;&#3591;&#3629;&#3656;&#3634;&#3609;&#3618;&#3657;&#3629;&#3609;&#3627;&#3621;&#3633;&#3591; &#3652;&#3617;&#3656;&#3605;&#3657;&#3629;&#3591;&#3614;&#3621;&#3634;&#3604;&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3626;&#3635;&#3588;&#3633;&#3597;<br>
+        Silo &#3626;&#3619;&#3640;&#3611;&#3651;&#3627;&#3657;&#3607;&#3640;&#3585;&#3623;&#3633;&#3609;
+      </div>
+      <div class="wizard-btn-row">
+        <button class="btn btn-primary btn-lg" onclick="wizardNext()">&#3648;&#3619;&#3636;&#3656;&#3617;&#3605;&#3633;&#3657;&#3591;&#3588;&#3656;&#3634; &rarr;</button>
+      </div>`;
+  } else if (wizardStep === 1) {
+    card.innerHTML = `${dots}
+      <div class="wizard-icon">&#129302;</div>
+      <div class="wizard-title">&#3648;&#3614;&#3636;&#3656;&#3617; Silo Bot &#3648;&#3586;&#3657;&#3634;&#3585;&#3621;&#3640;&#3656;&#3617; LINE</div>
+      <div class="wizard-desc">&#3607;&#3635;&#3605;&#3634;&#3617;&#3586;&#3633;&#3657;&#3609;&#3605;&#3629;&#3609;&#3648;&#3627;&#3621;&#3656;&#3634;&#3609;&#3637;&#3657;&#3648;&#3614;&#3639;&#3656;&#3629;&#3648;&#3614;&#3636;&#3656;&#3617; Bot &#3648;&#3586;&#3657;&#3634;&#3585;&#3621;&#3640;&#3656;&#3617;</div>
+      <div class="wizard-steps-list">
+        <div class="wizard-step-item">
+          <div class="wizard-step-num">1</div>
+          <div>&#3648;&#3611;&#3636;&#3604;&#3585;&#3621;&#3640;&#3656;&#3617; LINE &#3607;&#3637;&#3656;&#3605;&#3657;&#3629;&#3591;&#3585;&#3634;&#3619;</div>
+        </div>
+        <div class="wizard-step-item">
+          <div class="wizard-step-num">2</div>
+          <div>&#3585;&#3604;&#3648;&#3594;&#3636;&#3597;&#3648;&#3614;&#3639;&#3656;&#3629;&#3609; &rarr; &#3588;&#3657;&#3609;&#3627;&#3634; "<strong>Silo AI</strong>"</div>
+        </div>
+        <div class="wizard-step-item">
+          <div class="wizard-step-num">3</div>
+          <div>&#3648;&#3614;&#3636;&#3656;&#3617; Bot &#3648;&#3586;&#3657;&#3634;&#3585;&#3621;&#3640;&#3656;&#3617;</div>
+        </div>
+        <div class="wizard-step-item">
+          <div class="wizard-step-num">4</div>
+          <div>Bot &#3592;&#3632;&#3648;&#3619;&#3636;&#3656;&#3617;&#3619;&#3633;&#3610;&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3629;&#3633;&#3605;&#3650;&#3609;&#3617;&#3633;&#3605;&#3636;</div>
+        </div>
+      </div>
+      <div class="wizard-btn-row">
+        <button class="btn btn-ghost" onclick="wizardBack()">&larr; &#3585;&#3621;&#3633;&#3610;</button>
+        <button class="btn btn-primary btn-lg" onclick="wizardNext()">&#3648;&#3614;&#3636;&#3656;&#3617;&#3649;&#3621;&#3657;&#3623; &#3606;&#3633;&#3604;&#3652;&#3611; &rarr;</button>
+      </div>`;
+  } else if (wizardStep === 2) {
+    card.innerHTML = `${dots}
+      <div class="wizard-icon">&#128269;</div>
+      <div class="wizard-title">&#3648;&#3621;&#3639;&#3629;&#3585;&#3585;&#3621;&#3640;&#3656;&#3617;&#3607;&#3637;&#3656;&#3605;&#3657;&#3629;&#3591;&#3585;&#3634;&#3619;&#3626;&#3619;&#3640;&#3611;</div>
+      <div class="wizard-desc">&#3585;&#3621;&#3640;&#3656;&#3617;&#3607;&#3637;&#3656; Bot &#3648;&#3586;&#3657;&#3634;&#3619;&#3656;&#3623;&#3617;&#3649;&#3621;&#3657;&#3623;&#3592;&#3632;&#3649;&#3626;&#3604;&#3591;&#3607;&#3637;&#3656;&#3609;&#3637;&#3656;</div>
+      <div class="wizard-groups-list" id="wizardGroupsList">
+        <div class="loading"><div class="spinner-sm"></div> &#3585;&#3635;&#3621;&#3633;&#3591;&#3650;&#3627;&#3621;&#3604;...</div>
+      </div>
+      <div class="wizard-btn-row">
+        <button class="btn btn-ghost" onclick="wizardBack()">&larr; &#3585;&#3621;&#3633;&#3610;</button>
+        <button class="btn btn-primary btn-lg" onclick="wizardNext()">&#3606;&#3633;&#3604;&#3652;&#3611; &rarr;</button>
+      </div>`;
+    loadWizardGroups();
+  } else if (wizardStep === 3) {
+    card.innerHTML = `${dots}
+      <div class="wizard-icon" style="background:rgba(16,185,129,0.15)">&#10003;</div>
+      <div class="wizard-title">&#3614;&#3619;&#3657;&#3629;&#3617;&#3651;&#3594;&#3657;&#3591;&#3634;&#3609;!</div>
+      <div class="wizard-desc">
+        Silo &#3592;&#3632;&#3626;&#3619;&#3640;&#3611;&#3649;&#3594;&#3607;&#3651;&#3627;&#3657;&#3607;&#3640;&#3585;&#3623;&#3633;&#3609;&#3648;&#3623;&#3621;&#3634; 23:00<br>
+        &#3588;&#3640;&#3603;&#3626;&#3634;&#3617;&#3634;&#3619;&#3606;&#3585;&#3604; "&#3626;&#3619;&#3657;&#3634;&#3591; Digest &#3605;&#3629;&#3609;&#3609;&#3637;&#3657;" &#3652;&#3604;&#3657;&#3607;&#3640;&#3585;&#3648;&#3617;&#3639;&#3656;&#3629;<br>
+        &#3627;&#3619;&#3639;&#3629;&#3606;&#3634;&#3617; AI &#3648;&#3585;&#3637;&#3656;&#3618;&#3623;&#3585;&#3633;&#3610;&#3649;&#3594;&#3607;&#3652;&#3604;&#3657;&#3648;&#3621;&#3618;
+      </div>
+      <div class="wizard-btn-row">
+        <button class="btn btn-primary btn-lg" onclick="finishOnboarding()">&#3652;&#3611;&#3607;&#3637;&#3656; Dashboard &rarr;</button>
+      </div>`;
+  }
+}
+
+async function loadWizardGroups() {
+  const data = await api('/api/v1/dashboard/groups');
+  groupsData = Array.isArray(data) ? data : [];
+  const el = document.getElementById('wizardGroupsList');
+
+  if (groupsData.length === 0) {
+    el.innerHTML = `<div class="wizard-empty">
+      <div class="wizard-empty-icon">&#128269;</div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:8px">&#3619;&#3629; Bot &#3648;&#3586;&#3657;&#3634;&#3585;&#3621;&#3640;&#3656;&#3617;...</div>
+      <div style="font-size:13px;color:var(--text-faint);margin-bottom:16px">&#3585;&#3619;&#3640;&#3603;&#3634;&#3648;&#3614;&#3636;&#3656;&#3617; Bot &#3648;&#3586;&#3657;&#3634;&#3585;&#3621;&#3640;&#3656;&#3617; LINE &#3585;&#3656;&#3629;&#3609;</div>
+      <button class="btn btn-ghost btn-sm" onclick="loadWizardGroups()">&#8635; &#3619;&#3637;&#3648;&#3615;&#3619;&#3594;</button>
+    </div>`;
+    return;
+  }
+
+  groupsData.forEach(g => { if (!(g.chat_id in wizardGroupToggles)) wizardGroupToggles[g.chat_id] = true; });
+
+  el.innerHTML = groupsData.map(g => `
+    <div class="wizard-group-row">
+      <div class="wizard-group-info">
+        <div class="wizard-group-name">${esc(g.name)}</div>
+        <div class="wizard-group-meta">${g.member_count ? g.member_count + ' &#3626;&#3617;&#3634;&#3594;&#3636;&#3585;' : ''}</div>
+      </div>
+      <div class="toggle-wrap">
+        <span class="toggle-label">Auto-digest</span>
+        <div class="toggle ${wizardGroupToggles[g.chat_id] ? 'active' : ''}"
+             onclick="toggleWizardGroup('${esc(g.chat_id)}', this)"></div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleWizardGroup(chatId, el) {
+  wizardGroupToggles[chatId] = !wizardGroupToggles[chatId];
+  el.classList.toggle('active');
+}
+
+function wizardNext() { wizardStep++; renderWizardStep(); }
+function wizardBack() { wizardStep--; renderWizardStep(); }
+
+function finishOnboarding() {
+  document.getElementById('wizardOverlay').style.display = 'none';
+  onboardingDone = true;
+  loadDashboard();
+  startAutoRefresh();
+}
+
 // ── Navigation ──
 function switchView(view) {
   currentView = view;
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('view-' + view).classList.add('active');
-  document.querySelector(`[data-view="${view}"]`).classList.add('active');
+  const navEl = document.querySelector(`[data-view="${view}"]`);
+  if (navEl) navEl.classList.add('active');
 
   const titles = {
-    dashboard: ['Dashboard', 'ภาพรวมกิจกรรมวันนี้'],
-    groups: ['Groups', 'กลุ่ม LINE ที่เชื่อมต่อ'],
-    digests: ['Digests', 'สรุป AI ย้อนหลัง'],
-    aichat: ['AI Chat', 'ถาม AI เกี่ยวกับแชท'],
-    settings: ['Settings', 'ตั้งค่าองค์กรและการเชื่อมต่อ'],
+    dashboard: ['Dashboard', '&#3616;&#3634;&#3614;&#3619;&#3623;&#3617;&#3585;&#3636;&#3592;&#3585;&#3619;&#3619;&#3617;&#3623;&#3633;&#3609;&#3609;&#3637;&#3657;'],
+    groups: ['Groups', '&#3585;&#3621;&#3640;&#3656;&#3617; LINE &#3607;&#3637;&#3656;&#3648;&#3594;&#3639;&#3656;&#3629;&#3617;&#3605;&#3656;&#3629;'],
+    digests: ['Digests', '&#3626;&#3619;&#3640;&#3611; AI &#3618;&#3657;&#3629;&#3609;&#3627;&#3621;&#3633;&#3591;'],
+    aichat: ['AI Chat', '&#3606;&#3634;&#3617; AI &#3648;&#3585;&#3637;&#3656;&#3618;&#3623;&#3585;&#3633;&#3610;&#3649;&#3594;&#3607;'],
+    settings: ['Settings', '&#3605;&#3633;&#3657;&#3591;&#3588;&#3656;&#3634;&#3629;&#3591;&#3588;&#3660;&#3585;&#3619;&#3649;&#3621;&#3632;&#3585;&#3634;&#3619;&#3648;&#3594;&#3639;&#3656;&#3629;&#3617;&#3605;&#3656;&#3629;'],
   };
   const [t, s] = titles[view] || [view, ''];
   document.getElementById('pageTitle').textContent = t;
-  document.getElementById('pageSubtitle').textContent = s;
+  document.getElementById('pageSubtitle').innerHTML = s;
 
   // Header actions
   const ha = document.getElementById('headerActions');
+  const bellHtml = `<div class="notif-bell" onclick="switchView('digests')" title="Digests">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    <div class="notif-dot" id="notifDot" style="display:none"></div>
+  </div>`;
   if (view === 'digests') {
-    ha.innerHTML = '<button class="btn btn-primary btn-sm" onclick="generateAllDigests()">&#9889; Generate All</button>';
-  } else if (view === 'groups') {
-    ha.innerHTML = '<button class="btn btn-primary btn-sm" onclick="showAddGroup()">+ เพิ่มกลุ่ม</button>';
+    ha.innerHTML = `<button class="btn btn-primary btn-sm" onclick="generateAllDigests()">&#9889; Generate All</button>${bellHtml}`;
   } else {
-    ha.innerHTML = '';
+    ha.innerHTML = bellHtml;
   }
+
+  // Quick AI bar visibility
+  document.getElementById('quickAiBar').classList.toggle('hidden', view !== 'dashboard');
 
   if (view === 'dashboard') loadDashboard();
   else if (view === 'groups') loadGroups();
@@ -670,21 +984,61 @@ function closeSidebar() {
 
 // ── Dashboard ──
 async function loadDashboard() {
-  const data = await api(`/api/v1/dashboard/overview`);
+  const data = await api('/api/v1/dashboard/overview');
   if (!data) return;
 
   document.getElementById('statMessages').textContent = (data.messages_today || 0).toLocaleString();
-  document.getElementById('statMessagesSub').textContent = `${data.date}`;
+  document.getElementById('statMessagesSub').textContent = data.date || '';
   document.getElementById('statGroups').textContent = data.active_groups || 0;
-  document.getElementById('statGroupsSub').textContent = `${data.total_groups || 0} ทั้งหมด`;
+  document.getElementById('statGroupsSub').textContent = (data.total_groups || 0) + ' &#3607;&#3633;&#3657;&#3591;&#3627;&#3617;&#3604;';
   document.getElementById('statDigests').textContent = data.digests_today || 0;
-  document.getElementById('statDigestsSub').textContent = 'วันนี้';
+  document.getElementById('statDigestsSub').textContent = '&#3623;&#3633;&#3609;&#3609;&#3637;&#3657;';
   const usage = data.usage || {};
   document.getElementById('statAI').textContent = (usage.ai_queries || 0).toLocaleString();
-  document.getElementById('statAISub').textContent = `เดือนนี้`;
+  document.getElementById('statAISub').textContent = '&#3648;&#3604;&#3639;&#3629;&#3609;&#3609;&#3637;&#3657;';
 
+  loadDashGroups();
   loadActivity();
   loadTopGroups();
+}
+
+async function loadDashGroups() {
+  const data = await api('/api/v1/dashboard/groups');
+  groupsData = Array.isArray(data) ? data : [];
+  const el = document.getElementById('dashGroupsGrid');
+
+  if (groupsData.length === 0) {
+    el.innerHTML = `<div class="group-card" style="grid-column:1/-1;text-align:center;padding:40px">
+      <div style="font-size:36px;margin-bottom:12px;opacity:0.5">&#128101;</div>
+      <div style="font-size:15px;font-weight:600;margin-bottom:8px;color:var(--text-dim)">&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3617;&#3637;&#3585;&#3621;&#3640;&#3656;&#3617;</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px">&#3648;&#3614;&#3636;&#3656;&#3617; Silo Bot &#3648;&#3586;&#3657;&#3634;&#3585;&#3621;&#3640;&#3656;&#3617; LINE &#3648;&#3614;&#3639;&#3656;&#3629;&#3648;&#3619;&#3636;&#3656;&#3617;&#3651;&#3594;&#3657;&#3591;&#3634;&#3609;</div>
+      <button class="btn btn-primary btn-sm" onclick="showOnboarding()">&#3648;&#3619;&#3636;&#3656;&#3617;&#3605;&#3633;&#3657;&#3591;&#3588;&#3656;&#3634;</button>
+    </div>`;
+    return;
+  }
+
+  el.innerHTML = groupsData.slice(0, 6).map(g => `
+    <div class="group-card">
+      <div class="group-card-header">
+        <div class="group-card-name">${esc(g.name)}</div>
+        ${g.status === 'active' ? '<span class="badge badge-green">Active</span>' : '<span class="badge badge-red">Inactive</span>'}
+      </div>
+      <div class="group-card-stats">
+        <div>&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3623;&#3633;&#3609;&#3609;&#3637;&#3657;<span class="group-card-stat-val">${(g.messages_today || 0).toLocaleString()}</span></div>
+        <div>Digest &#3621;&#3656;&#3634;&#3626;&#3640;&#3604;<span class="group-card-stat-val">${g.last_digest_date || '-'}</span></div>
+      </div>
+      <div class="group-card-actions">
+        <button class="btn btn-ghost btn-sm" onclick="switchView('groups'); setTimeout(()=>showGroupDetail('${esc(g.chat_id)}'),100)">
+          &#128172; &#3604;&#3641;&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;
+        </button>
+        <button class="btn btn-primary btn-sm" onclick="generateDigest('${esc(g.chat_id)}')">
+          &#9889; &#3626;&#3619;&#3657;&#3634;&#3591; Digest
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="quickAiForGroup('${esc(g.chat_id)}','${esc(g.name)}')">
+          &#129302; &#3606;&#3634;&#3617; AI
+        </button>
+      </div>
+    </div>`).join('');
 }
 
 async function loadActivity() {
@@ -692,7 +1046,7 @@ async function loadActivity() {
   if (!data) return;
   const el = document.getElementById('activityFeed');
   if (!data.feed || data.feed.length === 0) {
-    el.innerHTML = '<div class="empty-state"><div class="icon">&#128196;</div><div class="title">ยังไม่มีกิจกรรม</div></div>';
+    el.innerHTML = '<div class="empty-state"><div class="icon">&#128196;</div><div class="title">&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3617;&#3637;&#3585;&#3636;&#3592;&#3585;&#3619;&#3619;&#3617;</div></div>';
     return;
   }
   el.innerHTML = data.feed.map(f => {
@@ -700,7 +1054,7 @@ async function loadActivity() {
     const emoji = f.type === 'digest' ? '&#128203;' : '&#128172;';
     const text = f.type === 'digest'
       ? `<strong>${esc(f.chat_name)}</strong> — ${esc(f.summary || 'Digest generated')}`
-      : `<strong>${esc(f.chat_name)}</strong> — ${f.count} ข้อความ`;
+      : `<strong>${esc(f.chat_name)}</strong> — ${f.count} &#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;`;
     return `<div class="feed-item">
       <div class="feed-icon ${icon}">${emoji}</div>
       <div class="feed-text">${text}<div class="feed-time">${timeAgo(f.timestamp)}</div></div>
@@ -709,55 +1063,84 @@ async function loadActivity() {
 }
 
 async function loadTopGroups() {
-  const data = await api('/api/v1/dashboard/groups');
-  if (!data) return;
-  const groups = Array.isArray(data) ? data : [];
+  const groups = groupsData;
   const el = document.getElementById('topGroupsBody');
   if (groups.length === 0) {
-    el.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-faint)">ยังไม่มีกลุ่ม</td></tr>';
+    el.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-faint)">&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3617;&#3637;&#3585;&#3621;&#3640;&#3656;&#3617;</td></tr>';
     return;
   }
   el.innerHTML = groups.slice(0, 5).map(g => `
-    <tr onclick="switchView('groups'); showGroupDetail('${esc(g.chat_id)}')">
+    <tr onclick="switchView('groups'); setTimeout(()=>showGroupDetail('${esc(g.chat_id)}'),100)">
       <td><strong>${esc(g.name)}</strong></td>
-      <td>${g.messages_today.toLocaleString()}</td>
+      <td>${(g.messages_today || 0).toLocaleString()}</td>
       <td>${g.has_digest_today ? '<span class="badge badge-green">Digest</span>' : '<span class="badge badge-amber">Pending</span>'}</td>
     </tr>`).join('');
 }
 
-// ── Groups ──
+// ── Groups View ──
 async function loadGroups() {
   const data = await api('/api/v1/dashboard/groups');
   groupsData = Array.isArray(data) ? data : [];
   const el = document.getElementById('groupsList');
   document.getElementById('groupDetail').style.display = 'none';
+  el.style.display = '';
+
   if (groupsData.length === 0) {
-    el.innerHTML = '<div class="empty-state"><div class="icon">&#128101;</div><div class="title">ยังไม่มีกลุ่ม</div><div class="desc">เพิ่มกลุ่ม LINE เพื่อเริ่มติดตาม</div></div>';
+    el.innerHTML = `<div class="empty-state" style="padding:60px 20px">
+      <div class="icon">&#128101;</div>
+      <div class="title">&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3617;&#3637;&#3585;&#3621;&#3640;&#3656;&#3617;</div>
+      <div class="desc" style="margin-bottom:20px">
+        &#3648;&#3614;&#3636;&#3656;&#3617; Silo Bot &#3648;&#3586;&#3657;&#3634;&#3585;&#3621;&#3640;&#3656;&#3617; LINE &#3586;&#3629;&#3591;&#3588;&#3640;&#3603;<br>
+        Bot &#3592;&#3632;&#3605;&#3619;&#3623;&#3592;&#3592;&#3633;&#3610;&#3585;&#3621;&#3640;&#3656;&#3617;&#3629;&#3633;&#3605;&#3650;&#3609;&#3617;&#3633;&#3605;&#3636;&#3648;&#3617;&#3639;&#3656;&#3629;&#3606;&#3641;&#3585;&#3648;&#3614;&#3636;&#3656;&#3617;&#3648;&#3586;&#3657;&#3634;&#3585;&#3621;&#3640;&#3656;&#3617;
+      </div>
+      <button class="btn btn-primary" onclick="showOnboarding()">&#3648;&#3619;&#3636;&#3656;&#3617;&#3605;&#3633;&#3657;&#3591;&#3588;&#3656;&#3634;</button>
+    </div>`;
     return;
   }
-  el.innerHTML = '<div class="panel-grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">' +
+
+  el.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px">' +
     groupsData.map(g => `
-      <div class="panel" style="cursor:pointer" onclick="showGroupDetail('${esc(g.chat_id)}')">
-        <div class="panel-body">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-            <strong style="font-size:15px">${esc(g.name)}</strong>
-            ${g.status === 'active' ? '<span class="badge badge-green">Active</span>' : '<span class="badge badge-red">Inactive</span>'}
+      <div class="group-card">
+        <div class="group-card-header">
+          <div class="group-card-name">${esc(g.name)}</div>
+          ${g.status === 'active' ? '<span class="badge badge-green">Active</span>' : '<span class="badge badge-red">Inactive</span>'}
+        </div>
+        <div class="group-card-stats">
+          <div>&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3623;&#3633;&#3609;&#3609;&#3637;&#3657;<span class="group-card-stat-val">${(g.messages_today || 0).toLocaleString()}</span></div>
+          <div>&#3607;&#3633;&#3657;&#3591;&#3627;&#3617;&#3604;<span class="group-card-stat-val">${(g.total_messages || 0).toLocaleString()}</span></div>
+          <div>Digest &#3621;&#3656;&#3634;&#3626;&#3640;&#3604;<span class="group-card-stat-val">${g.last_digest_date || '-'}</span></div>
+          <div>&#3626;&#3606;&#3634;&#3609;&#3632;<span class="group-card-stat-val">${g.has_digest_today ? '<span class="badge badge-green">Digest OK</span>' : '<span class="badge badge-amber">Pending</span>'}</span></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid var(--border)">
+          <div class="toggle-wrap">
+            <span class="toggle-label" style="font-size:12px">Auto-digest</span>
+            <div class="toggle ${g.auto_digest !== false ? 'active' : ''}"
+                 onclick="toggleAutoDigest('${esc(g.chat_id)}', this)"></div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;color:var(--text-muted)">
-            <div>ข้อความวันนี้: <strong style="color:var(--text)">${g.messages_today}</strong></div>
-            <div>ทั้งหมด: <strong style="color:var(--text)">${(g.total_messages||0).toLocaleString()}</strong></div>
-            <div>Digest ล่าสุด: <strong style="color:var(--text)">${g.last_digest_date || '-'}</strong></div>
-            <div>${g.has_digest_today ? '<span class="badge badge-green badge-sm">Digest OK</span>' : '<span class="badge badge-amber badge-sm">Pending</span>'}</div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost btn-sm" onclick="showGroupDetail('${esc(g.chat_id)}')">&#3604;&#3641;&#3619;&#3634;&#3618;&#3621;&#3632;&#3648;&#3629;&#3637;&#3618;&#3604;</button>
+            <button class="btn btn-primary btn-sm" onclick="generateDigest('${esc(g.chat_id)}')">&#9889; &#3626;&#3619;&#3657;&#3634;&#3591; Digest &#3605;&#3629;&#3609;&#3609;&#3637;&#3657;</button>
           </div>
         </div>
       </div>`).join('') + '</div>';
 }
 
+async function toggleAutoDigest(chatId, el) {
+  el.classList.toggle('active');
+  const enabled = el.classList.contains('active');
+  // Fire and forget - update server
+  api(`/api/v1/dashboard/groups/${chatId}/auto-digest`, {
+    method: 'PUT',
+    body: JSON.stringify({ enabled }),
+  });
+}
+
 async function showGroupDetail(chatId) {
-  document.getElementById('groupsList').style.display = 'none';
+  const el_list = document.getElementById('groupsList');
+  el_list.style.display = 'none';
   const det = document.getElementById('groupDetail');
   det.style.display = 'block';
-  det.innerHTML = '<div class="loading"><div class="spinner-sm"></div> กำลังโหลด...</div>';
+  det.innerHTML = '<div class="loading"><div class="spinner-sm"></div> &#3585;&#3635;&#3621;&#3633;&#3591;&#3650;&#3627;&#3621;&#3604;...</div>';
 
   const [msgs, digests] = await Promise.all([
     api(`/api/v1/dashboard/groups/${chatId}/messages?limit=30`),
@@ -766,11 +1149,33 @@ async function showGroupDetail(chatId) {
 
   const g = groupsData.find(x => x.chat_id === chatId) || {};
   let html = `
-    <div style="margin-bottom:16px">
-      <button class="btn btn-ghost btn-sm" onclick="loadGroups()">&larr; กลับ</button>
-      <span style="margin-left:12px;font-size:18px;font-weight:700">${esc(g.name || chatId)}</span>
-      <button class="btn btn-primary btn-sm" style="float:right" onclick="generateDigest('${esc(chatId)}')">&#9889; Generate Digest</button>
+    <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button class="btn btn-ghost btn-sm" onclick="loadGroups()">&larr; &#3585;&#3621;&#3633;&#3610;</button>
+        <span style="font-size:20px;font-weight:700">${esc(g.name || chatId)}</span>
+        ${g.status === 'active' ? '<span class="badge badge-green">Active</span>' : ''}
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary btn-sm" onclick="generateDigest('${esc(chatId)}')">&#9889; &#3626;&#3619;&#3657;&#3634;&#3591; Digest &#3605;&#3629;&#3609;&#3609;&#3637;&#3657;</button>
+        <button class="btn btn-ghost btn-sm" onclick="quickAiForGroup('${esc(chatId)}','${esc(g.name || '')}')">&#129302; &#3606;&#3634;&#3617; AI</button>
+      </div>
     </div>`;
+
+  // Stats bar
+  html += `<div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
+    <div class="stat-card" style="padding:16px 20px">
+      <div class="stat-label" style="font-size:11px">&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3623;&#3633;&#3609;&#3609;&#3637;&#3657;</div>
+      <div class="stat-value" style="font-size:24px">${g.messages_today || 0}</div>
+    </div>
+    <div class="stat-card" style="padding:16px 20px">
+      <div class="stat-label" style="font-size:11px">&#3607;&#3633;&#3657;&#3591;&#3627;&#3617;&#3604;</div>
+      <div class="stat-value" style="font-size:24px">${(g.total_messages || 0).toLocaleString()}</div>
+    </div>
+    <div class="stat-card" style="padding:16px 20px">
+      <div class="stat-label" style="font-size:11px">Digest &#3621;&#3656;&#3634;&#3626;&#3640;&#3604;</div>
+      <div class="stat-value" style="font-size:24px;-webkit-text-fill-color:var(--text)">${g.last_digest_date || '-'}</div>
+    </div>
+  </div>`;
 
   // Digests
   html += '<div class="panel" style="margin-bottom:16px"><div class="panel-header"><span class="panel-title">Digests</span></div><div class="panel-body">';
@@ -782,20 +1187,21 @@ async function showGroupDetail(chatId) {
             <span class="badge badge-purple">${esc(d.date || '')}</span>
             <span class="digest-msgs">${d.message_count || 0} msgs</span>
           </div>
-          <span style="color:var(--text-faint)">&#9660;</span>
+          <span style="color:var(--text-faint);transition:transform .2s">&#9660;</span>
         </div>
         <div class="digest-body">
-          <div>${esc(d.summary || '')}</div>
+          <div style="white-space:pre-wrap">${esc(d.summary || '')}</div>
           ${d.topics && d.topics.length ? '<div class="digest-topics">' + d.topics.map(t => '<span class="digest-topic">' + esc(t) + '</span>').join('') + '</div>' : ''}
+          ${d.action_items && d.action_items.length ? '<div style="margin-top:12px"><strong style="font-size:12px;color:var(--amber)">Action Items:</strong><ul style="margin-top:4px;padding-left:18px;font-size:12px">' + d.action_items.map(a => '<li>' + esc(a) + '</li>').join('') + '</ul></div>' : ''}
         </div>
       </div>`).join('');
   } else {
-    html += '<div style="color:var(--text-faint);font-size:13px">ยังไม่มี Digest</div>';
+    html += '<div style="color:var(--text-faint);font-size:13px;padding:16px 0;text-align:center">&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3617;&#3637; Digest &mdash; &#3585;&#3604;&#3611;&#3640;&#3656;&#3617; "&#3626;&#3619;&#3657;&#3634;&#3591; Digest &#3605;&#3629;&#3609;&#3609;&#3637;&#3657;" &#3648;&#3614;&#3639;&#3656;&#3629;&#3648;&#3619;&#3636;&#3656;&#3617;</div>';
   }
   html += '</div></div>';
 
   // Messages
-  html += '<div class="panel"><div class="panel-header"><span class="panel-title">ข้อความล่าสุด</span><span class="badge badge-blue">' + ((msgs && msgs.total) || 0) + ' ทั้งหมด</span></div><div class="panel-body">';
+  html += '<div class="panel"><div class="panel-header"><span class="panel-title">&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3621;&#3656;&#3634;&#3626;&#3640;&#3604;</span><span class="badge badge-blue">' + ((msgs && msgs.total) || 0) + ' &#3607;&#3633;&#3657;&#3591;&#3627;&#3617;&#3604;</span></div><div class="panel-body">';
   if (msgs && msgs.messages && msgs.messages.length > 0) {
     html += msgs.messages.map(m => `
       <div class="msg-item">
@@ -807,7 +1213,7 @@ async function showGroupDetail(chatId) {
         </div>
       </div>`).join('');
   } else {
-    html += '<div style="color:var(--text-faint);font-size:13px">ไม่มีข้อความ</div>';
+    html += '<div style="color:var(--text-faint);font-size:13px;text-align:center;padding:16px 0">&#3652;&#3617;&#3656;&#3617;&#3637;&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;</div>';
   }
   html += '</div></div>';
 
@@ -815,52 +1221,53 @@ async function showGroupDetail(chatId) {
 }
 
 async function generateDigest(chatId) {
+  const btn = event ? event.target : null;
+  if (btn) { btn.disabled = true; btn.innerHTML = '<div class="spinner-sm" style="display:inline-block;vertical-align:middle;margin:0"></div>'; }
+
   const resp = await api('/api/v1/digest/generate', {
     method: 'POST',
     body: JSON.stringify({ chat_id: chatId, last_24h: true }),
   });
+
+  if (btn) { btn.disabled = false; btn.innerHTML = '&#9889; &#3626;&#3619;&#3657;&#3634;&#3591; Digest &#3605;&#3629;&#3609;&#3609;&#3637;&#3657;'; }
+
   if (resp && resp.ok) {
-    alert('Digest สร้างเสร็จแล้ว: ' + (resp.message_count || 0) + ' ข้อความ');
-    showGroupDetail(chatId);
+    showToast('Digest &#3626;&#3619;&#3657;&#3634;&#3591;&#3648;&#3626;&#3619;&#3655;&#3592;&#3649;&#3621;&#3657;&#3623;: ' + (resp.message_count || 0) + ' &#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;', 'success');
+    if (currentView === 'groups') showGroupDetail(chatId);
+    else if (currentView === 'dashboard') loadDashboard();
   } else {
-    alert('Error: ' + (resp ? resp.error || resp.detail || 'Unknown' : 'Network error'));
+    showToast('Error: ' + (resp ? resp.error || resp.detail || 'Unknown' : 'Network error'), 'error');
   }
 }
 
 async function generateAllDigests() {
-  if (!confirm('สร้าง Digest สำหรับทุกกลุ่ม?')) return;
+  if (!confirm('&#3626;&#3619;&#3657;&#3634;&#3591; Digest &#3626;&#3635;&#3627;&#3619;&#3633;&#3610;&#3607;&#3640;&#3585;&#3585;&#3621;&#3640;&#3656;&#3617;?')) return;
   const resp = await api('/api/v1/digest/generate/all', {
     method: 'POST',
     body: JSON.stringify({}),
   });
   if (resp && resp.ok) {
-    alert(`สำเร็จ ${resp.success}/${resp.total} กลุ่ม`);
+    showToast(`&#3626;&#3635;&#3648;&#3619;&#3655;&#3592; ${resp.success}/${resp.total} &#3585;&#3621;&#3640;&#3656;&#3617;`, 'success');
     loadDigests();
   } else {
-    alert('Error: ' + (resp ? resp.error || resp.detail || 'Unknown' : 'Network error'));
+    showToast('Error: ' + (resp ? resp.error || resp.detail || 'Unknown' : 'Network error'), 'error');
   }
 }
 
-function showAddGroup() {
-  const mid = prompt('Group MID (LINE group ID):');
-  if (!mid) return;
-  const name = prompt('ชื่อกลุ่ม:') || '';
-  api(`/api/v1/org/${orgId}/groups`, {
-    method: 'POST',
-    body: JSON.stringify({ group_mid: mid, group_name: name }),
-  }).then(r => {
-    if (r && r.ok) { alert('เพิ่มกลุ่มแล้ว'); loadGroups(); }
-    else alert('Error: ' + (r ? r.detail || 'Unknown' : 'Failed'));
-  });
-}
-
-// ── Digests ──
+// ── Digests View ──
 async function loadDigests() {
-  const data = await api('/api/v1/digest/list?limit=30');
   const el = document.getElementById('digestsList');
+  el.innerHTML = '<div class="loading"><div class="spinner-sm"></div> &#3585;&#3635;&#3621;&#3633;&#3591;&#3650;&#3627;&#3621;&#3604;...</div>';
+
+  const data = await api('/api/v1/digest/list?limit=30');
   const digests = Array.isArray(data) ? data : [];
   if (digests.length === 0) {
-    el.innerHTML = '<div class="empty-state"><div class="icon">&#128203;</div><div class="title">ยังไม่มี Digest</div><div class="desc">กด Generate เพื่อสร้างสรุป AI</div></div>';
+    el.innerHTML = `<div class="empty-state" style="padding:60px 20px">
+      <div class="icon">&#128203;</div>
+      <div class="title">&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3617;&#3637; Digest</div>
+      <div class="desc" style="margin-bottom:20px">&#3585;&#3604; "Generate All" &#3648;&#3614;&#3639;&#3656;&#3629;&#3626;&#3619;&#3657;&#3634;&#3591;&#3626;&#3619;&#3640;&#3611; AI &#3626;&#3635;&#3627;&#3619;&#3633;&#3610;&#3607;&#3640;&#3585;&#3585;&#3621;&#3640;&#3656;&#3617;</div>
+      <button class="btn btn-primary" onclick="generateAllDigests()">&#9889; Generate All</button>
+    </div>`;
     return;
   }
   el.innerHTML = digests.map(d => `
@@ -878,8 +1285,22 @@ async function loadDigests() {
         ${d.topics && d.topics.length ? '<div class="digest-topics">' + d.topics.map(t => '<span class="digest-topic">' + esc(t) + '</span>').join('') + '</div>' : ''}
         ${d.action_items && d.action_items.length ? '<div style="margin-top:12px"><strong style="font-size:12px;color:var(--amber)">Action Items:</strong><ul style="margin-top:4px;padding-left:18px;font-size:12px">' + d.action_items.map(a => '<li>' + esc(a) + '</li>').join('') + '</ul></div>' : ''}
         ${d.sentiment ? '<div style="margin-top:8px"><span class="badge ' + sentimentBadge(d.sentiment) + '">' + esc(d.sentiment) + '</span></div>' : ''}
+        <div class="digest-actions">
+          <button class="btn btn-ghost btn-sm" onclick="copyDigest(this.parentElement.parentElement)">&#128203; &#3588;&#3633;&#3604;&#3621;&#3629;&#3585;</button>
+          <button class="btn btn-ghost btn-sm" onclick="shareDigest('${esc(d.id || '')}')">&#128279; &#3649;&#3594;&#3619;&#3660;</button>
+        </div>
       </div>
     </div>`).join('');
+}
+
+function copyDigest(bodyEl) {
+  const text = bodyEl.querySelector('div').textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('&#3588;&#3633;&#3604;&#3621;&#3629;&#3585;&#3649;&#3621;&#3657;&#3623;', 'success'));
+}
+
+function shareDigest(id) {
+  const url = window.location.origin + '/digest/' + id;
+  navigator.clipboard.writeText(url).then(() => showToast('&#3588;&#3633;&#3604;&#3621;&#3629;&#3585;&#3621;&#3636;&#3591;&#3585;&#3660;&#3649;&#3621;&#3657;&#3623;', 'success'));
 }
 
 // ── AI Chat ──
@@ -887,10 +1308,14 @@ async function loadChatGroups() {
   const data = await api('/api/v1/dashboard/groups');
   const groups = Array.isArray(data) ? data : [];
   const el = document.getElementById('chatGroupList');
+  if (groups.length === 0) {
+    el.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-faint);font-size:13px">&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3617;&#3637;&#3585;&#3621;&#3640;&#3656;&#3617;</div>';
+    return;
+  }
   el.innerHTML = groups.map(g => `
     <div class="chat-group-item ${selectedChatId === g.chat_id ? 'active' : ''}" onclick="selectChat('${esc(g.chat_id)}', '${esc(g.name)}')" data-name="${esc(g.name.toLowerCase())}">
       <div class="chat-group-name">${esc(g.name)}</div>
-      <div class="chat-group-preview">${g.messages_today} ข้อความวันนี้</div>
+      <div class="chat-group-preview">${g.messages_today} &#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3623;&#3633;&#3609;&#3609;&#3637;&#3657;</div>
     </div>`).join('');
 }
 
@@ -905,14 +1330,20 @@ function selectChat(chatId, chatName) {
   selectedChatId = chatId;
   conversationId = null;
   document.querySelectorAll('.chat-group-item').forEach(el => el.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  if (event && event.currentTarget) event.currentTarget.classList.add('active');
   document.getElementById('chatMessages').innerHTML = `
     <div class="empty-state">
       <div class="icon">&#129302;</div>
       <div class="title">${esc(chatName)}</div>
-      <div class="desc">พิมพ์คำถามเกี่ยวกับแชทนี้ เช่น "สรุปหัวข้อหลักวันนี้" หรือ "ใครพูดถึงอะไรบ้าง"</div>
+      <div class="desc">&#3614;&#3636;&#3617;&#3614;&#3660;&#3588;&#3635;&#3606;&#3634;&#3617;&#3648;&#3585;&#3637;&#3656;&#3618;&#3623;&#3585;&#3633;&#3610;&#3649;&#3594;&#3607;&#3609;&#3637;&#3657;</div>
     </div>`;
+  document.getElementById('chatSuggestions').style.display = 'flex';
   document.getElementById('chatContainer').classList.add('chat-open');
+}
+
+function askSuggestion(btn) {
+  document.getElementById('chatInput').value = btn.textContent;
+  sendChat();
 }
 
 async function sendChat() {
@@ -922,17 +1353,15 @@ async function sendChat() {
   input.value = '';
 
   const msgs = document.getElementById('chatMessages');
-  // Remove empty state
   const empty = msgs.querySelector('.empty-state');
   if (empty) empty.remove();
+  document.getElementById('chatSuggestions').style.display = 'none';
 
-  // Add user message
   msgs.innerHTML += `<div class="chat-msg user"><div class="chat-msg-bubble">${esc(text)}</div></div>`;
   msgs.scrollTop = msgs.scrollHeight;
 
-  // Loading
   const loadId = 'load-' + Date.now();
-  msgs.innerHTML += `<div class="chat-msg assistant" id="${loadId}"><div class="chat-msg-bubble"><div class="spinner-sm" style="display:inline-block;vertical-align:middle;margin-right:8px"></div>กำลังคิด...</div></div>`;
+  msgs.innerHTML += `<div class="chat-msg assistant" id="${loadId}"><div class="chat-msg-bubble"><div class="spinner-sm" style="display:inline-block;vertical-align:middle;margin-right:8px"></div>&#3585;&#3635;&#3621;&#3633;&#3591;&#3588;&#3636;&#3604;...</div></div>`;
   msgs.scrollTop = msgs.scrollHeight;
 
   const resp = await api('/api/v1/digest/ask', {
@@ -947,28 +1376,67 @@ async function sendChat() {
     conversationId = resp.conversation_id;
     msgs.innerHTML += `<div class="chat-msg assistant"><div class="chat-msg-bubble">${formatAnswer(resp.answer)}</div></div>`;
   } else {
-    msgs.innerHTML += `<div class="chat-msg assistant"><div class="chat-msg-bubble" style="color:var(--red)">เกิดข้อผิดพลาด กรุณาลองใหม่</div></div>`;
+    msgs.innerHTML += `<div class="chat-msg assistant"><div class="chat-msg-bubble" style="color:var(--red)">&#3648;&#3585;&#3636;&#3604;&#3586;&#3657;&#3629;&#3612;&#3636;&#3604;&#3614;&#3621;&#3634;&#3604; &#3585;&#3619;&#3640;&#3603;&#3634;&#3621;&#3629;&#3591;&#3651;&#3627;&#3617;&#3656;</div></div>`;
   }
   msgs.scrollTop = msgs.scrollHeight;
+}
+
+// ── Quick AI ──
+function quickAiForGroup(chatId, chatName) {
+  switchView('aichat');
+  setTimeout(() => selectChat(chatId, chatName), 100);
+}
+
+async function quickAiAsk() {
+  const input = document.getElementById('quickAiInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+
+  // If we have groups, ask about the first one or switch to AI chat
+  if (groupsData.length > 0) {
+    selectedChatId = groupsData[0].chat_id;
+    switchView('aichat');
+    setTimeout(() => {
+      document.getElementById('chatInput').value = text;
+      sendChat();
+    }, 200);
+  }
 }
 
 // ── Settings ──
 async function loadSettings() {
   const [org, members, plans] = await Promise.all([
-    api(`/api/v1/org/${orgId}`),
-    api(`/api/v1/org/${orgId}/members`),
-    api('/api/v1/org/plans'),
+    api(`/api/v1/org/${orgId}`).catch(() => null),
+    api(`/api/v1/org/${orgId}/members`).catch(() => null),
+    api('/api/v1/org/plans').catch(() => null),
   ]);
 
   // Org info
   if (org) {
     document.getElementById('settingsOrg').innerHTML = `
-      <div class="settings-row"><span class="settings-label">ชื่อ</span><span class="settings-value">${esc(org.name || '')}</span></div>
+      <div class="settings-row"><span class="settings-label">&#3594;&#3639;&#3656;&#3629;</span><span class="settings-value">${esc(org.name || '')}</span></div>
       <div class="settings-row"><span class="settings-label">Slug</span><span class="settings-value">${esc(org.slug || '')}</span></div>
       <div class="settings-row"><span class="settings-label">Plan</span><span class="settings-value">${esc(org.plan || 'free')}</span></div>
-      <div class="settings-row"><span class="settings-label">สถานะ</span><span class="settings-value">${org.status === 'active' ? '<span class="badge badge-green">Active</span>' : esc(org.status || '')}</span></div>
+      <div class="settings-row"><span class="settings-label">&#3626;&#3606;&#3634;&#3609;&#3632;</span><span class="settings-value">${org.status === 'active' ? '<span class="badge badge-green">Active</span>' : esc(org.status || '')}</span></div>
       <div class="settings-row"><span class="settings-label">Max Groups</span><span class="settings-value">${org.max_groups || '-'}</span></div>
       <div class="settings-row"><span class="settings-label">Max Users</span><span class="settings-value">${org.max_users || '-'}</span></div>`;
+  }
+
+  // LINE Bot status
+  const lineEl = document.getElementById('settingsLineStatus');
+  if (org && org.line_channel_id) {
+    lineEl.innerHTML = `
+      <div class="settings-row"><span class="settings-label">Channel ID</span><span class="settings-value">${esc(org.line_channel_id)}</span></div>
+      <div class="settings-row"><span class="settings-label">&#3626;&#3606;&#3634;&#3609;&#3632;</span><span class="settings-value"><span class="badge badge-green">&#3648;&#3594;&#3639;&#3656;&#3629;&#3617;&#3605;&#3656;&#3629;&#3649;&#3621;&#3657;&#3623;</span></span></div>
+      <div class="settings-row"><span class="settings-label">Webhook URL</span><span class="settings-value" style="font-size:11px;word-break:break-all">${window.location.origin}/webhook/line</span></div>`;
+  } else {
+    lineEl.innerHTML = `
+      <div style="padding:16px 0;text-align:center">
+        <div style="font-size:32px;margin-bottom:12px;opacity:0.5">&#128279;</div>
+        <div style="font-size:14px;font-weight:600;color:var(--text-dim);margin-bottom:8px">&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3652;&#3604;&#3657;&#3648;&#3594;&#3639;&#3656;&#3629;&#3617;&#3605;&#3656;&#3629;</div>
+        <div style="font-size:12px;color:var(--text-faint);margin-bottom:16px">&#3605;&#3636;&#3604;&#3605;&#3656;&#3629;&#3612;&#3641;&#3657;&#3604;&#3641;&#3649;&#3621;&#3619;&#3632;&#3610;&#3610;&#3648;&#3614;&#3639;&#3656;&#3629;&#3605;&#3633;&#3657;&#3591;&#3588;&#3656;&#3634; LINE Bot</div>
+      </div>`;
   }
 
   // Members
@@ -978,11 +1446,11 @@ async function loadSettings() {
       memArr.map(m => `<tr>
         <td>${esc(m.display_name || m.user_id || '')}</td>
         <td><span class="badge ${m.role === 'owner' ? 'badge-purple' : m.role === 'admin' ? 'badge-blue' : 'badge-green'}">${esc(m.role)}</span></td>
-        <td>${m.created_at ? m.created_at.slice(0,10) : '-'}</td>
+        <td>${m.created_at ? m.created_at.slice(0, 10) : '-'}</td>
         <td>${m.role !== 'owner' ? '<button class="btn btn-danger btn-sm" onclick="removeMember(\'' + esc(m.user_id) + '\')">Remove</button>' : ''}</td>
       </tr>`).join('') + '</tbody></table>';
   } else {
-    document.getElementById('settingsMembers').innerHTML = '<div style="color:var(--text-faint);font-size:13px">ไม่มีสมาชิก</div>';
+    document.getElementById('settingsMembers').innerHTML = '<div style="color:var(--text-faint);font-size:13px">&#3652;&#3617;&#3656;&#3617;&#3637;&#3626;&#3617;&#3634;&#3594;&#3636;&#3585;</div>';
   }
 
   // Plan
@@ -993,40 +1461,50 @@ async function loadSettings() {
         <div style="background:var(--bg-surface);border:1px solid ${org && org.plan === p.id ? 'var(--blue)' : 'var(--border)'};border-radius:var(--radius);padding:18px;text-align:center">
           <div style="font-weight:700;font-size:16px;margin-bottom:4px">${esc(p.name)}</div>
           <div style="font-size:28px;font-weight:800;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:8px 0">
-            ${p.price === 0 ? 'Free' : '฿' + p.price.toLocaleString()}
+            ${p.price === 0 ? 'Free' : '&#3647;' + p.price.toLocaleString()}
           </div>
-          <div style="font-size:11px;color:var(--text-faint);margin-bottom:12px">${p.price > 0 ? '/เดือน' : ''}</div>
+          <div style="font-size:11px;color:var(--text-faint);margin-bottom:12px">${p.price > 0 ? '/&#3648;&#3604;&#3639;&#3629;&#3609;' : ''}</div>
           <div style="text-align:left;font-size:12px;color:var(--text-dim)">
             ${(p.features || []).map(f => '<div style="padding:2px 0">&#10003; ' + esc(f) + '</div>').join('')}
           </div>
-          ${org && org.plan === p.id ? '<div class="badge badge-blue" style="margin-top:12px">แผนปัจจุบัน</div>' : ''}
+          ${org && org.plan === p.id ? '<div class="badge badge-blue" style="margin-top:12px">&#3649;&#3612;&#3609;&#3611;&#3633;&#3592;&#3592;&#3640;&#3610;&#3633;&#3609;</div>' : ''}
         </div>`).join('') + '</div>';
+  } else {
+    document.getElementById('settingsPlan').innerHTML = '<div style="color:var(--text-faint);font-size:13px">&#3652;&#3617;&#3656;&#3617;&#3637;&#3586;&#3657;&#3629;&#3617;&#3641;&#3621;&#3649;&#3612;&#3609;</div>';
   }
 }
 
-async function saveLineConfig() {
-  const data = {
-    line_channel_id: document.getElementById('lineChannelId').value,
-    line_channel_secret: document.getElementById('lineChannelSecret').value,
-    line_channel_token: document.getElementById('lineChannelToken').value,
-  };
-  const resp = await api(`/api/v1/org/${orgId}/line-config`, {
-    method: 'PUT',
-    body: JSON.stringify(data),
-  });
-  if (resp && resp.ok) alert('บันทึกสำเร็จ');
-  else alert('Error: ' + (resp ? resp.detail || 'Unknown' : 'Failed'));
-}
-
 async function removeMember(userId) {
-  if (!confirm('ลบสมาชิก ' + userId + '?')) return;
+  if (!confirm('&#3621;&#3610;&#3626;&#3617;&#3634;&#3594;&#3636;&#3585; ' + userId + '?')) return;
   const resp = await api(`/api/v1/org/${orgId}/members/${userId}`, { method: 'DELETE' });
   if (resp && resp.ok) loadSettings();
-  else alert('Error: ' + (resp ? resp.detail || 'Unknown' : 'Failed'));
+  else showToast('Error: ' + (resp ? resp.detail || 'Unknown' : 'Failed'), 'error');
 }
 
 function generateApiToken() {
-  alert('API token generation will be available soon.');
+  showToast('&#3585;&#3635;&#3621;&#3633;&#3591;&#3614;&#3633;&#3602;&#3609;&#3634; - &#3648;&#3619;&#3655;&#3623;&#3654; &#3609;&#3637;&#3657;', 'info');
+}
+
+// ── Toast notification ──
+function showToast(message, type = 'info') {
+  const existing = document.getElementById('toast');
+  if (existing) existing.remove();
+
+  const colors = { success: 'var(--green)', error: 'var(--red)', info: 'var(--blue)' };
+  const toast = document.createElement('div');
+  toast.id = 'toast';
+  toast.innerHTML = message;
+  toast.style.cssText = `
+    position: fixed; top: 24px; right: 24px; z-index: 9999;
+    padding: 14px 24px; border-radius: var(--radius-sm);
+    background: var(--bg-card); border: 1px solid ${colors[type] || colors.info};
+    color: var(--text); font-size: 13px; font-weight: 500;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    animation: slideUp .3s ease-out;
+    font-family: 'Sarabun', sans-serif;
+  `;
+  document.body.appendChild(toast);
+  setTimeout(() => { toast.style.opacity = '0'; toast.style.transition = 'opacity .3s'; setTimeout(() => toast.remove(), 300); }, 3000);
 }
 
 // ── Helpers ──
@@ -1042,9 +1520,9 @@ function timeAgo(ts) {
   const d = new Date(ts);
   const diff = (Date.now() - d.getTime()) / 1000;
   if (diff < 60) return 'just now';
-  if (diff < 3600) return Math.floor(diff/60) + ' min ago';
-  if (diff < 86400) return Math.floor(diff/3600) + ' hr ago';
-  return Math.floor(diff/86400) + ' days ago';
+  if (diff < 3600) return Math.floor(diff / 60) + ' min ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + ' hr ago';
+  return Math.floor(diff / 86400) + ' days ago';
 }
 
 function sentimentBadge(s) {
@@ -1055,7 +1533,6 @@ function sentimentBadge(s) {
 }
 
 function formatAnswer(text) {
-  // Basic markdown-like formatting
   return esc(text)
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/\n/g, '<br>');
