@@ -566,7 +566,7 @@ select.form-input {
     </a>
   </nav>
   <div class="sidebar-footer">
-    <a href="/auth/logout">Logout</a> &middot; Silo v1.0
+    <a href="/auth/logout">Logout</a> · Silo v1.0
   </div>
 </div>
 
@@ -576,9 +576,9 @@ select.form-input {
 <div class="main">
   <div class="page-header">
     <div>
-      <button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
+      <button class="hamburger" onclick="toggleSidebar()">☰</button>
       <div class="page-title" id="pageTitle">Dashboard</div>
-      <div class="page-subtitle" id="pageSubtitle">&#8203;</div>
+      <div class="page-subtitle" id="pageSubtitle">​</div>
     </div>
     <div class="header-actions" id="headerActions">
       <div class="notif-bell" onclick="switchView('digests')" title="Digests">
@@ -592,35 +592,35 @@ select.form-input {
   <div class="view active" id="view-dashboard">
     <div class="stat-grid" id="statGrid">
       <div class="stat-card">
-        <div class="stat-icon blue">&#128172;</div>
-        <div class="stat-label">&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3623;&#3633;&#3609;&#3609;&#3637;&#3657;</div>
+        <div class="stat-icon blue">💬</div>
+        <div class="stat-label">ข้อความวันนี้</div>
         <div class="stat-value" id="statMessages">--</div>
-        <div class="stat-sub" id="statMessagesSub">&nbsp;</div>
+        <div class="stat-sub" id="statMessagesSub"> </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon green">&#128101;</div>
-        <div class="stat-label">&#3585;&#3621;&#3640;&#3656;&#3617;&#3607;&#3637;&#3656;&#3648;&#3594;&#3639;&#3656;&#3629;&#3617;&#3605;&#3656;&#3629;</div>
+        <div class="stat-icon green">👥</div>
+        <div class="stat-label">กลุ่มที่เชื่อมต่อ</div>
         <div class="stat-value" id="statGroups">--</div>
-        <div class="stat-sub" id="statGroupsSub">&nbsp;</div>
+        <div class="stat-sub" id="statGroupsSub"> </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon purple">&#128203;</div>
-        <div class="stat-label">Digest &#3626;&#3619;&#3657;&#3634;&#3591;&#3649;&#3621;&#3657;&#3623;</div>
+        <div class="stat-icon purple">📋</div>
+        <div class="stat-label">Digest สร้างแล้ว</div>
         <div class="stat-value" id="statDigests">--</div>
-        <div class="stat-sub" id="statDigestsSub">&nbsp;</div>
+        <div class="stat-sub" id="statDigestsSub"> </div>
       </div>
       <div class="stat-card">
-        <div class="stat-icon cyan">&#129302;</div>
+        <div class="stat-icon cyan">🤖</div>
         <div class="stat-label">AI Queries</div>
         <div class="stat-value" id="statAI">--</div>
-        <div class="stat-sub" id="statAISub">&nbsp;</div>
+        <div class="stat-sub" id="statAISub"> </div>
       </div>
     </div>
 
     <!-- Groups grid -->
     <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between">
-      <h3 style="font-size:16px;font-weight:700">&#3585;&#3621;&#3640;&#3656;&#3617;&#3607;&#3637;&#3656;&#3648;&#3594;&#3639;&#3656;&#3629;&#3617;&#3605;&#3656;&#3629;</h3>
-      <button class="btn btn-ghost btn-sm" onclick="switchView('groups')">&#3604;&#3641;&#3607;&#3633;&#3657;&#3591;&#3627;&#3617;&#3604; &rarr;</button>
+      <h3 style="font-size:16px;font-weight:700">กลุ่มที่เชื่อมต่อ</h3>
+      <button class="btn btn-ghost btn-sm" onclick="switchView('groups')">ดูทั้งหมด →</button>
     </div>
     <div id="dashGroupsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-bottom:28px">
       <div class="skeleton" style="height:160px"></div>
@@ -631,21 +631,21 @@ select.form-input {
     <div class="panel-grid">
       <div class="panel">
         <div class="panel-header">
-          <span class="panel-title">&#3585;&#3636;&#3592;&#3585;&#3619;&#3619;&#3617;&#3621;&#3656;&#3634;&#3626;&#3640;&#3604;</span>
-          <button class="btn btn-ghost btn-sm" onclick="loadActivity()">&#8635; Refresh</button>
+          <span class="panel-title">กิจกรรมล่าสุด</span>
+          <button class="btn btn-ghost btn-sm" onclick="loadActivity()">↻ Refresh</button>
         </div>
         <div class="panel-body" id="activityFeed">
-          <div class="loading"><div class="spinner-sm"></div> &#3585;&#3635;&#3621;&#3633;&#3591;&#3650;&#3627;&#3621;&#3604;...</div>
+          <div class="loading"><div class="spinner-sm"></div> กำลังโหลด...</div>
         </div>
       </div>
       <div class="panel">
         <div class="panel-header">
-          <span class="panel-title">&#3585;&#3621;&#3640;&#3656;&#3617;&#3618;&#3629;&#3604;&#3609;&#3636;&#3618;&#3617;</span>
+          <span class="panel-title">กลุ่มยอดนิยม</span>
         </div>
         <div class="panel-body no-pad">
           <div class="table-wrap">
             <table>
-              <thead><tr><th>&#3585;&#3621;&#3640;&#3656;&#3617;</th><th>&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;</th><th>&#3626;&#3606;&#3634;&#3609;&#3632;</th></tr></thead>
+              <thead><tr><th>กลุ่ม</th><th>ข้อความ</th><th>สถานะ</th></tr></thead>
               <tbody id="topGroupsBody">
                 <tr><td colspan="3" style="text-align:center;color:var(--text-faint)">loading...</td></tr>
               </tbody>
@@ -672,28 +672,28 @@ select.form-input {
     <div class="chat-container" id="chatContainer">
       <div class="chat-sidebar">
         <div class="chat-sidebar-header">
-          <div style="font-size:14px;font-weight:700;margin-bottom:8px">&#3648;&#3621;&#3639;&#3629;&#3585;&#3585;&#3621;&#3640;&#3656;&#3617;</div>
-          <input class="form-input" placeholder="&#3588;&#3657;&#3609;&#3627;&#3634;..." id="chatSearch" oninput="filterChatGroups()" style="padding:10px 14px;font-size:13px">
+          <div style="font-size:14px;font-weight:700;margin-bottom:8px">เลือกกลุ่ม</div>
+          <input class="form-input" placeholder="ค้นหา..." id="chatSearch" oninput="filterChatGroups()" style="padding:10px 14px;font-size:13px">
         </div>
         <div class="chat-sidebar-list" id="chatGroupList"></div>
       </div>
       <div class="chat-main">
         <div class="chat-messages" id="chatMessages">
           <div class="empty-state">
-            <div class="icon">&#129302;</div>
-            <div class="title">&#3648;&#3621;&#3639;&#3629;&#3585;&#3585;&#3621;&#3640;&#3656;&#3617;&#3648;&#3614;&#3639;&#3656;&#3629;&#3648;&#3619;&#3636;&#3656;&#3617;&#3606;&#3634;&#3617; AI</div>
-            <div class="desc">AI &#3592;&#3632;&#3623;&#3636;&#3648;&#3588;&#3619;&#3634;&#3632;&#3627;&#3660;&#3592;&#3634;&#3585; Digest &#3649;&#3621;&#3632;&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3651;&#3609;&#3585;&#3621;&#3640;&#3656;&#3617;</div>
+            <div class="icon">🤖</div>
+            <div class="title">เลือกกลุ่มเพื่อเริ่มถาม AI</div>
+            <div class="desc">AI จะวิเคราะห์จาก Digest และข้อความในกลุ่ม</div>
           </div>
         </div>
         <div class="chat-suggestions" id="chatSuggestions" style="display:none">
-          <button class="chat-suggestion" onclick="askSuggestion(this)">&#3626;&#3619;&#3640;&#3611;&#3627;&#3633;&#3623;&#3586;&#3657;&#3629;&#3627;&#3621;&#3633;&#3585;&#3623;&#3633;&#3609;&#3609;&#3637;&#3657;</button>
-          <button class="chat-suggestion" onclick="askSuggestion(this)">&#3651;&#3588;&#3619;&#3614;&#3641;&#3604;&#3606;&#3638;&#3591;&#3629;&#3632;&#3652;&#3619;&#3610;&#3657;&#3634;&#3591;</button>
-          <button class="chat-suggestion" onclick="askSuggestion(this)">&#3617;&#3637; action items &#3629;&#3632;&#3652;&#3619;</button>
-          <button class="chat-suggestion" onclick="askSuggestion(this)">&#3648;&#3619;&#3639;&#3656;&#3629;&#3591;&#3626;&#3635;&#3588;&#3633;&#3597;&#3607;&#3637;&#3656;&#3605;&#3657;&#3629;&#3591;&#3605;&#3636;&#3604;&#3605;&#3634;&#3617;</button>
+          <button class="chat-suggestion" onclick="askSuggestion(this)">สรุปหัวข้อหลักวันนี้</button>
+          <button class="chat-suggestion" onclick="askSuggestion(this)">ใครพูดถึงอะไรบ้าง</button>
+          <button class="chat-suggestion" onclick="askSuggestion(this)">มี action items อะไร</button>
+          <button class="chat-suggestion" onclick="askSuggestion(this)">เรื่องสำคัญที่ต้องติดตาม</button>
         </div>
         <div class="chat-input-area">
-          <textarea class="chat-input" id="chatInput" rows="1" placeholder="&#3614;&#3636;&#3617;&#3614;&#3660;&#3588;&#3635;&#3606;&#3634;&#3617;..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
-          <button class="chat-send" onclick="sendChat()">&#3626;&#3656;&#3591;</button>
+          <textarea class="chat-input" id="chatInput" rows="1" placeholder="พิมพ์คำถาม..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"></textarea>
+          <button class="chat-send" onclick="sendChat()">ส่ง</button>
         </div>
       </div>
     </div>
@@ -702,9 +702,9 @@ select.form-input {
   <!-- Settings View -->
   <div class="view" id="view-settings">
     <div class="settings-section">
-      <div class="settings-title">&#3586;&#3657;&#3629;&#3617;&#3641;&#3621;&#3629;&#3591;&#3588;&#3660;&#3585;&#3619;</div>
+      <div class="settings-title">ข้อมูลองค์กร</div>
       <div id="settingsOrg">
-        <div class="loading"><div class="spinner-sm"></div> &#3585;&#3635;&#3621;&#3633;&#3591;&#3650;&#3627;&#3621;&#3604;...</div>
+        <div class="loading"><div class="spinner-sm"></div> กำลังโหลด...</div>
       </div>
     </div>
     <div class="settings-section">
@@ -714,23 +714,23 @@ select.form-input {
     <div class="settings-section">
       <div class="settings-title">API Tokens</div>
       <div id="settingsTokens">
-        <p style="font-size:13px;color:var(--text-muted)">&#3651;&#3594;&#3657; API key &#3626;&#3635;&#3627;&#3619;&#3633;&#3610;&#3648;&#3594;&#3639;&#3656;&#3629;&#3617;&#3605;&#3656;&#3629;&#3619;&#3632;&#3610;&#3610;&#3616;&#3634;&#3618;&#3609;&#3629;&#3585;</p>
+        <p style="font-size:13px;color:var(--text-muted)">ใช้ API key สำหรับเชื่อมต่อระบบภายนอก</p>
         <div style="margin-top:12px">
-          <button class="btn btn-ghost btn-sm" onclick="generateApiToken()">+ &#3626;&#3619;&#3657;&#3634;&#3591; API Token</button>
+          <button class="btn btn-ghost btn-sm" onclick="generateApiToken()">+ สร้าง API Token</button>
         </div>
         <div id="tokenList" style="margin-top:12px"></div>
       </div>
     </div>
     <div class="settings-section">
-      <div class="settings-title">&#3626;&#3617;&#3634;&#3594;&#3636;&#3585;</div>
+      <div class="settings-title">สมาชิก</div>
       <div id="settingsMembers">
-        <div class="loading"><div class="spinner-sm"></div> &#3585;&#3635;&#3621;&#3633;&#3591;&#3650;&#3627;&#3621;&#3604;...</div>
+        <div class="loading"><div class="spinner-sm"></div> กำลังโหลด...</div>
       </div>
     </div>
     <div class="settings-section">
-      <div class="settings-title">&#3649;&#3612;&#3609;&#3611;&#3633;&#3592;&#3592;&#3640;&#3610;&#3633;&#3609;</div>
+      <div class="settings-title">แผนปัจจุบัน</div>
       <div id="settingsPlan">
-        <div class="loading"><div class="spinner-sm"></div> &#3585;&#3635;&#3621;&#3633;&#3591;&#3650;&#3627;&#3621;&#3604;...</div>
+        <div class="loading"><div class="spinner-sm"></div> กำลังโหลด...</div>
       </div>
     </div>
   </div>
@@ -738,9 +738,9 @@ select.form-input {
 
 <!-- Quick AI bar (dashboard only) -->
 <div class="quick-ai-bar" id="quickAiBar">
-  <div class="quick-ai-icon">&#129302;</div>
-  <input class="quick-ai-input" id="quickAiInput" placeholder="&#3606;&#3634;&#3617; AI &#3648;&#3585;&#3637;&#3656;&#3618;&#3623;&#3585;&#3633;&#3610;&#3649;&#3594;&#3607;&#3585;&#3621;&#3640;&#3656;&#3617;&#3652;&#3627;&#3609;&#3585;&#3655;&#3652;&#3604;&#3657;..." onkeydown="if(event.key==='Enter')quickAiAsk()">
-  <button class="quick-ai-send" onclick="quickAiAsk()">&#3606;&#3634;&#3617;</button>
+  <div class="quick-ai-icon">🤖</div>
+  <input class="quick-ai-input" id="quickAiInput" placeholder="ถาม AI เกี่ยวกับแชทกลุ่มไหนก็ได้..." onkeydown="if(event.key==='Enter')quickAiAsk()">
+  <button class="quick-ai-send" onclick="quickAiAsk()">ถาม</button>
 </div>
 
 <script>
@@ -818,67 +818,67 @@ function renderWizardStep() {
 
   if (wizardStep === 0) {
     card.innerHTML = `${dots}
-      <div class="wizard-icon">&#128075;</div>
-      <div class="wizard-title">&#3618;&#3636;&#3609;&#3604;&#3637;&#3605;&#3657;&#3629;&#3609;&#3619;&#3633;&#3610;&#3626;&#3641;&#3656; Silo!</div>
+      <div class="wizard-icon">👋</div>
+      <div class="wizard-title">ยินดีต้อนรับสู่ Silo!</div>
       <div class="wizard-desc">
-        &#3619;&#3632;&#3610;&#3610; AI &#3626;&#3619;&#3640;&#3611;&#3649;&#3594;&#3607;&#3585;&#3621;&#3640;&#3656;&#3617; LINE &#3629;&#3633;&#3605;&#3650;&#3609;&#3617;&#3633;&#3605;&#3636;<br>
-        &#3652;&#3617;&#3656;&#3605;&#3657;&#3629;&#3591;&#3629;&#3656;&#3634;&#3609;&#3618;&#3657;&#3629;&#3609;&#3627;&#3621;&#3633;&#3591; &#3652;&#3617;&#3656;&#3605;&#3657;&#3629;&#3591;&#3614;&#3621;&#3634;&#3604;&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3626;&#3635;&#3588;&#3633;&#3597;<br>
-        Silo &#3626;&#3619;&#3640;&#3611;&#3651;&#3627;&#3657;&#3607;&#3640;&#3585;&#3623;&#3633;&#3609;
+        ระบบ AI สรุปแชทกลุ่ม LINE อัตโนมัติ<br>
+        ไม่ต้องอ่านย้อนหลัง ไม่ต้องพลาดข้อความสำคัญ<br>
+        Silo สรุปให้ทุกวัน
       </div>
       <div class="wizard-btn-row">
-        <button class="btn btn-primary btn-lg" onclick="wizardNext()">&#3648;&#3619;&#3636;&#3656;&#3617;&#3605;&#3633;&#3657;&#3591;&#3588;&#3656;&#3634; &rarr;</button>
+        <button class="btn btn-primary btn-lg" onclick="wizardNext()">เริ่มตั้งค่า →</button>
       </div>`;
   } else if (wizardStep === 1) {
     card.innerHTML = `${dots}
-      <div class="wizard-icon">&#129302;</div>
-      <div class="wizard-title">&#3648;&#3614;&#3636;&#3656;&#3617; Silo Bot &#3648;&#3586;&#3657;&#3634;&#3585;&#3621;&#3640;&#3656;&#3617; LINE</div>
-      <div class="wizard-desc">&#3607;&#3635;&#3605;&#3634;&#3617;&#3586;&#3633;&#3657;&#3609;&#3605;&#3629;&#3609;&#3648;&#3627;&#3621;&#3656;&#3634;&#3609;&#3637;&#3657;&#3648;&#3614;&#3639;&#3656;&#3629;&#3648;&#3614;&#3636;&#3656;&#3617; Bot &#3648;&#3586;&#3657;&#3634;&#3585;&#3621;&#3640;&#3656;&#3617;</div>
+      <div class="wizard-icon">🤖</div>
+      <div class="wizard-title">เพิ่ม Silo Bot เข้ากลุ่ม LINE</div>
+      <div class="wizard-desc">ทำตามขั้นตอนเหล่านี้เพื่อเพิ่ม Bot เข้ากลุ่ม</div>
       <div class="wizard-steps-list">
         <div class="wizard-step-item">
           <div class="wizard-step-num">1</div>
-          <div>&#3648;&#3611;&#3636;&#3604;&#3585;&#3621;&#3640;&#3656;&#3617; LINE &#3607;&#3637;&#3656;&#3605;&#3657;&#3629;&#3591;&#3585;&#3634;&#3619;</div>
+          <div>เปิดกลุ่ม LINE ที่ต้องการ</div>
         </div>
         <div class="wizard-step-item">
           <div class="wizard-step-num">2</div>
-          <div>&#3585;&#3604;&#3648;&#3594;&#3636;&#3597;&#3648;&#3614;&#3639;&#3656;&#3629;&#3609; &rarr; &#3588;&#3657;&#3609;&#3627;&#3634; "<strong>Silo AI</strong>"</div>
+          <div>กดเชิญเพื่อน → ค้นหา "<strong>Silo AI</strong>"</div>
         </div>
         <div class="wizard-step-item">
           <div class="wizard-step-num">3</div>
-          <div>&#3648;&#3614;&#3636;&#3656;&#3617; Bot &#3648;&#3586;&#3657;&#3634;&#3585;&#3621;&#3640;&#3656;&#3617;</div>
+          <div>เพิ่ม Bot เข้ากลุ่ม</div>
         </div>
         <div class="wizard-step-item">
           <div class="wizard-step-num">4</div>
-          <div>Bot &#3592;&#3632;&#3648;&#3619;&#3636;&#3656;&#3617;&#3619;&#3633;&#3610;&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3629;&#3633;&#3605;&#3650;&#3609;&#3617;&#3633;&#3605;&#3636;</div>
+          <div>Bot จะเริ่มรับข้อความอัตโนมัติ</div>
         </div>
       </div>
       <div class="wizard-btn-row">
-        <button class="btn btn-ghost" onclick="wizardBack()">&larr; &#3585;&#3621;&#3633;&#3610;</button>
-        <button class="btn btn-primary btn-lg" onclick="wizardNext()">&#3648;&#3614;&#3636;&#3656;&#3617;&#3649;&#3621;&#3657;&#3623; &#3606;&#3633;&#3604;&#3652;&#3611; &rarr;</button>
+        <button class="btn btn-ghost" onclick="wizardBack()">← กลับ</button>
+        <button class="btn btn-primary btn-lg" onclick="wizardNext()">เพิ่มแล้ว ถัดไป →</button>
       </div>`;
   } else if (wizardStep === 2) {
     card.innerHTML = `${dots}
-      <div class="wizard-icon">&#128269;</div>
-      <div class="wizard-title">&#3648;&#3621;&#3639;&#3629;&#3585;&#3585;&#3621;&#3640;&#3656;&#3617;&#3607;&#3637;&#3656;&#3605;&#3657;&#3629;&#3591;&#3585;&#3634;&#3619;&#3626;&#3619;&#3640;&#3611;</div>
-      <div class="wizard-desc">&#3585;&#3621;&#3640;&#3656;&#3617;&#3607;&#3637;&#3656; Bot &#3648;&#3586;&#3657;&#3634;&#3619;&#3656;&#3623;&#3617;&#3649;&#3621;&#3657;&#3623;&#3592;&#3632;&#3649;&#3626;&#3604;&#3591;&#3607;&#3637;&#3656;&#3609;&#3637;&#3656;</div>
+      <div class="wizard-icon">🔍</div>
+      <div class="wizard-title">เลือกกลุ่มที่ต้องการสรุป</div>
+      <div class="wizard-desc">กลุ่มที่ Bot เข้าร่วมแล้วจะแสดงที่นี่</div>
       <div class="wizard-groups-list" id="wizardGroupsList">
-        <div class="loading"><div class="spinner-sm"></div> &#3585;&#3635;&#3621;&#3633;&#3591;&#3650;&#3627;&#3621;&#3604;...</div>
+        <div class="loading"><div class="spinner-sm"></div> กำลังโหลด...</div>
       </div>
       <div class="wizard-btn-row">
-        <button class="btn btn-ghost" onclick="wizardBack()">&larr; &#3585;&#3621;&#3633;&#3610;</button>
-        <button class="btn btn-primary btn-lg" onclick="wizardNext()">&#3606;&#3633;&#3604;&#3652;&#3611; &rarr;</button>
+        <button class="btn btn-ghost" onclick="wizardBack()">← กลับ</button>
+        <button class="btn btn-primary btn-lg" onclick="wizardNext()">ถัดไป →</button>
       </div>`;
     loadWizardGroups();
   } else if (wizardStep === 3) {
     card.innerHTML = `${dots}
-      <div class="wizard-icon" style="background:rgba(16,185,129,0.15)">&#10003;</div>
-      <div class="wizard-title">&#3614;&#3619;&#3657;&#3629;&#3617;&#3651;&#3594;&#3657;&#3591;&#3634;&#3609;!</div>
+      <div class="wizard-icon" style="background:rgba(16,185,129,0.15)">✓</div>
+      <div class="wizard-title">พร้อมใช้งาน!</div>
       <div class="wizard-desc">
-        Silo &#3592;&#3632;&#3626;&#3619;&#3640;&#3611;&#3649;&#3594;&#3607;&#3651;&#3627;&#3657;&#3607;&#3640;&#3585;&#3623;&#3633;&#3609;&#3648;&#3623;&#3621;&#3634; 23:00<br>
-        &#3588;&#3640;&#3603;&#3626;&#3634;&#3617;&#3634;&#3619;&#3606;&#3585;&#3604; "&#3626;&#3619;&#3657;&#3634;&#3591; Digest &#3605;&#3629;&#3609;&#3609;&#3637;&#3657;" &#3652;&#3604;&#3657;&#3607;&#3640;&#3585;&#3648;&#3617;&#3639;&#3656;&#3629;<br>
-        &#3627;&#3619;&#3639;&#3629;&#3606;&#3634;&#3617; AI &#3648;&#3585;&#3637;&#3656;&#3618;&#3623;&#3585;&#3633;&#3610;&#3649;&#3594;&#3607;&#3652;&#3604;&#3657;&#3648;&#3621;&#3618;
+        Silo จะสรุปแชทให้ทุกวันเวลา 23:00<br>
+        คุณสามารถกด "สร้าง Digest ตอนนี้" ได้ทุกเมื่อ<br>
+        หรือถาม AI เกี่ยวกับแชทได้เลย
       </div>
       <div class="wizard-btn-row">
-        <button class="btn btn-primary btn-lg" onclick="finishOnboarding()">&#3652;&#3611;&#3607;&#3637;&#3656; Dashboard &rarr;</button>
+        <button class="btn btn-primary btn-lg" onclick="finishOnboarding()">ไปที่ Dashboard →</button>
       </div>`;
   }
 }
@@ -890,10 +890,10 @@ async function loadWizardGroups() {
 
   if (groupsData.length === 0) {
     el.innerHTML = `<div class="wizard-empty">
-      <div class="wizard-empty-icon">&#128269;</div>
-      <div style="font-size:14px;font-weight:600;margin-bottom:8px">&#3619;&#3629; Bot &#3648;&#3586;&#3657;&#3634;&#3585;&#3621;&#3640;&#3656;&#3617;...</div>
-      <div style="font-size:13px;color:var(--text-faint);margin-bottom:16px">&#3585;&#3619;&#3640;&#3603;&#3634;&#3648;&#3614;&#3636;&#3656;&#3617; Bot &#3648;&#3586;&#3657;&#3634;&#3585;&#3621;&#3640;&#3656;&#3617; LINE &#3585;&#3656;&#3629;&#3609;</div>
-      <button class="btn btn-ghost btn-sm" onclick="loadWizardGroups()">&#8635; &#3619;&#3637;&#3648;&#3615;&#3619;&#3594;</button>
+      <div class="wizard-empty-icon">🔍</div>
+      <div style="font-size:14px;font-weight:600;margin-bottom:8px">รอ Bot เข้ากลุ่ม...</div>
+      <div style="font-size:13px;color:var(--text-faint);margin-bottom:16px">กรุณาเพิ่ม Bot เข้ากลุ่ม LINE ก่อน</div>
+      <button class="btn btn-ghost btn-sm" onclick="loadWizardGroups()">↻ รีเฟรช</button>
     </div>`;
     return;
   }
@@ -904,7 +904,7 @@ async function loadWizardGroups() {
     <div class="wizard-group-row">
       <div class="wizard-group-info">
         <div class="wizard-group-name">${esc(g.name)}</div>
-        <div class="wizard-group-meta">${g.member_count ? g.member_count + ' &#3626;&#3617;&#3634;&#3594;&#3636;&#3585;' : ''}</div>
+        <div class="wizard-group-meta">${g.member_count ? g.member_count + ' สมาชิก' : ''}</div>
       </div>
       <div class="toggle-wrap">
         <span class="toggle-label">Auto-digest</span>
@@ -940,11 +940,11 @@ function switchView(view) {
   if (navEl) navEl.classList.add('active');
 
   const titles = {
-    dashboard: ['Dashboard', '&#3616;&#3634;&#3614;&#3619;&#3623;&#3617;&#3585;&#3636;&#3592;&#3585;&#3619;&#3619;&#3617;&#3623;&#3633;&#3609;&#3609;&#3637;&#3657;'],
-    groups: ['Groups', '&#3585;&#3621;&#3640;&#3656;&#3617; LINE &#3607;&#3637;&#3656;&#3648;&#3594;&#3639;&#3656;&#3629;&#3617;&#3605;&#3656;&#3629;'],
-    digests: ['Digests', '&#3626;&#3619;&#3640;&#3611; AI &#3618;&#3657;&#3629;&#3609;&#3627;&#3621;&#3633;&#3591;'],
-    aichat: ['AI Chat', '&#3606;&#3634;&#3617; AI &#3648;&#3585;&#3637;&#3656;&#3618;&#3623;&#3585;&#3633;&#3610;&#3649;&#3594;&#3607;'],
-    settings: ['Settings', '&#3605;&#3633;&#3657;&#3591;&#3588;&#3656;&#3634;&#3629;&#3591;&#3588;&#3660;&#3585;&#3619;&#3649;&#3621;&#3632;&#3585;&#3634;&#3619;&#3648;&#3594;&#3639;&#3656;&#3629;&#3617;&#3605;&#3656;&#3629;'],
+    dashboard: ['Dashboard', 'ภาพรวมกิจกรรมวันนี้'],
+    groups: ['Groups', 'กลุ่ม LINE ที่เชื่อมต่อ'],
+    digests: ['Digests', 'สรุป AI ย้อนหลัง'],
+    aichat: ['AI Chat', 'ถาม AI เกี่ยวกับแชท'],
+    settings: ['Settings', 'ตั้งค่าองค์กรและการเชื่อมต่อ'],
   };
   const [t, s] = titles[view] || [view, ''];
   document.getElementById('pageTitle').textContent = t;
@@ -957,7 +957,7 @@ function switchView(view) {
     <div class="notif-dot" id="notifDot" style="display:none"></div>
   </div>`;
   if (view === 'digests') {
-    ha.innerHTML = `<button class="btn btn-primary btn-sm" onclick="generateAllDigests()">&#9889; Generate All</button>${bellHtml}`;
+    ha.innerHTML = `<button class="btn btn-primary btn-sm" onclick="generateAllDigests()">⚡ Generate All</button>${bellHtml}`;
   } else {
     ha.innerHTML = bellHtml;
   }
@@ -992,12 +992,12 @@ async function loadDashboard() {
   document.getElementById('statMessages').textContent = (data.messages_today || 0).toLocaleString();
   document.getElementById('statMessagesSub').textContent = data.date || '';
   document.getElementById('statGroups').textContent = data.active_groups || 0;
-  document.getElementById('statGroupsSub').textContent = (data.total_groups || 0) + ' &#3607;&#3633;&#3657;&#3591;&#3627;&#3617;&#3604;';
+  document.getElementById('statGroupsSub').textContent = (data.total_groups || 0) + ' ทั้งหมด';
   document.getElementById('statDigests').textContent = data.digests_today || 0;
-  document.getElementById('statDigestsSub').textContent = '&#3623;&#3633;&#3609;&#3609;&#3637;&#3657;';
+  document.getElementById('statDigestsSub').textContent = 'วันนี้';
   const usage = data.usage || {};
   document.getElementById('statAI').textContent = (usage.ai_queries || 0).toLocaleString();
-  document.getElementById('statAISub').textContent = '&#3648;&#3604;&#3639;&#3629;&#3609;&#3609;&#3637;&#3657;';
+  document.getElementById('statAISub').textContent = 'เดือนนี้';
 
   loadDashGroups();
   loadActivity();
@@ -1011,10 +1011,10 @@ async function loadDashGroups() {
 
   if (groupsData.length === 0) {
     el.innerHTML = `<div class="group-card" style="grid-column:1/-1;text-align:center;padding:40px">
-      <div style="font-size:36px;margin-bottom:12px;opacity:0.5">&#128101;</div>
-      <div style="font-size:15px;font-weight:600;margin-bottom:8px;color:var(--text-dim)">&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3617;&#3637;&#3585;&#3621;&#3640;&#3656;&#3617;</div>
-      <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px">&#3648;&#3614;&#3636;&#3656;&#3617; Silo Bot &#3648;&#3586;&#3657;&#3634;&#3585;&#3621;&#3640;&#3656;&#3617; LINE &#3648;&#3614;&#3639;&#3656;&#3629;&#3648;&#3619;&#3636;&#3656;&#3617;&#3651;&#3594;&#3657;&#3591;&#3634;&#3609;</div>
-      <button class="btn btn-primary btn-sm" onclick="loadDashGroups()">&#8635; รีเฟรช</button>
+      <div style="font-size:36px;margin-bottom:12px;opacity:0.5">👥</div>
+      <div style="font-size:15px;font-weight:600;margin-bottom:8px;color:var(--text-dim)">ยังไม่มีกลุ่ม</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px">เพิ่ม Silo Bot เข้ากลุ่ม LINE เพื่อเริ่มใช้งาน</div>
+      <button class="btn btn-primary btn-sm" onclick="loadDashGroups()">↻ รีเฟรช</button>
     </div>`;
     return;
   }
@@ -1026,18 +1026,18 @@ async function loadDashGroups() {
         ${g.status === 'active' ? '<span class="badge badge-green">Active</span>' : '<span class="badge badge-red">Inactive</span>'}
       </div>
       <div class="group-card-stats">
-        <div>&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3623;&#3633;&#3609;&#3609;&#3637;&#3657;<span class="group-card-stat-val">${(g.messages_today || 0).toLocaleString()}</span></div>
-        <div>Digest &#3621;&#3656;&#3634;&#3626;&#3640;&#3604;<span class="group-card-stat-val">${g.last_digest_date || '-'}</span></div>
+        <div>ข้อความวันนี้<span class="group-card-stat-val">${(g.messages_today || 0).toLocaleString()}</span></div>
+        <div>Digest ล่าสุด<span class="group-card-stat-val">${g.last_digest_date || '-'}</span></div>
       </div>
       <div class="group-card-actions">
         <button class="btn btn-ghost btn-sm" onclick="switchView('groups'); setTimeout(()=>showGroupDetail('${esc(g.chat_id)}'),100)">
-          &#128172; &#3604;&#3641;&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;
+          💬 ดูข้อความ
         </button>
         <button class="btn btn-primary btn-sm" onclick="generateDigest('${esc(g.chat_id)}')">
-          &#9889; &#3626;&#3619;&#3657;&#3634;&#3591; Digest
+          ⚡ สร้าง Digest
         </button>
         <button class="btn btn-ghost btn-sm" onclick="quickAiForGroup('${esc(g.chat_id)}','${esc(g.name)}')">
-          &#129302; &#3606;&#3634;&#3617; AI
+          🤖 ถาม AI
         </button>
       </div>
     </div>`).join('');
@@ -1048,15 +1048,15 @@ async function loadActivity() {
   if (!data) return;
   const el = document.getElementById('activityFeed');
   if (!data.feed || data.feed.length === 0) {
-    el.innerHTML = '<div class="empty-state"><div class="icon">&#128196;</div><div class="title">&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3617;&#3637;&#3585;&#3636;&#3592;&#3585;&#3619;&#3619;&#3617;</div></div>';
+    el.innerHTML = '<div class="empty-state"><div class="icon">📄</div><div class="title">ยังไม่มีกิจกรรม</div></div>';
     return;
   }
   el.innerHTML = data.feed.map(f => {
     const icon = f.type === 'digest' ? 'digest' : 'message';
-    const emoji = f.type === 'digest' ? '&#128203;' : '&#128172;';
+    const emoji = f.type === 'digest' ? '📋' : '💬';
     const text = f.type === 'digest'
       ? `<strong>${esc(f.chat_name)}</strong> — ${esc(f.summary || 'Digest generated')}`
-      : `<strong>${esc(f.chat_name)}</strong> — ${f.count} &#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;`;
+      : `<strong>${esc(f.chat_name)}</strong> — ${f.count} ข้อความ`;
     return `<div class="feed-item">
       <div class="feed-icon ${icon}">${emoji}</div>
       <div class="feed-text">${text}<div class="feed-time">${timeAgo(f.timestamp)}</div></div>
@@ -1068,7 +1068,7 @@ async function loadTopGroups() {
   const groups = groupsData;
   const el = document.getElementById('topGroupsBody');
   if (groups.length === 0) {
-    el.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-faint)">&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3617;&#3637;&#3585;&#3621;&#3640;&#3656;&#3617;</td></tr>';
+    el.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-faint)">ยังไม่มีกลุ่ม</td></tr>';
     return;
   }
   el.innerHTML = groups.slice(0, 5).map(g => `
@@ -1089,13 +1089,13 @@ async function loadGroups() {
 
   if (groupsData.length === 0) {
     el.innerHTML = `<div class="empty-state" style="padding:60px 20px">
-      <div class="icon">&#128101;</div>
-      <div class="title">&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3617;&#3637;&#3585;&#3621;&#3640;&#3656;&#3617;</div>
+      <div class="icon">👥</div>
+      <div class="title">ยังไม่มีกลุ่ม</div>
       <div class="desc" style="margin-bottom:20px">
-        &#3648;&#3614;&#3636;&#3656;&#3617; Silo Bot &#3648;&#3586;&#3657;&#3634;&#3585;&#3621;&#3640;&#3656;&#3617; LINE &#3586;&#3629;&#3591;&#3588;&#3640;&#3603;<br>
-        Bot &#3592;&#3632;&#3605;&#3619;&#3623;&#3592;&#3592;&#3633;&#3610;&#3585;&#3621;&#3640;&#3656;&#3617;&#3629;&#3633;&#3605;&#3650;&#3609;&#3617;&#3633;&#3605;&#3636;&#3648;&#3617;&#3639;&#3656;&#3629;&#3606;&#3641;&#3585;&#3648;&#3614;&#3636;&#3656;&#3617;&#3648;&#3586;&#3657;&#3634;&#3585;&#3621;&#3640;&#3656;&#3617;
+        เพิ่ม Silo Bot เข้ากลุ่ม LINE ของคุณ<br>
+        Bot จะตรวจจับกลุ่มอัตโนมัติเมื่อถูกเพิ่มเข้ากลุ่ม
       </div>
-      <button class="btn btn-primary" onclick="showOnboarding()">&#3648;&#3619;&#3636;&#3656;&#3617;&#3605;&#3633;&#3657;&#3591;&#3588;&#3656;&#3634;</button>
+      <button class="btn btn-primary" onclick="loadGroups()">↻ รีเฟรช</button>
     </div>`;
     return;
   }
@@ -1108,10 +1108,10 @@ async function loadGroups() {
           ${g.status === 'active' ? '<span class="badge badge-green">Active</span>' : '<span class="badge badge-red">Inactive</span>'}
         </div>
         <div class="group-card-stats">
-          <div>&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3623;&#3633;&#3609;&#3609;&#3637;&#3657;<span class="group-card-stat-val">${(g.messages_today || 0).toLocaleString()}</span></div>
-          <div>&#3607;&#3633;&#3657;&#3591;&#3627;&#3617;&#3604;<span class="group-card-stat-val">${(g.total_messages || 0).toLocaleString()}</span></div>
-          <div>Digest &#3621;&#3656;&#3634;&#3626;&#3640;&#3604;<span class="group-card-stat-val">${g.last_digest_date || '-'}</span></div>
-          <div>&#3626;&#3606;&#3634;&#3609;&#3632;<span class="group-card-stat-val">${g.has_digest_today ? '<span class="badge badge-green">Digest OK</span>' : '<span class="badge badge-amber">Pending</span>'}</span></div>
+          <div>ข้อความวันนี้<span class="group-card-stat-val">${(g.messages_today || 0).toLocaleString()}</span></div>
+          <div>ทั้งหมด<span class="group-card-stat-val">${(g.total_messages || 0).toLocaleString()}</span></div>
+          <div>Digest ล่าสุด<span class="group-card-stat-val">${g.last_digest_date || '-'}</span></div>
+          <div>สถานะ<span class="group-card-stat-val">${g.has_digest_today ? '<span class="badge badge-green">Digest OK</span>' : '<span class="badge badge-amber">Pending</span>'}</span></div>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid var(--border)">
           <div class="toggle-wrap">
@@ -1120,8 +1120,8 @@ async function loadGroups() {
                  onclick="toggleAutoDigest('${esc(g.chat_id)}', this)"></div>
           </div>
           <div style="display:flex;gap:8px">
-            <button class="btn btn-ghost btn-sm" onclick="showGroupDetail('${esc(g.chat_id)}')">&#3604;&#3641;&#3619;&#3634;&#3618;&#3621;&#3632;&#3648;&#3629;&#3637;&#3618;&#3604;</button>
-            <button class="btn btn-primary btn-sm" onclick="generateDigest('${esc(g.chat_id)}')">&#9889; &#3626;&#3619;&#3657;&#3634;&#3591; Digest &#3605;&#3629;&#3609;&#3609;&#3637;&#3657;</button>
+            <button class="btn btn-ghost btn-sm" onclick="showGroupDetail('${esc(g.chat_id)}')">ดูรายละเอียด</button>
+            <button class="btn btn-primary btn-sm" onclick="generateDigest('${esc(g.chat_id)}')">⚡ สร้าง Digest ตอนนี้</button>
           </div>
         </div>
       </div>`).join('') + '</div>';
@@ -1142,7 +1142,7 @@ async function showGroupDetail(chatId) {
   el_list.style.display = 'none';
   const det = document.getElementById('groupDetail');
   det.style.display = 'block';
-  det.innerHTML = '<div class="loading"><div class="spinner-sm"></div> &#3585;&#3635;&#3621;&#3633;&#3591;&#3650;&#3627;&#3621;&#3604;...</div>';
+  det.innerHTML = '<div class="loading"><div class="spinner-sm"></div> กำลังโหลด...</div>';
 
   const [msgs, digests] = await Promise.all([
     api(`/api/v1/dashboard/groups/${chatId}/messages?limit=30`),
@@ -1153,28 +1153,28 @@ async function showGroupDetail(chatId) {
   let html = `
     <div style="margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
       <div style="display:flex;align-items:center;gap:12px">
-        <button class="btn btn-ghost btn-sm" onclick="loadGroups()">&larr; &#3585;&#3621;&#3633;&#3610;</button>
+        <button class="btn btn-ghost btn-sm" onclick="loadGroups()">← กลับ</button>
         <span style="font-size:20px;font-weight:700">${esc(g.name || chatId)}</span>
         ${g.status === 'active' ? '<span class="badge badge-green">Active</span>' : ''}
       </div>
       <div style="display:flex;gap:8px">
-        <button class="btn btn-primary btn-sm" onclick="generateDigest('${esc(chatId)}')">&#9889; &#3626;&#3619;&#3657;&#3634;&#3591; Digest &#3605;&#3629;&#3609;&#3609;&#3637;&#3657;</button>
-        <button class="btn btn-ghost btn-sm" onclick="quickAiForGroup('${esc(chatId)}','${esc(g.name || '')}')">&#129302; &#3606;&#3634;&#3617; AI</button>
+        <button class="btn btn-primary btn-sm" onclick="generateDigest('${esc(chatId)}')">⚡ สร้าง Digest ตอนนี้</button>
+        <button class="btn btn-ghost btn-sm" onclick="quickAiForGroup('${esc(chatId)}','${esc(g.name || '')}')">🤖 ถาม AI</button>
       </div>
     </div>`;
 
   // Stats bar
   html += `<div class="stat-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:20px">
     <div class="stat-card" style="padding:16px 20px">
-      <div class="stat-label" style="font-size:11px">&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3623;&#3633;&#3609;&#3609;&#3637;&#3657;</div>
+      <div class="stat-label" style="font-size:11px">ข้อความวันนี้</div>
       <div class="stat-value" style="font-size:24px">${g.messages_today || 0}</div>
     </div>
     <div class="stat-card" style="padding:16px 20px">
-      <div class="stat-label" style="font-size:11px">&#3607;&#3633;&#3657;&#3591;&#3627;&#3617;&#3604;</div>
+      <div class="stat-label" style="font-size:11px">ทั้งหมด</div>
       <div class="stat-value" style="font-size:24px">${(g.total_messages || 0).toLocaleString()}</div>
     </div>
     <div class="stat-card" style="padding:16px 20px">
-      <div class="stat-label" style="font-size:11px">Digest &#3621;&#3656;&#3634;&#3626;&#3640;&#3604;</div>
+      <div class="stat-label" style="font-size:11px">Digest ล่าสุด</div>
       <div class="stat-value" style="font-size:24px;-webkit-text-fill-color:var(--text)">${g.last_digest_date || '-'}</div>
     </div>
   </div>`;
@@ -1189,7 +1189,7 @@ async function showGroupDetail(chatId) {
             <span class="badge badge-purple">${esc(d.date || '')}</span>
             <span class="digest-msgs">${d.message_count || 0} msgs</span>
           </div>
-          <span style="color:var(--text-faint);transition:transform .2s">&#9660;</span>
+          <span style="color:var(--text-faint);transition:transform .2s">▼</span>
         </div>
         <div class="digest-body">
           <div style="white-space:pre-wrap">${esc(d.summary || '')}</div>
@@ -1198,12 +1198,12 @@ async function showGroupDetail(chatId) {
         </div>
       </div>`).join('');
   } else {
-    html += '<div style="color:var(--text-faint);font-size:13px;padding:16px 0;text-align:center">&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3617;&#3637; Digest &mdash; &#3585;&#3604;&#3611;&#3640;&#3656;&#3617; "&#3626;&#3619;&#3657;&#3634;&#3591; Digest &#3605;&#3629;&#3609;&#3609;&#3637;&#3657;" &#3648;&#3614;&#3639;&#3656;&#3629;&#3648;&#3619;&#3636;&#3656;&#3617;</div>';
+    html += '<div style="color:var(--text-faint);font-size:13px;padding:16px 0;text-align:center">ยังไม่มี Digest — กดปุ่ม "สร้าง Digest ตอนนี้" เพื่อเริ่ม</div>';
   }
   html += '</div></div>';
 
   // Messages
-  html += '<div class="panel"><div class="panel-header"><span class="panel-title">&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3621;&#3656;&#3634;&#3626;&#3640;&#3604;</span><span class="badge badge-blue">' + ((msgs && msgs.total) || 0) + ' &#3607;&#3633;&#3657;&#3591;&#3627;&#3617;&#3604;</span></div><div class="panel-body">';
+  html += '<div class="panel"><div class="panel-header"><span class="panel-title">ข้อความล่าสุด</span><span class="badge badge-blue">' + ((msgs && msgs.total) || 0) + ' ทั้งหมด</span></div><div class="panel-body">';
   if (msgs && msgs.messages && msgs.messages.length > 0) {
     html += msgs.messages.map(m => `
       <div class="msg-item">
@@ -1215,7 +1215,7 @@ async function showGroupDetail(chatId) {
         </div>
       </div>`).join('');
   } else {
-    html += '<div style="color:var(--text-faint);font-size:13px;text-align:center;padding:16px 0">&#3652;&#3617;&#3656;&#3617;&#3637;&#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;</div>';
+    html += '<div style="color:var(--text-faint);font-size:13px;text-align:center;padding:16px 0">ไม่มีข้อความ</div>';
   }
   html += '</div></div>';
 
@@ -1231,10 +1231,10 @@ async function generateDigest(chatId) {
     body: JSON.stringify({ chat_id: chatId, last_24h: true }),
   });
 
-  if (btn) { btn.disabled = false; btn.innerHTML = '&#9889; &#3626;&#3619;&#3657;&#3634;&#3591; Digest &#3605;&#3629;&#3609;&#3609;&#3637;&#3657;'; }
+  if (btn) { btn.disabled = false; btn.innerHTML = '⚡ สร้าง Digest ตอนนี้'; }
 
   if (resp && resp.ok) {
-    showToast('Digest &#3626;&#3619;&#3657;&#3634;&#3591;&#3648;&#3626;&#3619;&#3655;&#3592;&#3649;&#3621;&#3657;&#3623;: ' + (resp.message_count || 0) + ' &#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;', 'success');
+    showToast('Digest สร้างเสร็จแล้ว: ' + (resp.message_count || 0) + ' ข้อความ', 'success');
     if (currentView === 'groups') showGroupDetail(chatId);
     else if (currentView === 'dashboard') loadDashboard();
   } else {
@@ -1243,13 +1243,13 @@ async function generateDigest(chatId) {
 }
 
 async function generateAllDigests() {
-  if (!confirm('&#3626;&#3619;&#3657;&#3634;&#3591; Digest &#3626;&#3635;&#3627;&#3619;&#3633;&#3610;&#3607;&#3640;&#3585;&#3585;&#3621;&#3640;&#3656;&#3617;?')) return;
+  if (!confirm('สร้าง Digest สำหรับทุกกลุ่ม?')) return;
   const resp = await api('/api/v1/digest/generate/all', {
     method: 'POST',
     body: JSON.stringify({}),
   });
   if (resp && resp.ok) {
-    showToast(`&#3626;&#3635;&#3648;&#3619;&#3655;&#3592; ${resp.success}/${resp.total} &#3585;&#3621;&#3640;&#3656;&#3617;`, 'success');
+    showToast(`สำเร็จ ${resp.success}/${resp.total} กลุ่ม`, 'success');
     loadDigests();
   } else {
     showToast('Error: ' + (resp ? resp.error || resp.detail || 'Unknown' : 'Network error'), 'error');
@@ -1259,16 +1259,16 @@ async function generateAllDigests() {
 // ── Digests View ──
 async function loadDigests() {
   const el = document.getElementById('digestsList');
-  el.innerHTML = '<div class="loading"><div class="spinner-sm"></div> &#3585;&#3635;&#3621;&#3633;&#3591;&#3650;&#3627;&#3621;&#3604;...</div>';
+  el.innerHTML = '<div class="loading"><div class="spinner-sm"></div> กำลังโหลด...</div>';
 
   const data = await api('/api/v1/digest/list?limit=30');
   const digests = Array.isArray(data) ? data : [];
   if (digests.length === 0) {
     el.innerHTML = `<div class="empty-state" style="padding:60px 20px">
-      <div class="icon">&#128203;</div>
-      <div class="title">&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3617;&#3637; Digest</div>
-      <div class="desc" style="margin-bottom:20px">&#3585;&#3604; "Generate All" &#3648;&#3614;&#3639;&#3656;&#3629;&#3626;&#3619;&#3657;&#3634;&#3591;&#3626;&#3619;&#3640;&#3611; AI &#3626;&#3635;&#3627;&#3619;&#3633;&#3610;&#3607;&#3640;&#3585;&#3585;&#3621;&#3640;&#3656;&#3617;</div>
-      <button class="btn btn-primary" onclick="generateAllDigests()">&#9889; Generate All</button>
+      <div class="icon">📋</div>
+      <div class="title">ยังไม่มี Digest</div>
+      <div class="desc" style="margin-bottom:20px">กด "Generate All" เพื่อสร้างสรุป AI สำหรับทุกกลุ่ม</div>
+      <button class="btn btn-primary" onclick="generateAllDigests()">⚡ Generate All</button>
     </div>`;
     return;
   }
@@ -1280,7 +1280,7 @@ async function loadDigests() {
           <span class="digest-chat">${esc(d.chat_name || '')}</span>
           <span class="digest-msgs">${d.message_count || 0} msgs</span>
         </div>
-        <span style="color:var(--text-faint)">&#9660;</span>
+        <span style="color:var(--text-faint)">▼</span>
       </div>
       <div class="digest-body">
         <div style="white-space:pre-wrap">${esc(d.summary || '')}</div>
@@ -1288,8 +1288,8 @@ async function loadDigests() {
         ${d.action_items && d.action_items.length ? '<div style="margin-top:12px"><strong style="font-size:12px;color:var(--amber)">Action Items:</strong><ul style="margin-top:4px;padding-left:18px;font-size:12px">' + d.action_items.map(a => '<li>' + esc(a) + '</li>').join('') + '</ul></div>' : ''}
         ${d.sentiment ? '<div style="margin-top:8px"><span class="badge ' + sentimentBadge(d.sentiment) + '">' + esc(d.sentiment) + '</span></div>' : ''}
         <div class="digest-actions">
-          <button class="btn btn-ghost btn-sm" onclick="copyDigest(this.parentElement.parentElement)">&#128203; &#3588;&#3633;&#3604;&#3621;&#3629;&#3585;</button>
-          <button class="btn btn-ghost btn-sm" onclick="shareDigest('${esc(d.id || '')}')">&#128279; &#3649;&#3594;&#3619;&#3660;</button>
+          <button class="btn btn-ghost btn-sm" onclick="copyDigest(this.parentElement.parentElement)">📋 คัดลอก</button>
+          <button class="btn btn-ghost btn-sm" onclick="shareDigest('${esc(d.id || '')}')">🔗 แชร์</button>
         </div>
       </div>
     </div>`).join('');
@@ -1297,12 +1297,12 @@ async function loadDigests() {
 
 function copyDigest(bodyEl) {
   const text = bodyEl.querySelector('div').textContent;
-  navigator.clipboard.writeText(text).then(() => showToast('&#3588;&#3633;&#3604;&#3621;&#3629;&#3585;&#3649;&#3621;&#3657;&#3623;', 'success'));
+  navigator.clipboard.writeText(text).then(() => showToast('คัดลอกแล้ว', 'success'));
 }
 
 function shareDigest(id) {
   const url = window.location.origin + '/digest/' + id;
-  navigator.clipboard.writeText(url).then(() => showToast('&#3588;&#3633;&#3604;&#3621;&#3629;&#3585;&#3621;&#3636;&#3591;&#3585;&#3660;&#3649;&#3621;&#3657;&#3623;', 'success'));
+  navigator.clipboard.writeText(url).then(() => showToast('คัดลอกลิงก์แล้ว', 'success'));
 }
 
 // ── AI Chat ──
@@ -1311,13 +1311,13 @@ async function loadChatGroups() {
   const groups = Array.isArray(data) ? data : [];
   const el = document.getElementById('chatGroupList');
   if (groups.length === 0) {
-    el.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-faint);font-size:13px">&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3617;&#3637;&#3585;&#3621;&#3640;&#3656;&#3617;</div>';
+    el.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-faint);font-size:13px">ยังไม่มีกลุ่ม</div>';
     return;
   }
   el.innerHTML = groups.map(g => `
     <div class="chat-group-item ${selectedChatId === g.chat_id ? 'active' : ''}" onclick="selectChat('${esc(g.chat_id)}', '${esc(g.name)}')" data-name="${esc(g.name.toLowerCase())}">
       <div class="chat-group-name">${esc(g.name)}</div>
-      <div class="chat-group-preview">${g.messages_today} &#3586;&#3657;&#3629;&#3588;&#3623;&#3634;&#3617;&#3623;&#3633;&#3609;&#3609;&#3637;&#3657;</div>
+      <div class="chat-group-preview">${g.messages_today} ข้อความวันนี้</div>
     </div>`).join('');
 }
 
@@ -1335,9 +1335,9 @@ function selectChat(chatId, chatName) {
   if (event && event.currentTarget) event.currentTarget.classList.add('active');
   document.getElementById('chatMessages').innerHTML = `
     <div class="empty-state">
-      <div class="icon">&#129302;</div>
+      <div class="icon">🤖</div>
       <div class="title">${esc(chatName)}</div>
-      <div class="desc">&#3614;&#3636;&#3617;&#3614;&#3660;&#3588;&#3635;&#3606;&#3634;&#3617;&#3648;&#3585;&#3637;&#3656;&#3618;&#3623;&#3585;&#3633;&#3610;&#3649;&#3594;&#3607;&#3609;&#3637;&#3657;</div>
+      <div class="desc">พิมพ์คำถามเกี่ยวกับแชทนี้</div>
     </div>`;
   document.getElementById('chatSuggestions').style.display = 'flex';
   document.getElementById('chatContainer').classList.add('chat-open');
@@ -1363,7 +1363,7 @@ async function sendChat() {
   msgs.scrollTop = msgs.scrollHeight;
 
   const loadId = 'load-' + Date.now();
-  msgs.innerHTML += `<div class="chat-msg assistant" id="${loadId}"><div class="chat-msg-bubble"><div class="spinner-sm" style="display:inline-block;vertical-align:middle;margin-right:8px"></div>&#3585;&#3635;&#3621;&#3633;&#3591;&#3588;&#3636;&#3604;...</div></div>`;
+  msgs.innerHTML += `<div class="chat-msg assistant" id="${loadId}"><div class="chat-msg-bubble"><div class="spinner-sm" style="display:inline-block;vertical-align:middle;margin-right:8px"></div>กำลังคิด...</div></div>`;
   msgs.scrollTop = msgs.scrollHeight;
 
   const resp = await api('/api/v1/digest/ask', {
@@ -1378,7 +1378,7 @@ async function sendChat() {
     conversationId = resp.conversation_id;
     msgs.innerHTML += `<div class="chat-msg assistant"><div class="chat-msg-bubble">${formatAnswer(resp.answer)}</div></div>`;
   } else {
-    msgs.innerHTML += `<div class="chat-msg assistant"><div class="chat-msg-bubble" style="color:var(--red)">&#3648;&#3585;&#3636;&#3604;&#3586;&#3657;&#3629;&#3612;&#3636;&#3604;&#3614;&#3621;&#3634;&#3604; &#3585;&#3619;&#3640;&#3603;&#3634;&#3621;&#3629;&#3591;&#3651;&#3627;&#3617;&#3656;</div></div>`;
+    msgs.innerHTML += `<div class="chat-msg assistant"><div class="chat-msg-bubble" style="color:var(--red)">เกิดข้อผิดพลาด กรุณาลองใหม่</div></div>`;
   }
   msgs.scrollTop = msgs.scrollHeight;
 }
@@ -1417,10 +1417,10 @@ async function loadSettings() {
   // Org info
   if (org) {
     document.getElementById('settingsOrg').innerHTML = `
-      <div class="settings-row"><span class="settings-label">&#3594;&#3639;&#3656;&#3629;</span><span class="settings-value">${esc(org.name || '')}</span></div>
+      <div class="settings-row"><span class="settings-label">ชื่อ</span><span class="settings-value">${esc(org.name || '')}</span></div>
       <div class="settings-row"><span class="settings-label">Slug</span><span class="settings-value">${esc(org.slug || '')}</span></div>
       <div class="settings-row"><span class="settings-label">Plan</span><span class="settings-value">${esc(org.plan || 'free')}</span></div>
-      <div class="settings-row"><span class="settings-label">&#3626;&#3606;&#3634;&#3609;&#3632;</span><span class="settings-value">${org.status === 'active' ? '<span class="badge badge-green">Active</span>' : esc(org.status || '')}</span></div>
+      <div class="settings-row"><span class="settings-label">สถานะ</span><span class="settings-value">${org.status === 'active' ? '<span class="badge badge-green">Active</span>' : esc(org.status || '')}</span></div>
       <div class="settings-row"><span class="settings-label">Max Groups</span><span class="settings-value">${org.max_groups || '-'}</span></div>
       <div class="settings-row"><span class="settings-label">Max Users</span><span class="settings-value">${org.max_users || '-'}</span></div>`;
   }
@@ -1430,14 +1430,14 @@ async function loadSettings() {
   if (org && org.line_channel_id) {
     lineEl.innerHTML = `
       <div class="settings-row"><span class="settings-label">Channel ID</span><span class="settings-value">${esc(org.line_channel_id)}</span></div>
-      <div class="settings-row"><span class="settings-label">&#3626;&#3606;&#3634;&#3609;&#3632;</span><span class="settings-value"><span class="badge badge-green">&#3648;&#3594;&#3639;&#3656;&#3629;&#3617;&#3605;&#3656;&#3629;&#3649;&#3621;&#3657;&#3623;</span></span></div>
+      <div class="settings-row"><span class="settings-label">สถานะ</span><span class="settings-value"><span class="badge badge-green">เชื่อมต่อแล้ว</span></span></div>
       <div class="settings-row"><span class="settings-label">Webhook URL</span><span class="settings-value" style="font-size:11px;word-break:break-all">${window.location.origin}/webhook/line</span></div>`;
   } else {
     lineEl.innerHTML = `
       <div style="padding:16px 0;text-align:center">
-        <div style="font-size:32px;margin-bottom:12px;opacity:0.5">&#128279;</div>
-        <div style="font-size:14px;font-weight:600;color:var(--text-dim);margin-bottom:8px">&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3652;&#3604;&#3657;&#3648;&#3594;&#3639;&#3656;&#3629;&#3617;&#3605;&#3656;&#3629;</div>
-        <div style="font-size:12px;color:var(--text-faint);margin-bottom:16px">&#3605;&#3636;&#3604;&#3605;&#3656;&#3629;&#3612;&#3641;&#3657;&#3604;&#3641;&#3649;&#3621;&#3619;&#3632;&#3610;&#3610;&#3648;&#3614;&#3639;&#3656;&#3629;&#3605;&#3633;&#3657;&#3591;&#3588;&#3656;&#3634; LINE Bot</div>
+        <div style="font-size:32px;margin-bottom:12px;opacity:0.5">🔗</div>
+        <div style="font-size:14px;font-weight:600;color:var(--text-dim);margin-bottom:8px">ยังไม่ได้เชื่อมต่อ</div>
+        <div style="font-size:12px;color:var(--text-faint);margin-bottom:16px">ติดต่อผู้ดูแลระบบเพื่อตั้งค่า LINE Bot</div>
       </div>`;
   }
 
@@ -1452,7 +1452,7 @@ async function loadSettings() {
         <td>${m.role !== 'owner' ? '<button class="btn btn-danger btn-sm" onclick="removeMember(\'' + esc(m.user_id) + '\')">Remove</button>' : ''}</td>
       </tr>`).join('') + '</tbody></table>';
   } else {
-    document.getElementById('settingsMembers').innerHTML = '<div style="color:var(--text-faint);font-size:13px">&#3652;&#3617;&#3656;&#3617;&#3637;&#3626;&#3617;&#3634;&#3594;&#3636;&#3585;</div>';
+    document.getElementById('settingsMembers').innerHTML = '<div style="color:var(--text-faint);font-size:13px">ไม่มีสมาชิก</div>';
   }
 
   // Plan
@@ -1463,28 +1463,28 @@ async function loadSettings() {
         <div style="background:var(--bg-surface);border:1px solid ${org && org.plan === p.id ? 'var(--blue)' : 'var(--border)'};border-radius:var(--radius);padding:18px;text-align:center">
           <div style="font-weight:700;font-size:16px;margin-bottom:4px">${esc(p.name)}</div>
           <div style="font-size:28px;font-weight:800;background:var(--gradient);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:8px 0">
-            ${p.price === 0 ? 'Free' : '&#3647;' + p.price.toLocaleString()}
+            ${p.price === 0 ? 'Free' : '฿' + p.price.toLocaleString()}
           </div>
-          <div style="font-size:11px;color:var(--text-faint);margin-bottom:12px">${p.price > 0 ? '/&#3648;&#3604;&#3639;&#3629;&#3609;' : ''}</div>
+          <div style="font-size:11px;color:var(--text-faint);margin-bottom:12px">${p.price > 0 ? '/เดือน' : ''}</div>
           <div style="text-align:left;font-size:12px;color:var(--text-dim)">
-            ${(p.features || []).map(f => '<div style="padding:2px 0">&#10003; ' + esc(f) + '</div>').join('')}
+            ${(p.features || []).map(f => '<div style="padding:2px 0">✓ ' + esc(f) + '</div>').join('')}
           </div>
-          ${org && org.plan === p.id ? '<div class="badge badge-blue" style="margin-top:12px">&#3649;&#3612;&#3609;&#3611;&#3633;&#3592;&#3592;&#3640;&#3610;&#3633;&#3609;</div>' : ''}
+          ${org && org.plan === p.id ? '<div class="badge badge-blue" style="margin-top:12px">แผนปัจจุบัน</div>' : ''}
         </div>`).join('') + '</div>';
   } else {
-    document.getElementById('settingsPlan').innerHTML = '<div style="color:var(--text-faint);font-size:13px">&#3652;&#3617;&#3656;&#3617;&#3637;&#3586;&#3657;&#3629;&#3617;&#3641;&#3621;&#3649;&#3612;&#3609;</div>';
+    document.getElementById('settingsPlan').innerHTML = '<div style="color:var(--text-faint);font-size:13px">ไม่มีข้อมูลแผน</div>';
   }
 }
 
 async function removeMember(userId) {
-  if (!confirm('&#3621;&#3610;&#3626;&#3617;&#3634;&#3594;&#3636;&#3585; ' + userId + '?')) return;
+  if (!confirm('ลบสมาชิก ' + userId + '?')) return;
   const resp = await api(`/api/v1/org/${orgId}/members/${userId}`, { method: 'DELETE' });
   if (resp && resp.ok) loadSettings();
   else showToast('Error: ' + (resp ? resp.detail || 'Unknown' : 'Failed'), 'error');
 }
 
 function generateApiToken() {
-  showToast('&#3585;&#3635;&#3621;&#3633;&#3591;&#3614;&#3633;&#3602;&#3609;&#3634; - &#3648;&#3619;&#3655;&#3623;&#3654; &#3609;&#3637;&#3657;', 'info');
+  showToast('กำลังพัฒนา - เร็วๆ นี้', 'info');
 }
 
 // ── Toast notification ──

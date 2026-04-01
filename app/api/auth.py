@@ -166,19 +166,17 @@ async def login_submit(request: Request):
         html = html.replace("<!--ERROR-->", '<div class="error">รหัสผ่านไม่ถูกต้อง</div>')
         return HTMLResponse(html, status_code=401)
 
-    # Resolve org — use slug or default to first org
+    # Resolve org — use slug or default
     db = request.app.db
     org = None
     if org_slug:
         org = db.org_get_by_slug(org_slug)
     if not org:
-        orgs = db.org_list()
-        if orgs:
-            org = orgs[0]
-        else:
-            # Auto-create default org on first login
-            org = db.org_create("Default", "default")
-            db.org_add_member(org["id"], "admin", role="owner")
+        org = db.org_get_by_slug("default")
+    if not org:
+        # Auto-create default org on first login
+        org = db.org_create("Default", "default")
+        db.org_add_member(org["id"], "admin", role="owner")
 
     org_id = org["id"]
     user_id = "admin"
