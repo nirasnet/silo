@@ -63,6 +63,7 @@ def init_db() -> None:
             max_users INTEGER DEFAULT 3,
             logo_url TEXT DEFAULT '',
             status TEXT DEFAULT 'active',
+            production_start_time TEXT DEFAULT '00:00',
             created_at REAL NOT NULL,
             updated_at REAL NOT NULL
         );
@@ -181,6 +182,93 @@ def init_db() -> None:
     """)
     c.commit()
 
+    # Migrations for existing databases
+    _migrate(c, "organizations", "production_start_time", "TEXT DEFAULT '00:00'")
+
+
+def _migrate(c, table: str, column: str, col_type: str):
+    """Add a column if it doesn't exist."""
+    try:
+        c.execute(f"ALTER TABLE {table} ADD COLUMN {column} {col_type}")
+        c.commit()
+    except Exception:
+        pass  # column already exists
+
+
+# ══════════════════════════════════════════════
+#  Production Date Utility
+# ══════════════════════════════════════════════
+
+def get_production_period(org_id: str, target_date: str = "") -> dict:
+    """Calculate production date and time range based on org's production_start_time.
+
+    Default (00:00): normal calendar day 00:00 → 23:59
+    Custom (e.g. 07:25): production day runs from 07:25 to D+1 07:25
+      - If current time < 07:25, production date = yesterday, range = D-1 07:25 → now
+      - If current time >= 07:25, production date = today, range = D 07:25 → now
+
+    Returns: {
+        "production_date": "2026-04-02",
+        "start_ts": 1234567890.0,
+        "end_ts": 1234567999.0,
+        "start_str": "02/04/2026 07:25",
+        "end_str": "02/04/2026 23:59",
+        "production_start_time": "07:25",
+    }
+    """
+    from datetime import datetime, timezone, timedelta
+    TH_TZ = timezone(timedelta(hours=7))
+    now = datetime.now(TH_TZ)
+
+    # Get org production start time
+    org = org_get(org_id) if org_id else None
+    start_time_str = (org.get("production_start_time") or "00:00") if org else "00:00"
+
+    try:
+        parts = start_time_str.split(":")
+        start_hour = int(parts[0])
+        start_minute = int(parts[1]) if len(parts) > 1 else 0
+    except (ValueError, IndexError):
+        start_hour, start_minute = 0, 0
+
+    if start_hour == 0 and start_minute == 0:
+        # Default: normal calendar day
+        if target_date:
+            dt = datetime.strptime(target_date, "%Y-%m-%d").replace(tzinfo=TH_TZ)
+        else:
+            dt = now
+        day_start = dt.replace(hour=0, minute=0, second=0, microsecond=0)
+        day_end = dt.replace(hour=23, minute=59, second=59, microsecond=0)
+        prod_date = dt.strftime("%Y-%m-%d")
+    else:
+        # Custom production time
+        if target_date:
+            dt = datetime.strptime(target_date, "%Y-%m-%d").replace(tzinfo=TH_TZ)
+            day_start = dt.replace(hour=start_hour, minute=start_minute, second=0, microsecond=0)
+            day_end = day_start + timedelta(days=1)
+            prod_date = target_date
+        else:
+            today_start = now.replace(hour=start_hour, minute=start_minute, second=0, microsecond=0)
+            if now < today_start:
+                # Before production start → production date is yesterday
+                prod_date = (now - timedelta(days=1)).strftime("%Y-%m-%d")
+                day_start = today_start - timedelta(days=1)
+                day_end = now
+            else:
+                # After production start → production date is today
+                prod_date = now.strftime("%Y-%m-%d")
+                day_start = today_start
+                day_end = now
+
+    return {
+        "production_date": prod_date,
+        "start_ts": day_start.timestamp(),
+        "end_ts": day_end.timestamp(),
+        "start_str": day_start.strftime("%d/%m/%Y %H:%M"),
+        "end_str": day_end.strftime("%d/%m/%Y %H:%M"),
+        "production_start_time": start_time_str,
+    }
+
 
 # ══════════════════════════════════════════════
 #  Organizations
@@ -228,6 +316,7 @@ def org_update(org_id: str, **kwargs: object) -> None:
     allowed = {
         "name", "slug", "plan", "line_channel_id", "line_channel_secret",
         "line_channel_token", "max_groups", "max_users", "logo_url", "status",
+        "production_start_time",
     }
     fields = {k: v for k, v in kwargs.items() if k in allowed}
     if not fields:

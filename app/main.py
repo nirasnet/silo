@@ -133,7 +133,11 @@ def _run_all_digests(date_str: str):
             chat_id = group["group_mid"]
             chat_name = group.get("group_name", chat_id[:16])
             try:
-                messages = db.get_messages(org_id, chat_id, limit=5000)
+                # Use production date period
+                period = db.get_production_period(org_id)
+                messages = db.get_messages(org_id, chat_id, after=period["start_ts"], limit=5000)
+                messages = [m for m in messages if m.get("created_at", 0) <= period["end_ts"]]
+                date_str = period["production_date"]
                 if len(messages) < 2:
                     continue
                 digest = generate_digest(chat_name, date_str, messages)

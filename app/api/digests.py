@@ -30,27 +30,30 @@ class AskRequest(BaseModel):
 
 @router.post("/generate")
 async def generate_digest_route(body: GenerateDigestRequest, request: Request, auth: dict = Depends(require_auth)):
-    """Generate AI digest for a chat."""
+    """Generate AI digest for a chat. Uses production date config."""
     db = request.app.db
     ai = request.app.ai
     org_id = body.org_id or auth["org_id"]
-    now = datetime.now(TH_TZ)
 
     if body.last_24h:
+        now = datetime.now(TH_TZ)
         after_ts = (now - timedelta(hours=24)).timestamp()
+        end_ts = now.timestamp()
         date_str = now.strftime("%Y-%m-%d")
-    elif body.date:
-        date_str = body.date
-        dt = datetime.strptime(body.date, "%Y-%m-%d").replace(tzinfo=TH_TZ)
-        after_ts = dt.replace(hour=0, minute=0, second=0).timestamp()
+        period_str = f"{(now - timedelta(hours=24)).strftime('%d/%m %H:%M')} - {now.strftime('%d/%m %H:%M')}"
     else:
-        date_str = now.strftime("%Y-%m-%d")
-        after_ts = now.replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
+        # Use production date (respects org's production_start_time)
+        period = db.get_production_period(org_id, target_date=body.date or "")
+        after_ts = period["start_ts"]
+        end_ts = period["end_ts"]
+        date_str = period["production_date"]
+        period_str = f"{period['start_str']} - {period['end_str']}"
 
-    # Get messages
-    messages = db.get_messages(org_id, body.chat_id, after=after_ts, limit=5000)
+    # Get messages in production period
+    all_msgs = db.get_messages(org_id, body.chat_id, after=after_ts, limit=5000)
+    messages = [m for m in all_msgs if m.get("created_at", 0) <= end_ts]
     if not messages:
-        return {"ok": False, "error": "ไม่มีข้อความในช่วงเวลานี้", "message_count": 0}
+        return {"ok": False, "error": f"ไม่มีข้อความในช่วง {period_str}", "message_count": 0, "period": period_str}
 
     # Get chat name from org_groups
     group = db.org_get_group_by_mid(org_id, body.chat_id)
@@ -68,10 +71,18 @@ async def generate_digest_route(body: GenerateDigestRequest, request: Request, a
     return {
         "ok": True,
         "date": date_str,
+        "period": period_str,
         "chat_name": chat_name,
         "message_count": len(messages),
         "digest": digest,
     }
+
+
+@router.get("/production-period")
+async def get_production_period(request: Request, date: str = "", auth: dict = Depends(require_auth)):
+    """Get current production date and time range based on org config."""
+    db = request.app.db
+    return db.get_production_period(auth["org_id"], target_date=date)
 
 
 @router.post("/generate/all")

@@ -28,6 +28,7 @@ class UpdateOrgRequest(BaseModel):
     status: Optional[str] = None
     digest_hour: Optional[int] = None
     ai_model: Optional[str] = None
+    production_start_time: Optional[str] = None  # "HH:MM" e.g. "07:25"
 
 
 class AddMemberRequest(BaseModel):

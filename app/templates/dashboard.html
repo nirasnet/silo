@@ -708,6 +708,24 @@ select.form-input {
       </div>
     </div>
     <div class="settings-section">
+      <div class="settings-title">⏰ เวลาเริ่มต้นการผลิต (Production Date)</div>
+      <div id="settingsProductionTime">
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:12px">
+          กำหนดเวลาเริ่มนับ "วันผลิต" สำหรับ Digest<br>
+          ค่าเริ่มต้น: 00:00 (ตามปฏิทินปกติ)<br>
+          ตัวอย่าง: 07:25 = วันผลิตเริ่ม 07:25 ถึง D+1 07:25
+        </p>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <input type="time" id="prodStartTime" value="00:00"
+            style="padding:8px 14px;background:var(--bg-hover);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px">
+          <button class="btn btn-primary btn-sm" onclick="saveProductionTime()">บันทึก</button>
+          <button class="btn btn-ghost btn-sm" onclick="document.getElementById('prodStartTime').value='00:00'">รีเซ็ต (00:00)</button>
+        </div>
+        <div id="prodPeriodPreview" style="margin-top:12px;padding:12px 16px;background:var(--bg-hover);border-radius:8px;font-size:13px;display:none">
+        </div>
+      </div>
+    </div>
+    <div class="settings-section">
       <div class="settings-title">LINE Bot Connection</div>
       <div id="settingsLineStatus"></div>
     </div>
@@ -1470,8 +1488,35 @@ async function quickAiAsk() {
   }
 }
 
+// ── Production Time ──
+async function loadProductionTime() {
+  const period = await api('/api/v1/digest/production-period');
+  if (period) {
+    const input = document.getElementById('prodStartTime');
+    input.value = period.production_start_time || '00:00';
+    const preview = document.getElementById('prodPeriodPreview');
+    preview.style.display = 'block';
+    preview.innerHTML = `
+      📅 <strong>วันผลิตปัจจุบัน:</strong> ${period.production_date}<br>
+      ⏰ <strong>ช่วงเวลา:</strong> ${period.start_str} — ${period.end_str}`;
+  }
+}
+
+async function saveProductionTime() {
+  const val = document.getElementById('prodStartTime').value || '00:00';
+  const resp = await api(`/api/v1/org/${orgId}`, {
+    method: 'PUT',
+    body: JSON.stringify({ production_start_time: val }),
+  });
+  if (resp && resp.ok !== false) {
+    showToast('บันทึกเวลาเริ่มผลิตแล้ว: ' + val);
+    loadProductionTime();
+  }
+}
+
 // ── Settings ──
 async function loadSettings() {
+  loadProductionTime();
   const [org, members, plans] = await Promise.all([
     api(`/api/v1/org/${orgId}`).catch(() => null),
     api(`/api/v1/org/${orgId}/members`).catch(() => null),
