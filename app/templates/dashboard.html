@@ -1030,7 +1030,7 @@ async function loadDashGroups() {
         <div>Digest ล่าสุด<span class="group-card-stat-val">${g.last_digest_date || '-'}</span></div>
       </div>
       <div class="group-card-actions">
-        <button class="btn btn-ghost btn-sm" onclick="switchView('groups'); setTimeout(()=>showGroupDetail('${esc(g.chat_id)}'),100)">
+        <button class="btn btn-ghost btn-sm" onclick="viewGroupDirect('${esc(g.chat_id)}')">
           💬 ดูข้อความ
         </button>
         <button class="btn btn-primary btn-sm" onclick="generateDigest('${esc(g.chat_id)}')">
@@ -1072,7 +1072,7 @@ async function loadTopGroups() {
     return;
   }
   el.innerHTML = groups.slice(0, 5).map(g => `
-    <tr onclick="switchView('groups'); setTimeout(()=>showGroupDetail('${esc(g.chat_id)}'),100)">
+    <tr onclick="viewGroupDirect('${esc(g.chat_id)}')">
       <td><strong>${esc(g.name)}</strong></td>
       <td>${(g.messages_today || 0).toLocaleString()}</td>
       <td>${g.has_digest_today ? '<span class="badge badge-green">Digest</span>' : '<span class="badge badge-amber">Pending</span>'}</td>
@@ -1080,6 +1080,10 @@ async function loadTopGroups() {
 }
 
 // ── Groups View ──
+let groupSort = 'messages'; // messages | name | digest
+let groupFilter = '';
+let groupLayout = 'grid'; // grid | list
+
 async function loadGroups() {
   const data = await api('/api/v1/dashboard/groups');
   groupsData = Array.isArray(data) ? data : [];
@@ -1092,39 +1096,90 @@ async function loadGroups() {
       <div class="icon">👥</div>
       <div class="title">ยังไม่มีกลุ่ม</div>
       <div class="desc" style="margin-bottom:20px">
-        เพิ่ม Silo Bot เข้ากลุ่ม LINE ของคุณ<br>
-        Bot จะตรวจจับกลุ่มอัตโนมัติเมื่อถูกเพิ่มเข้ากลุ่ม
+        เพิ่ม Silo Bot เข้ากลุ่ม LINE ของคุณ<br>Bot จะตรวจจับอัตโนมัติ
       </div>
       <button class="btn btn-primary" onclick="loadGroups()">↻ รีเฟรช</button>
     </div>`;
     return;
   }
 
-  el.innerHTML = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px">' +
-    groupsData.map(g => `
+  renderGroupList(el);
+}
+
+function renderGroupList(el) {
+  // Filter
+  let filtered = groupsData;
+  if (groupFilter) {
+    const q = groupFilter.toLowerCase();
+    filtered = filtered.filter(g => (g.name || '').toLowerCase().includes(q));
+  }
+  // Sort
+  if (groupSort === 'messages') filtered.sort((a,b) => (b.total_messages||0) - (a.total_messages||0));
+  else if (groupSort === 'name') filtered.sort((a,b) => (a.name||'').localeCompare(b.name||''));
+  else if (groupSort === 'digest') filtered.sort((a,b) => (b.last_digest_date||'').localeCompare(a.last_digest_date||''));
+
+  // Toolbar
+  let html = `<div style="display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap">
+    <input type="text" placeholder="🔍 ค้นหากลุ่ม..." value="${esc(groupFilter)}"
+      oninput="groupFilter=this.value;renderGroupList(document.getElementById('groupsList'))"
+      style="flex:1;min-width:180px;padding:8px 14px;background:var(--bg-hover);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px">
+    <select onchange="groupSort=this.value;renderGroupList(document.getElementById('groupsList'))"
+      style="padding:8px 12px;background:var(--bg-hover);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:13px">
+      <option value="messages" ${groupSort==='messages'?'selected':''}>เรียง: ข้อความมากสุด</option>
+      <option value="name" ${groupSort==='name'?'selected':''}>เรียง: ชื่อ A-Z</option>
+      <option value="digest" ${groupSort==='digest'?'selected':''}>เรียง: Digest ล่าสุด</option>
+    </select>
+    <div style="display:flex;gap:4px">
+      <button class="btn btn-ghost btn-sm" onclick="groupLayout='grid';renderGroupList(document.getElementById('groupsList'))"
+        style="${groupLayout==='grid'?'background:var(--bg-hover)':''}">▦</button>
+      <button class="btn btn-ghost btn-sm" onclick="groupLayout='list';renderGroupList(document.getElementById('groupsList'))"
+        style="${groupLayout==='list'?'background:var(--bg-hover)':''}">☰</button>
+    </div>
+    <span style="font-size:12px;color:var(--text-faint)">${filtered.length} กลุ่ม</span>
+  </div>`;
+
+  if (groupLayout === 'list') {
+    // List layout
+    html += '<div style="display:flex;flex-direction:column;gap:8px">' + filtered.map(g => `
+      <div class="group-card" style="cursor:pointer;display:flex;align-items:center;gap:16px;padding:14px 18px"
+           onclick="showGroupDetail('${esc(g.chat_id)}')">
+        <div style="width:40px;height:40px;border-radius:10px;background:var(--gradient-soft);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">${(g.name||'?')[0]}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(g.name)}</div>
+          <div style="font-size:12px;color:var(--text-faint)">${g.total_messages||0} ข้อความ · วันนี้ ${g.messages_today||0}</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
+          ${g.has_digest_today ? '<span class="badge badge-green">Digest</span>' : '<span class="badge badge-amber">Pending</span>'}
+          <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();generateDigest('${esc(g.chat_id)}')">⚡</button>
+        </div>
+      </div>`).join('') + '</div>';
+  } else {
+    // Grid layout
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px">' + filtered.map(g => `
       <div class="group-card">
-        <div class="group-card-header">
+        <div class="group-card-header" style="cursor:pointer" onclick="showGroupDetail('${esc(g.chat_id)}')">
           <div class="group-card-name">${esc(g.name)}</div>
-          ${g.status === 'active' ? '<span class="badge badge-green">Active</span>' : '<span class="badge badge-red">Inactive</span>'}
+          ${g.has_digest_today ? '<span class="badge badge-green">Digest</span>' : '<span class="badge badge-amber">Pending</span>'}
         </div>
         <div class="group-card-stats">
-          <div>ข้อความวันนี้<span class="group-card-stat-val">${(g.messages_today || 0).toLocaleString()}</span></div>
-          <div>ทั้งหมด<span class="group-card-stat-val">${(g.total_messages || 0).toLocaleString()}</span></div>
-          <div>Digest ล่าสุด<span class="group-card-stat-val">${g.last_digest_date || '-'}</span></div>
-          <div>สถานะ<span class="group-card-stat-val">${g.has_digest_today ? '<span class="badge badge-green">Digest OK</span>' : '<span class="badge badge-amber">Pending</span>'}</span></div>
+          <div>วันนี้<span class="group-card-stat-val">${(g.messages_today||0).toLocaleString()}</span></div>
+          <div>ทั้งหมด<span class="group-card-stat-val">${(g.total_messages||0).toLocaleString()}</span></div>
+          <div>Digest<span class="group-card-stat-val">${g.last_digest_date||'-'}</span></div>
         </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid var(--border)">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border)">
           <div class="toggle-wrap">
-            <span class="toggle-label" style="font-size:12px">Auto-digest</span>
-            <div class="toggle ${g.auto_digest !== false ? 'active' : ''}"
-                 onclick="toggleAutoDigest('${esc(g.chat_id)}', this)"></div>
+            <span class="toggle-label" style="font-size:11px">Auto-digest</span>
+            <div class="toggle ${g.auto_digest!==false?'active':''}" onclick="event.stopPropagation();toggleAutoDigest('${esc(g.chat_id)}',this)"></div>
           </div>
-          <div style="display:flex;gap:8px">
-            <button class="btn btn-ghost btn-sm" onclick="showGroupDetail('${esc(g.chat_id)}')">ดูรายละเอียด</button>
-            <button class="btn btn-primary btn-sm" onclick="generateDigest('${esc(g.chat_id)}')">⚡ สร้าง Digest ตอนนี้</button>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-ghost btn-sm" onclick="showGroupDetail('${esc(g.chat_id)}')">💬 ดู</button>
+            <button class="btn btn-primary btn-sm" onclick="generateDigest('${esc(g.chat_id)}')">⚡ Digest</button>
           </div>
         </div>
       </div>`).join('') + '</div>';
+  }
+
+  el.innerHTML = html;
 }
 
 async function toggleAutoDigest(chatId, el) {
@@ -1135,6 +1190,15 @@ async function toggleAutoDigest(chatId, el) {
     method: 'PUT',
     body: JSON.stringify({ enabled }),
   });
+}
+
+async function viewGroupDirect(chatId) {
+  // Switch to groups view and show detail immediately (no reload race)
+  document.querySelectorAll('.view').forEach(v => v.style.display = 'none');
+  document.getElementById('view-groups').style.display = '';
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelector('[data-view="groups"]')?.classList.add('active');
+  await showGroupDetail(chatId);
 }
 
 async function showGroupDetail(chatId) {
