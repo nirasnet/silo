@@ -581,6 +581,22 @@ def usage_record(org_id: str, metric_type: str, user_id: str = "", count: int = 
     c.commit()
 
 
+def usage_get(org_id: str, date_from: str = "", date_to: str = "") -> list[dict]:
+    """Get raw usage metrics for an org, optionally filtered by date range."""
+    c = _conn()
+    if date_from and date_to:
+        rows = c.execute(
+            "SELECT * FROM usage_metrics WHERE org_id=? AND date>=? AND date<=? ORDER BY date DESC, created_at DESC",
+            (org_id, date_from, date_to),
+        ).fetchall()
+    else:
+        rows = c.execute(
+            "SELECT * FROM usage_metrics WHERE org_id=? ORDER BY date DESC, created_at DESC LIMIT 500",
+            (org_id,),
+        ).fetchall()
+    return [dict(r) for r in rows]
+
+
 def usage_get_summary(org_id: str, month: str = "") -> dict:
     """Aggregate usage for a month (YYYY-MM). Returns {metric: total}."""
     if not month:

@@ -170,8 +170,14 @@ async def activity_feed(
             })
 
     # Merge and sort by timestamp (newest first)
+    # Normalize timestamps: convert floats to ISO strings for consistent sorting
     feed = recent_digests + group_activity
-    feed.sort(key=lambda x: x.get("timestamp", ""), reverse=True)
+    for item in feed:
+        ts = item.get("timestamp", "")
+        if isinstance(ts, (int, float)):
+            from datetime import datetime, timezone
+            item["timestamp"] = datetime.fromtimestamp(ts, tz=timezone.utc).isoformat()
+    feed.sort(key=lambda x: str(x.get("timestamp", "")), reverse=True)
 
     return {"feed": feed[:limit], "since": since}
 

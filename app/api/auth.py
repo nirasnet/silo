@@ -77,7 +77,11 @@ async def require_auth(request: Request) -> dict:
         # Check config API keys first (master keys)
         from app.config import settings
         if api_key in settings.api_keys:
-            return {"org_id": "default", "user_id": "admin", "role": "owner"}
+            # Resolve actual default org id (slug "default")
+            _db = request.app.db
+            _default_org = _db.org_get_by_slug("default")
+            _org_id = _default_org["id"] if _default_org else "default"
+            return {"org_id": _org_id, "user_id": "admin", "role": "owner"}
         # Check DB tokens (per-org keys)
         db = request.app.db
         org_id = db.token_verify(api_key)
