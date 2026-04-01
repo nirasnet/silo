@@ -55,8 +55,10 @@ def create_app() -> FastAPI:
     app.include_router(digests_router)
     app.include_router(dashboard_router)
 
-    # Attach db module for request.app.db access pattern
+    # Attach modules for request.app.db / request.app.ai access
     app.db = db
+    from .ai import provider as ai_provider
+    app.ai = ai_provider
 
     # Static files
     static_dir = Path(__file__).parent / "static"

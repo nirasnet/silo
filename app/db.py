@@ -395,6 +395,55 @@ def get_image_messages(
     return [{"id": r["id"], "sender": r["sender_name"], "time": r["created_at"]} for r in rows]
 
 
+def messages_count(org_id: str, chat_id: str = "", date_from: str = "", date_to: str = "") -> int:
+    """Count messages with optional filters."""
+    q = "SELECT COUNT(*) FROM messages WHERE org_id=?"
+    p: list = [org_id]
+    if chat_id:
+        q += " AND chat_id=?"
+        p.append(chat_id)
+    if date_from:
+        q += " AND created_at>=?"
+        try:
+            from datetime import datetime
+            p.append(datetime.fromisoformat(date_from).timestamp())
+        except Exception:
+            p.append(0)
+    if date_to:
+        q += " AND created_at<=?"
+        try:
+            from datetime import datetime
+            p.append(datetime.fromisoformat(date_to).timestamp())
+        except Exception:
+            p.append(9999999999)
+    return _conn().execute(q, p).fetchone()[0]
+
+
+def messages_get_recent(org_id: str, chat_id: str, limit: int = 50, offset: int = 0) -> list[dict]:
+    """Get recent messages for a chat."""
+    rows = _conn().execute(
+        "SELECT * FROM messages WHERE org_id=? AND chat_id=? ORDER BY created_at DESC LIMIT ? OFFSET ?",
+        (org_id, chat_id, limit, offset),
+    ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def digest_count(org_id: str, date: str = "") -> int:
+    """Count digests, optionally for a specific date."""
+    if date:
+        return _conn().execute(
+            "SELECT COUNT(*) FROM digests WHERE org_id=? AND date=?", (org_id, date)
+        ).fetchone()[0]
+    return _conn().execute(
+        "SELECT COUNT(*) FROM digests WHERE org_id=?", (org_id,)
+    ).fetchone()[0]
+
+
+def digest_list(org_id: str, chat_id: str = "", limit: int = 30, after: str = "") -> list[dict]:
+    """List digests. Wrapper matching dashboard API expectations."""
+    return get_digests(org_id, chat_id=chat_id, limit=limit)
+
+
 def get_chat_stats(org_id: str) -> list[dict]:
     """Overview stats for all chats in an org."""
     rows = _conn().execute(

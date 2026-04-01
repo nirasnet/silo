@@ -400,7 +400,8 @@ def generate_digest(chat_name: str, date: str, messages: list[dict]) -> dict | N
     if not messages:
         return None
     transcript = "\n".join(
-        f"[{m['sender']}]: {m['text']}" for m in messages if m.get("text")
+        f"[{m.get('sender') or m.get('sender_name', '?')}]: {m.get('text', '')}"
+        for m in messages if m.get("text")
     )
     prompt = f"กลุ่ม: {chat_name}\nวันที่: {date}\n\nข้อความ ({len(messages)} ข้อความ):\n{transcript}"
     raw = _call_ai(prompt, DIGEST_SYSTEM_PROMPT)
