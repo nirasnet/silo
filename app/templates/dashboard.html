@@ -1060,13 +1060,13 @@ async function loadDashboard() {
   const data = await api('/api/v1/dashboard/overview');
   if (!data) return;
   document.getElementById('statMessages').textContent = (data.messages_today || 0).toLocaleString();
-  document.getElementById('statMessagesSub').textContent = data.date || '';
+  document.getElementById('statMessagesSub').textContent = data.production_period || data.production_date || '';
   document.getElementById('statGroups').textContent = data.active_groups || 0;
   document.getElementById('statGroupsSub').textContent = (data.total_groups || 0) + ' ทั้งหมด';
   document.getElementById('statDigests').textContent = data.digests_today || 0;
-  document.getElementById('statDigestsSub').textContent = 'วันนี้';
+  document.getElementById('statDigestsSub').textContent = 'วันผลิต ' + (data.production_date || '');
   const usage = data.usage || {};
-  document.getElementById('statAI').textContent = (usage.ai_queries || 0).toLocaleString();
+  document.getElementById('statAI').textContent = ((usage.qa || 0) + (usage.digest || 0)).toLocaleString();
   document.getElementById('statAISub').textContent = 'เดือนนี้';
   if (data.production_date) {
     const prodText = 'วันผลิต: ' + data.production_date;
@@ -1557,12 +1557,12 @@ function esc(s) {
   if (!s) return '';
   var d = document.createElement('div');
   d.textContent = String(s);
-  return d.innerHTML;
+  return d.innerHTML.replace(/'/g, "&#39;");
 }
 
 function timeAgo(ts) {
   if (!ts) return '';
-  var d = new Date(ts);
+  var d = typeof ts === 'number' && ts < 9999999999 ? new Date(ts * 1000) : new Date(ts);
   var diff = (Date.now() - d.getTime()) / 1000;
   if (diff < 60) return 'เมื่อสักครู่';
   if (diff < 3600) return Math.floor(diff / 60) + ' นาที';
