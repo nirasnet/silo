@@ -760,11 +760,12 @@ let wizardGroupToggles = {};
 async function api(path, opts = {}) {
   try {
     const resp = await fetch(path, {
+      credentials: 'same-origin',
       headers: { 'Content-Type': 'application/json', ...opts.headers },
       ...opts,
     });
     if (resp.status === 403 || resp.status === 401) {
-      window.location.href = '/auth/login';
+      window.location.href = '/login';
       return null;
     }
     return resp.json();
@@ -786,7 +787,7 @@ async function init() {
   const groups = await api('/api/v1/dashboard/groups');
   groupsData = Array.isArray(groups) ? groups : [];
 
-  if (groupsData.length === 0) {
+  if (groupsData.length === 0 && !localStorage.getItem('silo_onboarded')) {
     showOnboarding();
   } else {
     onboardingDone = true;
@@ -924,6 +925,7 @@ function wizardBack() { wizardStep--; renderWizardStep(); }
 function finishOnboarding() {
   document.getElementById('wizardOverlay').style.display = 'none';
   onboardingDone = true;
+  localStorage.setItem('silo_onboarded', '1');
   loadDashboard();
   startAutoRefresh();
 }
@@ -1012,7 +1014,7 @@ async function loadDashGroups() {
       <div style="font-size:36px;margin-bottom:12px;opacity:0.5">&#128101;</div>
       <div style="font-size:15px;font-weight:600;margin-bottom:8px;color:var(--text-dim)">&#3618;&#3633;&#3591;&#3652;&#3617;&#3656;&#3617;&#3637;&#3585;&#3621;&#3640;&#3656;&#3617;</div>
       <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px">&#3648;&#3614;&#3636;&#3656;&#3617; Silo Bot &#3648;&#3586;&#3657;&#3634;&#3585;&#3621;&#3640;&#3656;&#3617; LINE &#3648;&#3614;&#3639;&#3656;&#3629;&#3648;&#3619;&#3636;&#3656;&#3617;&#3651;&#3594;&#3657;&#3591;&#3634;&#3609;</div>
-      <button class="btn btn-primary btn-sm" onclick="showOnboarding()">&#3648;&#3619;&#3636;&#3656;&#3617;&#3605;&#3633;&#3657;&#3591;&#3588;&#3656;&#3634;</button>
+      <button class="btn btn-primary btn-sm" onclick="loadDashGroups()">&#8635; รีเฟรช</button>
     </div>`;
     return;
   }
