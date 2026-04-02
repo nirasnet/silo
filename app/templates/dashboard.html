@@ -347,7 +347,11 @@ function renderGroups(list, el) {
 
 // Open group detail
 async function openGroup(chatId) {
-  go('groups');
+  // Switch to groups view WITHOUT calling loadGroups()
+  document.querySelectorAll('.view').forEach(v=>v.style.display='none');
+  document.getElementById('v-groups').style.display='';
+  document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));
+  document.querySelector('[data-view="groups"]')?.classList.add('active');
   document.getElementById('groupsList').style.display='none';
   document.getElementById('groupsToolbar').innerHTML='';
   const det=document.getElementById('groupDetail');
