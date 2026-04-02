@@ -175,9 +175,17 @@ a{color:var(--indigo);text-decoration:none}
     <div style="margin-bottom:12px">
       <select id="chatGroupSelect" onchange="chatGroupChanged()" style="padding:8px 12px;background:var(--bg-hover);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:13px;width:100%;max-width:400px"></select>
     </div>
+    <div id="chatSuggestions" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+      <button class="btn btn-ghost btn-sm" onclick="askSuggestion('สรุปหัวข้อหลักวันนี้')">📋 สรุปวันนี้</button>
+      <button class="btn btn-ghost btn-sm" onclick="askSuggestion('ปัญหาที่พบวันนี้และวิธีแก้')">⚠️ ปัญหา</button>
+      <button class="btn btn-ghost btn-sm" onclick="askSuggestion('Action items ที่ต้องติดตาม')">📌 Action Items</button>
+      <button class="btn btn-ghost btn-sm" onclick="askSuggestion('ใครทำอะไรบ้างวันนี้')">👥 คนที่แอคทีฟ</button>
+      <button class="btn btn-ghost btn-sm" onclick="askSuggestion('ตัวเลข KPI สำคัญ')">📊 ตัวเลข/KPI</button>
+      <button class="btn btn-ghost btn-sm" onclick="askSuggestion('เทียบกับเมื่อวาน มีอะไรเปลี่ยนแปลง')">📈 เทียบเมื่อวาน</button>
+    </div>
     <div class="chat-container">
       <div class="chat-messages" id="chatMessages">
-        <div class="empty"><div class="empty-icon">💬</div>เลือกกลุ่มแล้วถามคำถาม</div>
+        <div class="empty"><div class="empty-icon">💬</div>เลือกกลุ่มแล้วถามคำถาม<br><span style="font-size:12px;color:var(--text-muted)">หรือกดปุ่มคำถามด้านบน</span></div>
       </div>
       <div class="chat-input">
         <input id="chatInput" placeholder="ถามเกี่ยวกับแชทกลุ่ม..." onkeydown="if(event.key==='Enter')sendChat()">
@@ -392,9 +400,22 @@ async function openGroup(chatId) {
   h+='<h3 style="font-size:14px;margin:16px 0 10px">💬 ข้อความล่าสุด <span class="badge badge-indigo">'+(msgs&&msgs.total||0)+' ทั้งหมด</span></h3>';
   if(msgs&&msgs.messages&&msgs.messages.length) {
     msgs.messages.forEach(m=>{
+      let content = '';
+      if(m.content_type==='IMAGE') {
+        const msgId = m.id;
+        content = `<div style="margin:4px 0"><img src="/api/v1/dashboard/image/${msgId}" style="max-width:200px;max-height:200px;border-radius:8px;cursor:pointer;border:1px solid var(--border)" onclick="this.style.maxWidth=this.style.maxWidth==='200px'?'100%':'200px'" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="display:none;color:var(--text-muted);font-size:12px">📷 รูปภาพ (ไม่สามารถโหลดได้)</span></div><button class="btn btn-ghost btn-sm" style="margin-top:4px;font-size:11px" data-msgid="${msgId}" onclick="runOCR(this)">🔍 OCR อ่านข้อความ</button>`;
+      } else if(m.content_type==='STICKER') {
+        content = '<span style="font-size:12px;color:var(--text-muted)">🎨 สติกเกอร์</span>';
+      } else if(m.content_type==='FILE') {
+        content = '<span style="font-size:12px;color:var(--text-muted)">📎 ไฟล์</span>';
+      } else if(m.content_type==='VIDEO') {
+        content = '<span style="font-size:12px;color:var(--text-muted)">🎬 วิดีโอ</span>';
+      } else {
+        content = esc(m.text||'');
+      }
       h+=`<div class="msg">
         <div class="msg-avatar" style="background:${avatarColor(m.sender_name)}">${(m.sender_name||'?')[0]}</div>
-        <div><div class="msg-name">${esc(m.sender_name||'Unknown')}</div><div class="msg-text">${esc(m.text||`[${m.content_type}]`)}</div><div class="msg-time">${timeAgo(m.created_at)}</div></div>
+        <div style="flex:1"><div class="msg-name">${esc(m.sender_name||'Unknown')}</div><div class="msg-text">${content}</div><div class="msg-time">${timeAgo(m.created_at)}</div></div>
       </div>`;
     });
   } else { h+='<div style="color:var(--text-muted);font-size:13px">ไม่มีข้อความ</div>'; }
@@ -441,7 +462,29 @@ function loadChat() {
   sel.innerHTML='<option value="">-- เลือกกลุ่ม --</option>'+groups.map(g=>`<option value="${esc(g.chat_id)}" ${g.chat_id===chatGroupId?'selected':''}>${esc(g.name)}</option>`).join('');
 }
 
-function chatGroupChanged(){chatGroupId=document.getElementById('chatGroupSelect').value;convId=null;document.getElementById('chatMessages').innerHTML='<div class="empty"><div class="empty-icon">💬</div>ถามคำถามเกี่ยวกับกลุ่มนี้</div>';}
+function chatGroupChanged(){chatGroupId=document.getElementById('chatGroupSelect').value;convId=null;document.getElementById('chatMessages').innerHTML='<div class="empty"><div class="empty-icon">💬</div>ถามคำถามเกี่ยวกับกลุ่มนี้<br><span style="font-size:12px;color:var(--text-muted)">หรือกดปุ่มคำถามด้านบน</span></div>';}
+
+function askSuggestion(q){
+  if(!chatGroupId){toast('กรุณาเลือกกลุ่มก่อน');return;}
+  document.getElementById('chatInput').value=q;
+  sendChat();
+}
+
+async function runOCR(btn){
+  const msgId=btn.dataset.msgid;
+  if(!msgId)return;
+  btn.disabled=true;btn.textContent='กำลังอ่าน...';
+  const r=await api('/api/v1/dashboard/image/'+msgId+'/ocr',{method:'POST'});
+  if(r&&r.ok){
+    const div=document.createElement('div');
+    div.style.cssText='margin-top:6px;padding:8px 12px;background:var(--bg-hover);border:1px solid var(--border);border-radius:6px;font-size:12px;color:var(--text-dim);white-space:pre-wrap';
+    div.textContent='📝 OCR: '+r.text;
+    btn.parentElement.appendChild(div);
+    btn.textContent='✅ อ่านแล้ว ('+r.size_kb+'KB)';
+  } else {
+    btn.textContent='❌ อ่านไม่ได้';
+  }
+}
 
 async function sendChat() {
   const input=document.getElementById('chatInput');

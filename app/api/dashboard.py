@@ -234,6 +234,59 @@ async def enable_group(chat_id: str, request: Request, auth: dict = Depends(requ
     return {"ok": True, "chat_id": chat_id}
 
 
+@router.get("/image/{message_id}")
+async def proxy_image(message_id: str, request: Request, auth: dict = Depends(require_auth)):
+    """Proxy LINE image content (needs LINE auth header)."""
+    from fastapi.responses import Response
+    from app.config import settings
+    import requests as http_req
+
+    token = settings.line_channel_token
+    if not token:
+        raise HTTPException(404, "LINE token not configured")
+
+    r = http_req.get(
+        f"https://api-data.line.me/v2/bot/message/{message_id}/content",
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=15,
+    )
+    if r.status_code != 200:
+        raise HTTPException(r.status_code, "Failed to fetch image")
+
+    ct = r.headers.get("content-type", "image/jpeg")
+    return Response(content=r.content, media_type=ct)
+
+
+@router.post("/image/{message_id}/ocr")
+async def ocr_image(message_id: str, request: Request, auth: dict = Depends(require_auth)):
+    """Download LINE image and run OCR on it."""
+    from app.config import settings
+    import requests as http_req
+
+    token = settings.line_channel_token
+    if not token:
+        raise HTTPException(404, "LINE token not configured")
+
+    # Download image from LINE
+    r = http_req.get(
+        f"https://api-data.line.me/v2/bot/message/{message_id}/content",
+        headers={"Authorization": f"Bearer {token}"},
+        timeout=15,
+    )
+    if r.status_code != 200:
+        return {"ok": False, "error": "Failed to download image"}
+
+    # Run OCR
+    from app.ai.provider import analyze_image
+    ct = r.headers.get("content-type", "image/jpeg")
+    text = analyze_image(r.content, mime_type=ct)
+
+    db = _get_db(request)
+    db.usage_record(auth["org_id"], "vision")
+
+    return {"ok": True, "text": text, "size_kb": round(len(r.content) / 1024, 1)}
+
+
 @router.post("/groups/{chat_id}/disable")
 async def disable_group(chat_id: str, request: Request, auth: dict = Depends(require_auth)):
     """Remove a group from auto-digest."""
