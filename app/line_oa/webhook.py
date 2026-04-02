@@ -172,6 +172,19 @@ def _handle_message(event: dict, org_id: str, channel_token: str | None) -> None
     else:
         content_type = msg_type.upper()
 
+    # Auto-register group if not already registered
+    if chat_id.startswith("C") and org_id:
+        existing = db.org_get_group_by_mid(org_id, chat_id)
+        if not existing:
+            try:
+                from app.line_oa.api import get_group_summary
+                info = get_group_summary(chat_id, channel_token=channel_token)
+                gname = info.get("groupName", chat_id[:16]) if info else chat_id[:16]
+            except Exception:
+                gname = chat_id[:16]
+            db.org_add_group(org_id, chat_id, group_name=gname)
+            log.info("Auto-registered group from message: %s (%s)", chat_id[:12], gname)
+
     db.save_message(
         org_id=org_id,
         chat_id=chat_id,
