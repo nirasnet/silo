@@ -12,7 +12,7 @@ log = logging.getLogger("silo.ai")
 
 # ── Endpoints ──
 CLAUDE_API_URL = "https://api.anthropic.com/v1/messages"
-GEMINI_MODELS = ["gemini-2.0-flash", "gemini-2.5-flash", "gemini-1.5-flash"]
+GEMINI_MODELS = ["gemini-2.0-flash", "gemini-2.5-flash", "gemini-2.0-flash-lite"]
 GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models"
 
 # ── Prompts ──
