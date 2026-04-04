@@ -68,6 +68,28 @@ async def generate_digest_route(body: GenerateDigestRequest, request: Request, a
     db.save_digest(org_id, body.chat_id, chat_name, date_str, digest, len(messages))
     db.usage_record(org_id, "digest")
 
+    # Auto-push LINE summary after digest
+    pushed = False
+    try:
+        group_info = db.org_get_group_by_mid(org_id, body.chat_id)
+        summary_level = (group_info or {}).get("summary_level", "normal")
+        org = db.org_get(org_id)
+        channel_token = (org or {}).get("line_channel_token") or None
+
+        from app.ai.provider import generate_line_summary
+        from app.line_oa.api import send_push
+        summary_text = generate_line_summary(
+            chat_name, messages, period_str.split(" - ")[0] if " - " in period_str else "",
+            period_str.split(" - ")[1] if " - " in period_str else "", level=summary_level,
+        )
+        if summary_text:
+            send_push(body.chat_id, [{"type": "text", "text": summary_text}], channel_token=channel_token)
+            db.usage_record(org_id, "summary")
+            pushed = True
+            print(f"[LINE-PUSH] Digest summary sent to {chat_name} ({body.chat_id[:16]})")
+    except Exception as e:
+        print(f"[LINE-PUSH] Failed for {chat_name}: {e}")
+
     return {
         "ok": True,
         "date": date_str,
@@ -75,6 +97,7 @@ async def generate_digest_route(body: GenerateDigestRequest, request: Request, a
         "chat_name": chat_name,
         "message_count": len(messages),
         "digest": digest,
+        "line_pushed": pushed,
     }
 
 
@@ -117,6 +140,58 @@ async def generate_all(request: Request, auth: dict = Depends(require_auth)):
             errors += 1
 
     return {"ok": True, "generated": generated, "skipped": skipped, "errors": errors}
+
+
+class PushSummaryRequest(BaseModel):
+    chat_id: str
+    org_id: Optional[str] = None
+    digest_id: Optional[str] = None
+    level: Optional[str] = "normal"
+
+
+@router.post("/push-summary")
+async def push_summary(body: PushSummaryRequest, request: Request, auth: dict = Depends(require_auth)):
+    """Push a LINE summary for a chat. Uses latest digest period or specified digest."""
+    db = request.app.db
+    ai = request.app.ai
+    org_id = body.org_id or auth["org_id"]
+    org = db.org_get(org_id)
+    channel_token = (org or {}).get("line_channel_token") or None
+
+    # Get group info
+    group = db.org_get_group_by_mid(org_id, body.chat_id)
+    chat_name = group["group_name"] if group and group.get("group_name") else body.chat_id[:16]
+    level = body.level or (group or {}).get("summary_level", "normal")
+
+    # Get messages for the production period
+    period = db.get_production_period(org_id)
+    messages = db.get_messages(org_id, body.chat_id, after=period["start_ts"], limit=5000)
+    messages = [m for m in messages if m.get("created_at", 0) <= period["end_ts"]]
+
+    if not messages:
+        return {"ok": False, "error": "No messages in current production period"}
+
+    from app.ai.provider import generate_line_summary
+    from app.line_oa.api import send_push
+
+    summary_text = generate_line_summary(
+        chat_name, messages, period["start_str"], period["end_str"], level=level,
+    )
+    if not summary_text:
+        return {"ok": False, "error": "Failed to generate summary"}
+
+    result = send_push(body.chat_id, [{"type": "text", "text": summary_text}], channel_token=channel_token)
+    db.usage_record(org_id, "summary")
+
+    return {
+        "ok": True,
+        "chat_name": chat_name,
+        "level": level,
+        "message_count": len(messages),
+        "period": f"{period['start_str']} - {period['end_str']}",
+        "summary_length": len(summary_text),
+        "line_result": result,
+    }
 
 
 @router.get("/list")

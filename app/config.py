@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     line_channel_token: str = ""
 
     # OCR service
-    ocr_url: str = "http://172.18.0.1:9091"
+    ocr_url: str = "http://ocr-service:9091"
 
     # Platform
     domain: str = "silo.m4app.online"

@@ -205,6 +205,13 @@ def _handle_message(event: dict, org_id: str, channel_token: str | None) -> None
     log.info("Message saved: type=%s chat=%s sender=%s org=%s",
              msg_type, chat_id[:12], sender_id[:12], org_id[:8] if org_id else "none")
 
+    # Auto-OCR: run in background for image messages
+    if content_type == "IMAGE" and msg_id:
+        try:
+            _auto_ocr(msg_id, org_id, channel_token)
+        except Exception as e:
+            log.error("Auto-OCR failed for %s: %s", msg_id, e)
+
 
 def _handle_join(event: dict, org_id: str, channel_token: str | None) -> None:
     """Bot was added to a group or room. Auto-register the group if org exists."""
@@ -248,6 +255,32 @@ def _handle_unfollow(event: dict, org_id: str) -> None:
     source = event.get("source", {})
     user_id = source.get("userId", "")
     log.info("Unfollow: user=%s org=%s", user_id, org_id[:8] if org_id else "none")
+
+
+# ══════════════════════════════════════════════
+#  Auto-OCR for image messages
+# ══════════════════════════════════════════════
+
+def _auto_ocr(msg_id: str, org_id: str, channel_token: str | None) -> None:
+    """Download image from LINE and run OCR, save text to message."""
+    from app.line_oa.api import get_content
+    from app.ai.provider import analyze_image
+
+    image_bytes = get_content(msg_id, channel_token)
+    if not image_bytes:
+        log.warning("Auto-OCR: could not download image %s", msg_id)
+        return
+
+    text = analyze_image(image_bytes, mime_type="image/jpeg")
+    if text and not text.startswith("(รูปภาพ"):
+        # Prefix so digest knows this is OCR-extracted content
+        ocr_text = f"[รูปภาพ-OCR] {text}"
+        db.message_update_text(msg_id, ocr_text)
+        if org_id:
+            db.usage_record(org_id, "vision")
+        log.info("Auto-OCR saved: msg=%s len=%d", msg_id, len(ocr_text))
+    else:
+        log.info("Auto-OCR: no text extracted for %s", msg_id)
 
 
 # ══════════════════════════════════════════════

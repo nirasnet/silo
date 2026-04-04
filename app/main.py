@@ -119,19 +119,22 @@ def _digest_scheduler():
 def _run_all_digests(date_str: str):
     """Generate digests for all active orgs and groups."""
     from . import db
-    from .ai.provider import generate_digest
+    from .ai.provider import generate_digest, generate_line_summary
+    from .line_oa.api import send_push
 
     orgs = db.org_list()
     for org in orgs:
         if org.get("status") != "active":
             continue
         org_id = org["id"]
+        channel_token = org.get("line_channel_token") or None
         groups = db.org_get_groups(org_id)
         for group in groups:
             if not group.get("auto_digest", 1):
                 continue
             chat_id = group["group_mid"]
             chat_name = group.get("group_name", chat_id[:16])
+            summary_level = group.get("summary_level", "normal")
             try:
                 # Use production date period
                 period = db.get_production_period(org_id)
@@ -145,5 +148,19 @@ def _run_all_digests(date_str: str):
                     db.save_digest(org_id, chat_id, chat_name, date_str, digest, len(messages))
                     db.usage_record(org_id, "digest")
                     print(f"[Silo-Digest] {org['name']}/{chat_name}: {len(messages)} msgs → digest OK")
+
+                    # Auto-push LINE summary
+                    try:
+                        summary_text = generate_line_summary(
+                            chat_name, messages,
+                            period["start_str"], period["end_str"],
+                            level=summary_level,
+                        )
+                        if summary_text:
+                            send_push(chat_id, [{"type": "text", "text": summary_text}], channel_token=channel_token)
+                            db.usage_record(org_id, "summary")
+                            print(f"[Silo-Digest] LINE summary pushed to {chat_name}")
+                    except Exception as e:
+                        print(f"[LINE-PUSH] Failed for {chat_name}: {e}")
             except Exception as e:
                 print(f"[Silo-Digest] Error {chat_name}: {e}")

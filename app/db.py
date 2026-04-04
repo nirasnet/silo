@@ -447,6 +447,13 @@ def save_message(
     c.commit()
 
 
+def message_update_text(msg_id: str, text: str) -> None:
+    """Update a message's text field (e.g. after OCR)."""
+    c = _conn()
+    c.execute("UPDATE messages SET text=? WHERE id=?", (text, msg_id))
+    c.commit()
+
+
 def get_messages(
     org_id: str, chat_id: str, after: float | None = None, limit: int = 5000,
 ) -> list[dict]:
